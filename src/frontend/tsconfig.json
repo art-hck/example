@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [ "es2017", "dom" ],
+    "suppressImplicitAnyIndexErrors": true,
+    "typeRoots": [
+      "node_modules/@types/"
+    ]
+  },
+  "compileOnSave": true,
+  "include": [
+    "**/*",
+    "node_modules/@angular-addons/**/*.ts"
+  ],
+  "exclude": [
+    "**/*-aot.ts"
+  ]
+}
