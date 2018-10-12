@@ -12,8 +12,7 @@
 #### Execute this to deploy the project:
 ```bash
 # Basic setup
-./sh/generage-env.sh
-./sh/init-nginx-conf.sh
+./generage-env.sh
 
 # Build frontend app
 cd src/frontend/

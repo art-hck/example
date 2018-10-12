@@ -1,6 +1,7 @@
 server {
     root /opt/genie/web;
-    listen 8080;
+    listen ${NGINX_PORT};
+    server_name ${NGINX_HOST};
 
     gzip on;
     gzip_comp_level 2; 

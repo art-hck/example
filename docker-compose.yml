@@ -4,41 +4,47 @@ services:
     build: ./docker/mysql
     ports: ["3306:3306"]
     environment:
-      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS}
-      MYSQL_DATABASE: ${DB_NAME}
-      MYSQL_TEST_DATABASE: ${DB_TEST_NAME}
-      MYSQL_USER: ${DB_USER}
-      MYSQL_PASSWORD: ${DB_PASS}
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:?}
+      MYSQL_DATABASE: ${DB_NAME:?}
+      MYSQL_TEST_DATABASE: ${DB_TEST_NAME:?}
+      MYSQL_USER: ${DB_USER:?}
+      MYSQL_PASSWORD: ${DB_PASS:?}
     volumes:
       - ./docker/mysql/data:/var/lib/mysql
   nginx:
     build: ./docker/nginx
-    ports: ["80:8080", "443:4443"]
+    ports: ["80:8081", "443:443"]
+    environment:
+      - NGINX_PORT=${NGINX_PORT:?}
+      - NGINX_HOST=${NGINX_HOST:?}
     volumes:
-      - ./src:${APP_PATH}
+      - ./src:${APP_PATH:?}
       - ./docker/nginx/conf.d:/etc/nginx/conf.d
       - ./docker/nginx/ssl:/etc/nginx/ssl
+      - ./docker/nginx/command.sh:/etc/nginx/command.sh
+      - ./docker/nginx/mime.types:/etc/nginx/mime.types
     depends_on: [php, node]
+    command: /bin/bash -c /etc/nginx/command.sh
 
   php:
     build:
       context: ./docker/php
       args:
-        - APP_PATH=${APP_PATH}
-        - APP_USER=${USER}
+        - APP_PATH=${APP_PATH:?}
+        - APP_USER=${USER:?}
 
     stdin_open: true
     volumes: 
       - ./docker/php/conf.d/php.ini:/usr/local/etc/php/conf.d/php.ini:ro
-      - ./src:${APP_PATH}
+      - ./src:${APP_PATH:?}
     depends_on: [mysql]
 
   node:
     build: 
       context: ./docker/node
       args:
-        - APP_PATH=${APP_PATH}
+        - APP_PATH=${APP_PATH:?}
     stdin_open: true
     ports: ["8000:8000"]
     volumes:
-      - ./src:${APP_PATH}
+      - ./src:${APP_PATH:?}
