@@ -10,6 +10,9 @@ import "../../assets/styles/index.scss";
 
 import {ApplicationComponent} from "./Component/Application";
 import {MainRoute} from "./Routes/MainRoute/MainRoute";
+import {FilterModule} from "../Filter/FilterModule";
+import {PlatformService} from "./Service/PlatformService";
+import {RouteHelperService} from "./Service/RouteHelperService";
 
 registerLocaleData(localeRu);
 
@@ -18,11 +21,16 @@ registerLocaleData(localeRu);
         BrowserModule,
         RouterModule.forRoot(appRoutes),
         HttpClientModule,
+        FilterModule,
     ],
 
     declarations: [
         ApplicationComponent,
         MainRoute,
+    ],
+    providers: [
+        RouteHelperService,
+        PlatformService
     ],
     exports: [ApplicationComponent]
 })

@@ -13,7 +13,7 @@ services:
       - ./docker/mysql/data:/var/lib/mysql
   nginx:
     build: ./docker/nginx
-    ports: ["80:8081", "443:443"]
+    ports: ["80:8080", "443:443"]
     environment:
       - NGINX_PORT=${NGINX_PORT:?}
       - NGINX_HOST=${NGINX_HOST:?}
