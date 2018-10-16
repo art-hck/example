@@ -11,8 +11,10 @@ function root(args) {
 const isServer = !!envArgv.server;
 const isDev = !!envArgv.dev;
 const isProd = !!envArgv.prod;
+const isAnalyze = !!envArgv.analyze;
 
 exports.root = root;
 exports.isServer = isServer;
 exports.isDev = isDev;
 exports.isProd = isProd;
+exports.isAnalyze = isAnalyze;

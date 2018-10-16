@@ -1,5 +1,5 @@
 const webpackMerge = require('webpack-merge');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const commonConfig = require('./webpack.common.js');
 
 module.exports = webpackMerge(commonConfig, {
@@ -10,6 +10,11 @@ module.exports = webpackMerge(commonConfig, {
     },
     target: 'node', // solves error: fs not found
     plugins: [
-        new ExtractTextPlugin('[name].css')
-    ]
+        new MiniCssExtractPlugin({filename: '[name].css'})
+    ],
+    optimization: {
+        // keep minimization off
+        // workaround for https://github.com/angular/angular-cli/issues/10635
+        minimize: false
+    }
 });

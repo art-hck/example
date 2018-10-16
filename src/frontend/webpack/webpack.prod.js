@@ -1,59 +1,62 @@
+const helpers = require('./helpers');
 const webpack = require('webpack');
 const webpackMerge = require('webpack-merge');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const commonConfig = require('./webpack.common.js');
-const OptimizeJsPlugin = require("optimize-js-plugin");
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = webpackMerge(commonConfig, {
     devtool: 'source-map',
 
     output: {
         filename: '[name].[hash].js',
-        chunkFilename: '[id].[hash].chunk.js'
+        chunkFilename: '[name].[hash].chunk.js'
     },
 
     plugins: [
-        /**
-         * Webpack plugin to optimize a JavaScript file for faster initial load
-         * by wrapping eagerly-invoked functions.
-         *
-         * See: https://github.com/vigneshshanmugam/optimize-js-plugin
-         */
-        new OptimizeJsPlugin({
-            sourceMap: false
-        }),
-        new webpack.optimize.UglifyJsPlugin({ // https://github.com/angular/angular/issues/10618
-            mangle: {
-                screw_ie8: true,
-                // keep_fnames: true // debug
-            },
-            compress: {
-                screw_ie8: true,
-                warnings: false,
-                conditionals: true,
-                unused: true,
-                comparisons: true,
-                sequences: true,
-                dead_code: true,
-                evaluate: true,
-                if_return: true,
-                join_vars: true,
-                negate_iife: false // we need this for lazy v8
-            }
-        }),
-        new ExtractTextPlugin('[name].[hash].css'),
-        
-        new webpack.optimize.CommonsChunkPlugin({
-           name: 'vendor',
-           chunks: ['app'],
-           minChunks: module => /node_modules/.test(module.resource)
-        }),
-
+        new MiniCssExtractPlugin({filename: '[name].[hash].css'}),
         new webpack.LoaderOptionsPlugin({
             htmlLoader: {
                 minimize: false // workaround for ng2
             }
         })
-    ]
+    ],
+    optimization: {
+        minimizer: [
+            /**
+             * Plugin: UglifyJsPlugin
+             * Description: Minimize all JavaScript output of chunks.
+             * Loaders are switched into minimizing mode.
+             *
+             * See: https://webpack.js.org/plugins/uglifyjs-webpack-plugin/
+             *
+             * NOTE: To debug prod builds uncomment //debug lines and comment //prod lines
+             */
+            new UglifyJsPlugin({
+                sourceMap: false,
+                parallel: true,
+                cache: helpers.root('webpack-cache/uglify-cache'),
+                uglifyOptions: {
+                    ecma: 6,
+                    warnings: false, // TODO verbose based on option?
+                    ie8: false,
+                    mangle: true,
+                    compress: {
+                        pure_getters: true /* buildOptimizer */,
+                        // PURE comments work best with 3 passes.
+                        // See https://github.com/webpack/webpack/issues/2899#issuecomment-317425926.
+                        passes: 2 /* buildOptimizer */
+                    },
+                    output: {
+                        ascii_only: true,
+                        comments: false
+                    }
+                }
+            })
+        ],
+        splitChunks: {
+            chunks: 'all',
+            maxSize: 249856
+        }
+    }
 });
-

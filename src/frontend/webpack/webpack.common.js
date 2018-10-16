@@ -1,14 +1,23 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const helpers = require('./helpers');
 const ngtools = require('@ngtools/webpack');
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
-const ENV = process.env.ENV = process.env.ENV = helpers.isDev ? 'development' : 'production';
+const ENV = process.env.ENV = helpers.isDev ? 'development' : 'production';
 const IS_NODE = process.env.IS_NODE = helpers.isServer;
 const HOST = helpers.isServer ? "http://nginx:8080" : "";
 
+
+let plugins = [];
+
+if(helpers.isAnalyze) {
+    plugins.push(new BundleAnalyzerPlugin());
+}
+
 module.exports = {
+    mode: ENV,
     entry: {
         'app': './app/main.ts'
     },
@@ -68,16 +77,15 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                loader: ExtractTextPlugin.extract({
-                    fallback: 'style-loader',
-                    use: [
-                        {
-                            "loader":"css-loader",
-                            "options": { "minimize": !helpers.isDev}
-                        },
-                        'sass-loader'
-                    ]
-                }),
+                
+                use: [
+                    MiniCssExtractPlugin.loader,
+                    {
+                        "loader":"css-loader",
+                        "options": { "minimize": !helpers.isDev}
+                    },
+                    'sass-loader'
+                ],
                 include: helpers.root('assets')
             },
             {
@@ -92,6 +100,7 @@ module.exports = {
     },
 
     plugins: [
+        ...plugins,
         new webpack.DefinePlugin({
             'process.env': {
                 'ENV': JSON.stringify(ENV),
