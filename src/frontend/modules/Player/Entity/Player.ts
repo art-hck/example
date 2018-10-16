@@ -1,6 +1,29 @@
 export interface Player {
-    league: string;
-    goals: number;
-    team: number;
-    play_tile: number;
+    first_name: string
+    last_name: string
+    native_name: string
+    alias: string
+    birthday: number
+    birthplace: string
+    country_id: number
+    nationality: number
+    nationality_f: number
+    nationality_m: number
+    foot: string
+    position: string
+    height: number
+    number: number
+    preview: string
+    created: number
+    updated: number
+    status: number
+    link_to_tm: string
+    contract_until: number
+    contract_ext: number
+    team_uid: number
+    in_team: number
+    twitter: string
+    facebook: string
+    instagram: string
+    agents: string
 }
