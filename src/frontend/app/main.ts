@@ -1,14 +1,14 @@
 // Polyfills
-import 'core-js/es6';
-import 'core-js/es7/reflect';
-import 'zone.js/dist/zone';
+import ('core-js/es6');
+import ('core-js/es7/reflect');
+import ('zone.js/dist/zone');
 
 if (process.env.ENV === 'production') {
   // Production
 } else {
   // Development and test
   Error['stackTraceLimit'] = 1; //Infinity
-  require('zone.js/dist/long-stack-trace-zone');
+  import ('zone.js/dist/long-stack-trace-zone');
 }
 
 // Main
@@ -21,7 +21,9 @@ if (process.env.ENV === 'production') {
   enableProdMode();
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  platformBrowserDynamic().bootstrapModule(ApplicationModuleBrowser)
-      .catch(err => console.log(err));
-});
+document.addEventListener(
+  'DOMContentLoaded', 
+  () => platformBrowserDynamic()
+        .bootstrapModule(ApplicationModuleBrowser)
+        .catch(err => console.error(err))
+);

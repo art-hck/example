@@ -3,31 +3,12 @@
 namespace App\DataFixtures;
 
 use App\Entity\Player;
-use App\Type\PlayerRole;
-use App\Type\PlayerRole\PlayerRoleAttackingMidfield;
-use App\Type\PlayerRole\PlayerRoleCentralMidfield;
-use App\Type\PlayerRole\PlayerRoleCentreBack;
-use App\Type\PlayerRole\PlayerRoleCentreForward;
-use App\Type\PlayerRole\PlayerRoleDefender;
-use App\Type\PlayerRole\PlayerRoleDefensiveMidfield;
-use App\Type\PlayerRole\PlayerRoleForward;
-use App\Type\PlayerRole\PlayerRoleGoalkeeper;
-use App\Type\PlayerRole\PlayerRoleLeftBack;
-use App\Type\PlayerRole\PlayerRoleLeftMidfield;
-use App\Type\PlayerRole\PlayerRoleLeftWing;
-use App\Type\PlayerRole\PlayerRoleMidfielder;
-use App\Type\PlayerRole\PlayerRoleRightBack;
-use App\Type\PlayerRole\PlayerRoleRightMidfield;
-use App\Type\PlayerRole\PlayerRoleRightWing;
-use App\Type\PlayerRole\PlayerRoleSecondaryStriker;
-use App\Type\PlayerRole\PlayerRoleStriker;
-use App\Type\PlayerRoleType;
+use App\Type\PlayerRole\PlayerRoleFactory;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\Persistence\ObjectManager;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\Finder\Finder;
 
 class AppFixtures extends Fixture implements ContainerAwareInterface
 {
@@ -71,7 +52,7 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
             if(!empty($row["foot"]) && in_array($row["foot"], ["left", "right", "both"])) {
                 $player->setFoot( str_replace(["left", "right", "both"], [0,1,2], $row["foot"]));
             }
-            if(!empty($row["position"]))    $player->setRole($this->createPlayerRoleFromString(trim($row["position"])));
+            if(!empty($row["position"]))    $player->setRole(PlayerRoleFactory::createFromString(trim($row["position"])));
             if(!empty($row["height"]))      $player->setHeight($row["height"]);
             if(!empty($row["number"]))      $player->setNumber($row["number"]);
 
@@ -103,36 +84,5 @@ class AppFixtures extends Fixture implements ContainerAwareInterface
     public function setContainer( ContainerInterface $container = null )
     {
         $this->container = $container;
-    }
-    
-    private function createPlayerRoleFromString(string $role): ?PlayerRole 
-    {
-        switch ($role) {
-            case "Attacking Midfield": return new PlayerRoleAttackingMidfield();
-            case "Central Midfield": return new PlayerRoleCentralMidfield();
-            case "Centre-Back": return new PlayerRoleCentreBack();
-            case "Centre-Forward": return new PlayerRoleCentreForward();
-            case "Defence": return new PlayerRoleDefender();
-            case "Defensive Midfield": return new PlayerRoleDefensiveMidfield();
-            case "Goalkeeper": return new PlayerRoleGoalkeeper();
-            case "Keeper": return new PlayerRoleGoalkeeper();
-            case "Left Midfield": return new PlayerRoleLeftMidfield();
-            case "Left Wing": return new PlayerRoleLeftWing();
-            case "Left-Back": return new PlayerRoleLeftBack();
-            case "Midfield": return new PlayerRoleMidfielder();
-            case "Right Midfield": return new PlayerRoleRightMidfield();
-            case "Right Wing": return new PlayerRoleRightWing();
-            case "Right-Back": return new PlayerRoleRightBack();
-            case "Secondary Striker": return new PlayerRoleSecondaryStriker();
-            case "Striker": return new PlayerRoleStriker();
-            case "Defender": return new PlayerRoleDefender();
-            case "Forward": return new PlayerRoleForward();
-            case "Left Winger": return new PlayerRoleLeftWing();
-            case "Midfielder": return new PlayerRoleMidfielder();
-            case "Right Winger": return new PlayerRoleRightWing();
-            case "Second Striker": return new PlayerRoleSecondaryStriker();
-            case "Sweeper": return new PlayerRoleStriker();            
-            default: return null; 
-        }
     }
 }

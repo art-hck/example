@@ -2,8 +2,8 @@
 
 namespace App\Entity;
 
-use App\Type\PlayerRole;
-use App\Type\PlayerRoleType;
+use App\Type\PlayerRole\PlayerRole;
+use App\Type\PlayerRole\PlayerRoleFactory;
 use Doctrine\ORM\Mapping as ORM;
 //use App\DBAL\Types\BasketballPositionType;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
@@ -220,15 +220,15 @@ class Player
         return $this;
     }
 
-    public function getRole(): ?string
+    public function getRole(): ?PlayerRole
     {
-        return $this->role;
+        return PlayerRoleFactory::createFromString($this->role);
     }
 
     public function setRole(?PlayerRole $role): self
     {
         if($role instanceof PlayerRole) {
-            $this->role = $role::id;
+            $this->role = $role->getId();
         }
 
         return $this;

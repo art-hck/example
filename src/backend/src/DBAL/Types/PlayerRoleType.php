@@ -3,7 +3,7 @@
 namespace App\DBAL\Types;
 
 use Fresh\DoctrineEnumBundle\DBAL\Types\AbstractEnumType;
-use App\Type\PlayerRole\{
+use App\Type\PlayerRole\Types\{
     PlayerRoleAttackingMidfield,
     PlayerRoleCentralMidfield,
     PlayerRoleCentreBack,
@@ -46,4 +46,13 @@ class PlayerRoleType extends AbstractEnumType
         PlayerRoleRightWing::id => PlayerRoleRightWing::name,
         PlayerRoleSweeper::id => PlayerRoleSweeper::name,
     ];
+    
+    public static function getById(int $id) {
+        return self::$choices[$id] ?? null;
+    }
+
+    public static function getChoices(): array
+    {
+        return self::$choices;
+    }
 }
