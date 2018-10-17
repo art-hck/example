@@ -21,8 +21,8 @@ echo DB_TEST_NAME=${DB_TEST_NAME:-new_test_db} >> ${PROJECT_PATH}/.env
 echo DB_USER=${DB_USER:-new_db_user} >> ${PROJECT_PATH}/.env
 echo DB_PASS=${DB_PASS:-new_db_pass} >> ${PROJECT_PATH}/.env
 echo APP_PATH=${APP_PATH:-/opt/${PROJECT_NAME}} >> ${PROJECT_PATH}/.env
-echo NGINX_PORT=${NGINX_PORT:-8080}} >> ${NGINX_PORT}/.env
-echo NGINX_HOST=${NGINX_HOST:-localhost}} >> ${NGINX_HOST}/.env
+echo NGINX_PORT=${NGINX_PORT:-8080}} >> ${PROJECT_PATH}/.env
+echo NGINX_HOST=${NGINX_HOST:-localhost}} >> ${PROJECT_PATH}/.env
 
 echo USER=`whoami` >> ${PROJECT_PATH}/.env
 echo PROJECT_PATH=${PROJECT_PATH} >> ${PROJECT_PATH}/.env
