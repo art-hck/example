@@ -1,6 +1,6 @@
 #!/bin/bash
 
-PROJECT_PATH=`dirname $(dirname $(readlink -f $0))`
+PROJECT_PATH=`dirname $(readlink -f $0)`
 PROJECT_NAME=${PROJECT_PATH##*/}
 
 echo ""
