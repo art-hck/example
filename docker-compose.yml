@@ -2,7 +2,7 @@ version: '3.3'
 services:
   mysql:
     build: ./docker/mysql
-    ports: ["3306:3306"]
+    ports: ["${MYSQL_HOST_PORT:?}:${MYSQL_CONTAINER_PORT:?}"]
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASS:?}
       MYSQL_DATABASE: ${DB_NAME:?}
@@ -13,9 +13,9 @@ services:
       - ./docker/mysql/data:/var/lib/mysql
   nginx:
     build: ./docker/nginx
-    ports: ["80:8080", "443:443"]
+    ports: ["${NGINX_HOST_PORT:?}:${NGINX_CONTAINER_PORT:?}"]
     environment:
-      - NGINX_PORT=${NGINX_PORT:?}
+      - NGINX_PORT=${NGINX_CONTAINER_PORT:?}
       - NGINX_HOST=${NGINX_HOST:?}
     volumes:
       - ./src:${APP_PATH:?}
