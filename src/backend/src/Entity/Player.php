@@ -102,11 +102,6 @@ class Player
     private $contractExt;
 
     /**
-     * @ORM\Column(type="integer", nullable=true)
-     */
-    private $teamId;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $twitter;
@@ -130,6 +125,16 @@ class Player
      * @ORM\Column(type="datetime", nullable=true)
      */
     private $inTeam;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Country")
+     */
+    private $country;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Team", inversedBy="players")
+     */
+    private $team;
 
     public function getId(): ?int
     {
@@ -318,18 +323,6 @@ class Player
         return $this;
     }
 
-    public function getTeamId(): ?int
-    {
-        return $this->teamId;
-    }
-
-    public function setTeamId(?int $teamId): self
-    {
-        $this->teamId = $teamId;
-
-        return $this;
-    }
-
     public function getTwitter(): ?string
     {
         return $this->twitter;
@@ -398,6 +391,30 @@ class Player
     public function setInTeam(?\DateTimeInterface $inTeam): self
     {
         $this->inTeam = $inTeam;
+
+        return $this;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getTeam(): ?Team
+    {
+        return $this->team;
+    }
+
+    public function setTeam(?Team $team): self
+    {
+        $this->team = $team;
 
         return $this;
     }
