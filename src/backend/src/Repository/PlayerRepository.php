@@ -3,8 +3,11 @@
 namespace App\Repository;
 
 use App\Entity\Player;
+use App\Entity\Team;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\QueryException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method Player|null find($id, $lockMode = null, $lockVersion = null)
@@ -19,22 +22,26 @@ class PlayerRepository extends ServiceEntityRepository
         parent::__construct($registry, Player::class);
     }
 
-//    /**
-//     * @return Player[] Returns an array of Player objects
-//     */
-    /*
-    public function findByExampleField($value)
+
+    /**
+     * @param Team $team
+     * @param null|string $orderBy
+     * @param null|string $orderDirection
+     * @return mixed
+     */
+    public function findByTeam(Team $team, string $orderBy = 'id', string $orderDirection = 'ASC')
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
+        $query = $this->createQueryBuilder('player')
+            ->andWhere('player.team = :team')
+            ->setParameter('team', $team)
+            ->orderBy('player.' . $orderBy, $orderDirection)
             ->getQuery()
-            ->getResult()
         ;
+
+        $players = $query->getResult();
+
+        return $players;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Player
