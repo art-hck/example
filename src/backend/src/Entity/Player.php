@@ -189,7 +189,7 @@ class Player implements \JsonSerializable
         return $this;
     }
 
-    public function getBirthday(): \DateTimeInterface
+    public function getBirthday(): ?\DateTimeInterface
     {
         return $this->birthday;
     }
