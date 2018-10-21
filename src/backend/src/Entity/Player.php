@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Type\PlayerRole\PlayerRole;
 use App\Type\PlayerRole\PlayerRoleFactory;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 //use App\DBAL\Types\BasketballPositionType;
 use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
@@ -135,6 +137,28 @@ class Player implements \JsonSerializable
      * @ORM\ManyToOne(targetEntity="App\Entity\Team", inversedBy="players")
      */
     private $team;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Card", mappedBy="player")
+     */
+    private $cards;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Goal", mappedBy="player")
+     */
+    private $goals;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Assist", mappedBy="player", orphanRemoval=true)
+     */
+    private $assists;
+
+    public function __construct()
+    {
+        $this->cards = new ArrayCollection();
+        $this->goals = new ArrayCollection();
+        $this->assists = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -419,6 +443,67 @@ class Player implements \JsonSerializable
         return $this;
     }
 
+    /**
+     * @return Collection|Card[]
+     */
+    public function getCards(): Collection
+    {
+        return $this->cards;
+    }
+
+    public function addCard(Card $card): self
+    {
+        if (!$this->cards->contains($card)) {
+            $this->cards[] = $card;
+            $card->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeCard(Card $card): self
+    {
+        if ($this->cards->contains($card)) {
+            $this->cards->removeElement($card);
+            // set the owning side to null (unless already changed)
+            if ($card->getPlayer() === $this) {
+                $card->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Goal[]
+     */
+    public function getGoals(): Collection
+    {
+        return $this->goals;
+    }
+
+    public function addGoal(Goal $goal): self
+    {
+        if (!$this->goals->contains($goal)) {
+            $this->goals[] = $goal;
+            $goal->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGoal(Goal $goal): self
+    {
+        if ($this->goals->contains($goal)) {
+            $this->goals->removeElement($goal);
+            // set the owning side to null (unless already changed)
+            if ($goal->getPlayer() === $this) {
+                $goal->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
 
     public function jsonSerialize()
     {
@@ -448,5 +533,36 @@ class Player implements \JsonSerializable
             "country" => $this->getCountry(),
             "team" => $this->getTeam(),
         ];
+    }
+
+    /**
+     * @return Collection|Assist[]
+     */
+    public function getAssists(): Collection
+    {
+        return $this->assists;
+    }
+
+    public function addAssist(Assist $assist): self
+    {
+        if (!$this->assists->contains($assist)) {
+            $this->assists[] = $assist;
+            $assist->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeAssist(Assist $assist): self
+    {
+        if ($this->assists->contains($assist)) {
+            $this->assists->removeElement($assist);
+            // set the owning side to null (unless already changed)
+            if ($assist->getPlayer() === $this) {
+                $assist->setPlayer(null);
+            }
+        }
+
+        return $this;
     }
 }

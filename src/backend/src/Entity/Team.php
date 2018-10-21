@@ -58,9 +58,21 @@ class Team implements \JsonSerializable
      */
     private $players;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="homeTeam", orphanRemoval=true)
+     */
+    private $homeGames;
+
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="guestTeam")
+     */
+    private $guestGames;
+
     public function __construct()
     {
         $this->players = new ArrayCollection();
+        $this->homeGames = new ArrayCollection();
+        $this->guestGames = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -196,5 +208,67 @@ class Team implements \JsonSerializable
             "country" => $this->getCountry(),
             "players" => $this->getPlayers(),
         ];
+    }
+
+    /**
+     * @return Collection|Game[]
+     */
+    public function getHomeGames(): Collection
+    {
+        return $this->homeGames;
+    }
+
+    public function addHomeGame(Game $homeGame): self
+    {
+        if (!$this->homeGames->contains($homeGame)) {
+            $this->homeGames[] = $homeGame;
+            $homeGame->setHomeTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeHomeGame(Game $homeGame): self
+    {
+        if ($this->homeGames->contains($homeGame)) {
+            $this->homeGames->removeElement($homeGame);
+            // set the owning side to null (unless already changed)
+            if ($homeGame->getHomeTeam() === $this) {
+                $homeGame->setHomeTeam(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Game[]
+     */
+    public function getGuestGames(): Collection
+    {
+        return $this->guestGames;
+    }
+
+    public function addGuestGame(Game $guestGame): self
+    {
+        if (!$this->guestGames->contains($guestGame)) {
+            $this->guestGames[] = $guestGame;
+            $guestGame->setGuestTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGuestGame(Game $guestGame): self
+    {
+        if ($this->guestGames->contains($guestGame)) {
+            $this->guestGames->removeElement($guestGame);
+            // set the owning side to null (unless already changed)
+            if ($guestGame->getGuestTeam() === $this) {
+                $guestGame->setGuestTeam(null);
+            }
+        }
+
+        return $this;
     }
 }
