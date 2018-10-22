@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Serializable\PlayerSerializable;
 use App\Type\PlayerRole\PlayerRole;
 use App\Type\PlayerRole\PlayerRoleFactory;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -13,7 +14,7 @@ use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PlayerRepository")
  */
-class Player implements \JsonSerializable
+class Player extends PlayerSerializable
 {
     /**
      * @ORM\Id()
@@ -503,36 +504,6 @@ class Player implements \JsonSerializable
         }
 
         return $this;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            "id" => $this->getId(),
-            "tm_id" => $this->getTmId(),
-            "first_name" => $this->getFirstName(),
-            "last_name" => $this->getLastName(),
-            "native_name" => $this->getNativeName(),
-            "alias" => $this->getAlias(),
-            "birthday" => $this->getBirthday(),
-            "birthPlace" => $this->getBirthPlace(),
-            "foot" => $this->getFoot(),
-            "role" => $this->getRole(),
-            "height" => $this->getHeight(),
-            "number" => $this->getNumber(),
-            "avatar" => $this->getAvatar(),
-            "created" => $this->getCreated(),
-            "updated" => $this->getUpdated(),
-            "contract_until" => $this->getContractUntil(),
-            "contract_ext" => $this->getContractExt(),
-            "twitter" => $this->getTwitter(),
-            "facebook" => $this->getFacebook(),
-            "instagram" => $this->getInstagram(),
-            "agents" => $this->getAgents(),
-            "in_team" => $this->getInTeam(),
-            "country" => $this->getCountry(),
-            "team" => $this->getTeam(),
-        ];
     }
 
     /**

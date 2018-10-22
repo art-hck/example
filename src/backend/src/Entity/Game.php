@@ -30,12 +30,12 @@ class Game
     private $day;
 
     /**
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="date", nullable=true)
      */
     private $date;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer", nullable=true)
      */
     private $duration;
 
@@ -46,24 +46,28 @@ class Game
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Stadium", inversedBy="games")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @TODO: nullable must be false!!!!
      */
     private $stadium;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Referee", inversedBy="games")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $referee;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Team", inversedBy="homeGames")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @TODO: nullable must be false!!!!
      */
     private $homeTeam;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Team", inversedBy="guestGames")
+     * @ORM\JoinColumn(nullable=true)
+     * @TODO: nullable must be false!!!!
      */
     private $guestTeam;
 
@@ -86,6 +90,16 @@ class Game
      * @ORM\Column(type="datetime")
      */
     private $updated;
+
+    /**
+     * @ORM\Column(type="float", nullable=true)
+     */
+    private $attendance;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $tmId;
 
     public function __construct()
     {
@@ -288,6 +302,30 @@ class Game
     public function setUpdated(\DateTimeInterface $updated): self
     {
         $this->updated = $updated;
+
+        return $this;
+    }
+
+    public function getAttendance(): ?float
+    {
+        return $this->attendance;
+    }
+
+    public function setAttendance(?float $attendance): self
+    {
+        $this->attendance = $attendance;
+
+        return $this;
+    }
+
+    public function getTmId(): ?int
+    {
+        return $this->tmId;
+    }
+
+    public function setTmId(int $tmId): self
+    {
+        $this->tmId = $tmId;
 
         return $this;
     }

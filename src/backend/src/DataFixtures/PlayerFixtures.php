@@ -19,6 +19,7 @@ class PlayerFixtures extends Fixture implements ContainerAwareInterface, Depende
     
     public function load(ObjectManager $manager)
     {
+        return;
         try {
             gc_enable();
     

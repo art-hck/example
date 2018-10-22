@@ -24,11 +24,6 @@ class Stadium
     private $name;
 
     /**
-     * @ORM\Column(type="float")
-     */
-    private $attendance;
-
-    /**
      * @ORM\Column(type="integer")
      */
     private $tmId;
@@ -56,18 +51,6 @@ class Stadium
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getAttendance(): ?float
-    {
-        return $this->attendance;
-    }
-
-    public function setAttendance(float $attendance): self
-    {
-        $this->attendance = $attendance;
 
         return $this;
     }

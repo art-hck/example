@@ -16,6 +16,8 @@ class TeamFixtures extends Fixture implements ContainerAwareInterface
 
     public function load(ObjectManager $manager)
     {
+        return;
+
         try {
             gc_enable();
 
@@ -61,7 +63,7 @@ class TeamFixtures extends Fixture implements ContainerAwareInterface
         $this->container = $container;
     }
 
-    private static function convert($size)
+    public static function convert($size)
     {
         return @round($size / pow(1024, ($j = (int)floor(log($size, 1024)))), 2) . ' ' . ['b', 'kb', 'mb', 'gb', 'tb', 'pb'][$j];
     }

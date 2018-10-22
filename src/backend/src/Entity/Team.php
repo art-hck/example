@@ -46,7 +46,7 @@ class Team implements \JsonSerializable
     /**
      * @ORM\Column(type="integer")
      */
-    private $tm_id;
+    private $tmId;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Country")
@@ -142,12 +142,12 @@ class Team implements \JsonSerializable
 
     public function getTmId(): ?int
     {
-        return $this->tm_id;
+        return $this->tmId;
     }
 
-    public function setTmId(int $tm_id): self
+    public function setTmId(int $tmId): self
     {
-        $this->tm_id = $tm_id;
+        $this->tmId = $tmId;
 
         return $this;
     }
