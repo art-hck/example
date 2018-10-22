@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
+use App\Entity\Game;
 use App\Entity\Player;
 use App\Entity\Team;
+use App\Type\SeekCriteria\SeekCriteria;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query\QueryException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -37,15 +39,23 @@ class PlayerRepository extends ServiceEntityRepository
         ;
     }
 
-    /*
-    public function findOneBySomeField($value): ?Player
+    public function findByCriteria(SeekCriteria $seekCriteria)
     {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
+        $qb = $this->createQueryBuilder("p")
+            ->select('p')
+            ->leftJoin(Team::class, 't')
+            ->where('p.alias = 1')
+                //            ->where('g.date BETWEEN :from AND :to')
+//            ->setParameter('from', $seekCriteria->getDatePeriod()->getStartDate()->format('Y-m-d'))
+//            ->setParameter('to', $seekCriteria->getDatePeriod()->getEndDate()->format('Y-m-d'))
+            ->setMaxResults(10)
         ;
+
+        return $qb
+            ->getQuery()
+            ->getResult()
+            ;
     }
-    */
+    
+    
 }

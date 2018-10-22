@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Game;
 use App\Entity\Player;
 use App\Exception\BadRestRequestHttpException;
 use App\Form\GetPlayersType;
@@ -9,10 +10,12 @@ use App\Http\ErrorJsonResponse;
 
 use App\Service\RESTRequestService;
 use App\Service\ValidateService;
+use App\Type\SeekCriteria\SeekCriteria;
 use Doctrine\ORM\ORMException;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -139,6 +142,35 @@ class PlayerController extends Controller
         catch (\Exception $e) {
             return new ErrorJsonResponse($e->getMessage(), [], 500);
         }
+        
+        return new JsonResponse($players);
+    }
+
+
+    /**
+     * @Route("/test")
+     */   
+    public function getByDate()
+    {
+        try{
+            $criteria = new SeekCriteria();
+            $criteria->setDatePeriod(new \DatePeriod(new \DateTime('2003-09-16'), new \DateInterval("P2Y"), new \DateTime('2003-09-16') ));
+
+            $playersRepo = $this
+                ->getDoctrine()
+                ->getRepository(Player::class)
+            ;
+            $gamesRepo = $this
+                ->getDoctrine()
+                ->getRepository(Game::class)
+            ;
+        }
+        catch (\Exception $e) {
+            return new ErrorJsonResponse($e->getMessage(), [], 500);
+        }
+
+//        $games = $gamesRepo->findByCriteria($criteria);
+        $players = $playersRepo->findByCriteria($criteria);
         
         return new JsonResponse($players);
     }

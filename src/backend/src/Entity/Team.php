@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Serializable\TeamSerializable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TeamRepository")
  */
-class Team implements \JsonSerializable
+class Team extends TeamSerializable
 {
     /**
      * @ORM\Id()
@@ -193,21 +194,6 @@ class Team implements \JsonSerializable
         }
 
         return $this;
-    }
-
-    public function jsonSerialize()
-    {
-        return [
-            "id" => $this->getId(),
-            "name" => $this->getName(),
-            "alias" => $this->getAlias(),
-            "preview" => $this->getPreview(),
-            "created" => $this->getCreated(),
-            "updated" => $this->getUpdated(),
-            "tm_id" => $this->getTmId(),
-            "country" => $this->getCountry(),
-            "players" => $this->getPlayers(),
-        ];
     }
 
     /**

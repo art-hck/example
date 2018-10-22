@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Game;
+use App\Type\SeekCriteria\SeekCriteria;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -28,6 +29,21 @@ class GameRepository extends ServiceEntityRepository
         return $this->createQueryBuilder('game')
             ->andWhere('game.tmId IN (:ids)')
             ->setParameter('ids', $ids)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+    
+    public function findByCriteria(SeekCriteria $seekCriteria)
+    {
+        $qb = $this->createQueryBuilder("g")
+            ->where('g.date BETWEEN :from AND :to')
+            ->setParameter('from', $seekCriteria->getDatePeriod()->getStartDate()->format('Y-m-d'))
+            ->setParameter('to', $seekCriteria->getDatePeriod()->getEndDate()->format('Y-m-d'))
+            ->setMaxResults(1)
+        ;
+        
+        return $qb
             ->getQuery()
             ->getResult()
         ;

@@ -252,7 +252,7 @@ class Player extends PlayerSerializable
 
     public function getRole(): ?PlayerRole
     {
-        return PlayerRoleFactory::createFromString($this->role);
+        return PlayerRoleFactory::createFromId($this->role);
     }
 
     public function setRole(?PlayerRole $role): self

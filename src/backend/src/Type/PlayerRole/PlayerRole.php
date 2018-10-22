@@ -2,7 +2,9 @@
 
 namespace App\Type\PlayerRole;
 
-abstract class PlayerRole
+use App\Serializable\PlayerRoleSerializable;
+
+abstract class PlayerRole extends PlayerRoleSerializable
 {
     const id = null;
     const name = null;
