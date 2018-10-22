@@ -18,6 +18,8 @@ class Card
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Player", inversedBy="cards")
+     * @ORM\JoinColumn(nullable=true)
+     * @TODO: nullable must be false!!!!     * 
      */
     private $player;
 

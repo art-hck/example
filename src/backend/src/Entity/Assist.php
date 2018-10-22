@@ -18,7 +18,8 @@ class Assist
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Player", inversedBy="assists")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @TODO: nullable must be false!!!!     *
      */
     private $player;
 

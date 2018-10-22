@@ -18,6 +18,8 @@ class Goal
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Player", inversedBy="goals")
+     * @ORM\JoinColumn(nullable=true)
+     * @TODO: nullable must be false!!!!     *
      */
     private $player;
 

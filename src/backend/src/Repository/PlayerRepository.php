@@ -24,23 +24,17 @@ class PlayerRepository extends ServiceEntityRepository
 
 
     /**
-     * @param Team $team
-     * @param null|string $orderBy
-     * @param null|string $orderDirection
-     * @return mixed
+     * @param array $ids
+     * @return Player[]
      */
-    public function findByTeam(Team $team, string $orderBy = 'id', string $orderDirection = 'ASC')
+    public function findByIds(array $ids)
     {
-        $query = $this->createQueryBuilder('player')
-            ->andWhere('player.team = :team')
-            ->setParameter('team', $team)
-            ->orderBy('player.' . $orderBy, $orderDirection)
+        return $this->createQueryBuilder('player')
+            ->andWhere('player.tmId IN (:ids)')
+            ->setParameter('ids', $ids)
             ->getQuery()
+            ->getResult()
         ;
-
-        $players = $query->getResult();
-
-        return $players;
     }
 
     /*

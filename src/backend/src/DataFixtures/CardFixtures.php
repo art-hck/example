@@ -2,15 +2,9 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Assist;
 use App\Entity\Card;
 use App\Entity\Game;
-use App\Entity\Goal;
-use App\Entity\League;
 use App\Entity\Player;
-use App\Entity\Referee;
-use App\Entity\Stadium;
-use App\Entity\Team;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -23,80 +17,130 @@ class CardFixtures extends Fixture implements ContainerAwareInterface, Dependent
 {
     /** @type ContainerInterface */
     private $container;
+    /** @type EntityManager */
+    private $em;
 
     public function load(ObjectManager $manager)
     {
         return;
         try {
-            gc_enable();
+            $offset = 0;
+            $limit = 5000;
+            while (true) {
+                $gameIds = $playersIds = [];
+                $games = $this->getGames($limit, $offset);
 
-            /** @var EntityManager $em */
-            $em = $this->container->get('doctrine.orm.entity_manager');
-            $em->getConnection()->getConfiguration()->setSQLLogger(null);
-
-            $stmt = $em->getConnection()->executeQuery("SELECT * FROM tm.games");
-            $i = 0;
-            while ($row = $stmt->fetch()) {
-
-                $game = $manager->getRepository(Game::class)->findOneBy(["tmId" => $row["gameUID"]]);
-    
-                foreach(explode('][', $row['cards']) as $item) {
-                    if (empty($item)) continue;
-                    list($tmId, $time, $reason, $isYellow, $isRed) = array_pad(explode("_@", $item), 5, false);
-                    
-                    $player = $manager->getRepository(Player::class)->findOneBy(["tmId" => $tmId]);
-                    
-                    switch(true) {
-                        case $isYellow && $isRed: $type = 2; break;
-                        case $isRed: $type = 1; break;
-                        case $isYellow: $type = 0; break;
-                        default: $type = false;
+                foreach ($games as $game) {
+                    $gameIds[] = $game["gameUID"];
+                    foreach ($game["cards"] as $card) {
+                        $playersIds[] = $card[0];
                     }
-                    
-                    if($type !== false) {
-                        $card = (new Card())
-                            ->setPlayer($player)
-                            ->setTime($time)
-                            ->setGame($game)
-                            ->setType($type);
-    
-                        if ($reason !== "false") {
-                            $card->setReason($reason);
+                }
+
+                $playerEntities = $manager->getRepository(Player::class)->findByIds($playersIds);
+                $gameEntities = $manager->getRepository(Game::class)->findByIds($gameIds);
+
+                foreach ($games as $game) {
+
+                    /** @var Game[] $gameEntity */
+                    $gameEntity = array_filter($gameEntities, function (Game $gameEntity) use ($game) {
+                        return $gameEntity->getTmId() === (int)$game["gameUID"];
+                    });
+
+                    $gameEntity = array_shift($gameEntity);
+
+                    foreach ($game["cards"] as $card) {
+                        list($tmId, $time, $reason, $isYellow, $isRed) = $card;
+
+                        /** @var Player[] $playerEntity */
+                        $playerEntity = array_filter($playerEntities, function (Player $playerEntity) use ($tmId) {
+                            return $playerEntity->getTmId() == $tmId;
+                        });
+
+                        $playerEntity = array_shift($playerEntity);
+
+                        switch (true) {
+                            case $isYellow && $isRed: $type = 2; break;
+                            case $isRed: $type = 1; break;
+                            case $isYellow: $type = 0; break;
+                            default: $type = false;
                         }
-    
-                        $manager->persist($card);
+
+                        if ($type !== false) {
+                            $card = (new Card())
+                                ->setTime($time)
+                                ->setGame($gameEntity)
+                                ->setType($type)
+                            ;
+                            if ($playerEntity) {
+                                $card->setPlayer($playerEntity);
+                            }
+                            if ($reason !== "false") {
+                                $card->setReason($reason);
+                            }
+
+                            $manager->persist($card);
+                        }
                     }
                 }
 
-                if(++$i % 1000 == 0) {
-                    echo "Cleaning......." . PHP_EOL;
-                    $manager->flush();
-                    $manager->clear();
-                    gc_collect_cycles();
-                }
+                $offset += $limit;
 
-                echo "Index: " . $i . "\trowId:" . $row["id"] . "\t";
-                echo TeamFixtures::convert(memory_get_usage()) . PHP_EOL;
+                $manager->flush();
+                $manager->clear();
+                gc_collect_cycles();
+                echo "Offset ${offset}\t" . TeamFixtures::convert(memory_get_usage()) . PHP_EOL;
+
+                if (count($games) < $limit) break;
             }
-
 
             $manager->flush();
             $manager->clear();
 
         } catch (DBALException $e) {
-
             die($e->getMessage());
         }
 
     }
 
-    public function setContainer( ContainerInterface $container = null )
+    /**
+     * @param $limit
+     * @param $offset
+     * @return array
+     * @throws DBALException
+     */
+    private function getGames($limit = 0, $offset = 0)
+    {
+        gc_enable();
+        $this->em = $this->container->get('doctrine')->getManager();
+        $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
+        $sql = "SELECT `id`, `gameUID`, `cards` FROM tm.games";
+
+        if ($limit > 0 || $offset > 0)
+            $sql .= " LIMIT ${offset}, ${limit}";
+
+        $games = $this->em->getConnection()->executeQuery($sql)->fetchAll();
+
+        $games = array_map(function ($game) {
+            $game["cards"] = array_filter(array_map(function ($card) {
+                if ($card) {
+                    return array_pad(explode("_@", $card), 5, false);
+                }
+            }, explode('][', $game['cards'])));
+
+            return $game;
+        }, $games);
+
+        return $games;
+    }
+
+    public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }
 
     public function getDependencies(): array
     {
-        return [Game::class];
+        return [MainFixtures::class];
     }
 }

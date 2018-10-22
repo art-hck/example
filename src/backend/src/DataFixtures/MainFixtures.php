@@ -2,12 +2,8 @@
 
 namespace App\DataFixtures;
 
-use App\Entity\Assist;
-use App\Entity\Card;
 use App\Entity\Game;
-use App\Entity\Goal;
 use App\Entity\League;
-use App\Entity\Player;
 use App\Entity\Referee;
 use App\Entity\Stadium;
 use App\Entity\Team;
@@ -26,6 +22,7 @@ class MainFixtures extends Fixture implements ContainerAwareInterface, Dependent
 
     public function load(ObjectManager $manager)
     {
+        return;
         try {
             gc_enable();
 
