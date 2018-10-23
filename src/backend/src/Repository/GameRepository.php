@@ -33,20 +33,4 @@ class GameRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
-    
-    public function findByCriteria(SeekCriteria $seekCriteria)
-    {
-        $qb = $this->createQueryBuilder("g")
-            ->where('g.date BETWEEN :from AND :to')
-            ->setParameter('from', $seekCriteria->getDatePeriod()->getStartDate()->format('Y-m-d'))
-            ->setParameter('to', $seekCriteria->getDatePeriod()->getEndDate()->format('Y-m-d'))
-            ->setMaxResults(1)
-        ;
-        
-        return $qb
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-
 }

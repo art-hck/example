@@ -4,12 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Game;
 use App\Entity\Player;
-use App\Entity\Team;
 use App\Type\SeekCriteria\SeekCriteria;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\Query\QueryException;
 use Symfony\Bridge\Doctrine\RegistryInterface;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * @method Player|null find($id, $lockMode = null, $lockVersion = null)
@@ -41,21 +38,32 @@ class PlayerRepository extends ServiceEntityRepository
 
     public function findByCriteria(SeekCriteria $seekCriteria)
     {
-        $qb = $this->createQueryBuilder("p")
-            ->select('p')
-            ->leftJoin(Team::class, 't')
-            ->where('p.alias = 1')
-                //            ->where('g.date BETWEEN :from AND :to')
-//            ->setParameter('from', $seekCriteria->getDatePeriod()->getStartDate()->format('Y-m-d'))
-//            ->setParameter('to', $seekCriteria->getDatePeriod()->getEndDate()->format('Y-m-d'))
-            ->setMaxResults(10)
+        $qb = $this->createQueryBuilder('p')
+            ->join(Game::class, 'g', 'WITH', 'g.homeTeam = p.team OR g.guestTeam = p.team')
         ;
+        
+        if($seekCriteria->getDatePeriod()) {
+            $qb->where('g.date BETWEEN :from AND :to')
+                ->setParameter('from', $seekCriteria->getDatePeriod()->getStartDate()->format("Y-m-d"))
+                ->setParameter('to', $seekCriteria->getDatePeriod()->getEndDate()->format("Y-m-d"))
+            ;
+        }
 
+        if($seekCriteria->getLeagueId()) {
+            $qb->andWhere('g.league=:leagueId')
+                ->setParameter('leagueId', $seekCriteria->getLeagueId())
+            ;
+        }
+        
+        if($seekCriteria->getTeamId()) {
+            $qb->andWhere('p.team=:teamId')
+                ->setParameter('teamId', $seekCriteria->getTeamId())
+            ;
+        }
+        
         return $qb
             ->getQuery()
             ->getResult()
-            ;
+        ;
     }
-    
-    
 }

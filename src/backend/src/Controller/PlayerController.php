@@ -2,10 +2,10 @@
 
 namespace App\Controller;
 
-use App\Entity\Game;
 use App\Entity\Player;
 use App\Exception\BadRestRequestHttpException;
 use App\Form\GetPlayersType;
+use App\Form\PlayersFilterType;
 use App\Http\ErrorJsonResponse;
 
 use App\Service\RESTRequestService;
@@ -15,7 +15,6 @@ use Doctrine\ORM\ORMException;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -89,7 +88,7 @@ class PlayerController extends Controller
      *     description="Offset"
      * )
      * 
-     * @SWG\Tag(name="Team")
+     * @SWG\Tag(name="Player")
      *
      * @SWG\Response(
      *     response=200,
@@ -148,30 +147,89 @@ class PlayerController extends Controller
 
 
     /**
-     * @Route("/test")
-     */   
-    public function getByDate()
+     * /**
+     *
+     * @SWG\Parameter(
+     *     name="dateFrom",
+     *     in="query",
+     *     type="string",
+     *     description="Date from"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="dateTo",
+     *     in="query",
+     *     type="string",
+     *     description="Date to"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="leagueId",
+     *     in="query",
+     *     type="integer",
+     *     description="League id"
+     * )
+     *
+     * @SWG\Parameter(
+     *     name="teamId",
+     *     in="query",
+     *     type="integer",
+     *     description="Team id"
+     * )
+     *
+     * @SWG\Response(
+     *     response=200,
+     *     description="Returns player"
+     * )
+     *
+     * @SWG\Response(
+     *     response=404,
+     *     description="When no player found"
+     * )
+     *
+     * @SWG\Tag(name="Player")
+     * @Route("/players/filter", methods={"GET"})
+     * @param Request $request
+     * @param ValidateService $validateService
+     * @param RESTRequestService $restService
+     * @return ErrorJsonResponse|JsonResponse
+     */
+    public function getPlayersFilter(Request $request, ValidateService $validateService, RESTRequestService $restService)
     {
-        try{
-            $criteria = new SeekCriteria();
-            $criteria->setDatePeriod(new \DatePeriod(new \DateTime('2003-09-16'), new \DateInterval("P2Y"), new \DateTime('2003-09-16') ));
+        try {
+            $data = $validateService
+                ->validate($request, PlayersFilterType::class, $restService->getAllParams($request))
+                ->getData()
+            ;
 
-            $playersRepo = $this
+            $criteria = new SeekCriteria();
+
+            if ($data["dateFrom"] && $data["dateTo"]) {
+                $criteria->setDatePeriod($data["dateFrom"], $data["dateTo"]);
+            }
+
+            if($data["leagueId"]) {
+                $criteria->setLeagueId($data["leagueId"]);
+            }
+            
+            if($data["teamId"]) {
+                $criteria->setTeamId($data["teamId"]);
+            }
+
+            $players = $this
                 ->getDoctrine()
                 ->getRepository(Player::class)
+                ->findByCriteria($criteria)
             ;
-            $gamesRepo = $this
-                ->getDoctrine()
-                ->getRepository(Game::class)
-            ;
-        }
-        catch (\Exception $e) {
+
+        } catch (BadRestRequestHttpException $e) {
+            return new ErrorJsonResponse($e->getMessage(), $e->getErrors(), $e->getStatusCode());
+        } catch (HttpException $e) {
+            return new ErrorJsonResponse($e->getMessage(), [], $e->getStatusCode());
+        } catch (\Exception $e) {
             return new ErrorJsonResponse($e->getMessage(), [], 500);
         }
 
-//        $games = $gamesRepo->findByCriteria($criteria);
-        $players = $playersRepo->findByCriteria($criteria);
-        
         return new JsonResponse($players);
     }
 }
