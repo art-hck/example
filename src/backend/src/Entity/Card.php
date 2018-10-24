@@ -34,6 +34,7 @@ class Card
     private $reason;
 
     /**
+     * 0==Yellow, 1==Red, 2==Y+R
      * @ORM\Column(type="integer")
      */
     private $type;

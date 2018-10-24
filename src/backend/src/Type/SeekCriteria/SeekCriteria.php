@@ -6,20 +6,22 @@ class SeekCriteria
 {
     private $datePeriod;
     private $leagueId;
-    private $minGoals;
-    private $maxGoals;
     private $teamId;
-    private $minTime;
-    private $maxTime;
+    private $goalsRange;
+    private $playTimeRange;
+    private $cardsRange;
+    private $cardsType;
 
     public function getDatePeriod(): ?\DatePeriod
     {
         return $this->datePeriod;
     }
 
-    public function setDatePeriod(\DateTime $dateFrom, \DateTime $dateTo)
+    public function setDatePeriod(\DateTime $dateFrom, \DateTime $dateTo): self
     {
         $this->datePeriod = new \DatePeriod($dateFrom, new \DateInterval("P2Y"), $dateTo);
+
+        return $this;
     }
 
     public function getLeagueId()
@@ -27,23 +29,11 @@ class SeekCriteria
         return $this->leagueId;
     }
 
-    public function setLeagueId(int $leagueId): void
+    public function setLeagueId(?int $leagueId): self
     {
         $this->leagueId = $leagueId;
-    }
 
-    public function getGoals(): ?array
-    {
-        return [
-            $this->minGoals,
-            $this->maxGoals
-        ];
-    }
-
-    public function setGoals(int $min = null, int $max = null)
-    {
-        $this->minGoals = $min;
-        $this->maxGoals = $max;
+        return $this;
     }
 
     public function getTeamId(): ?int
@@ -51,22 +41,58 @@ class SeekCriteria
         return $this->teamId;
     }
 
-    public function setTeamId(?int $teamId): void
+    public function setTeamId(?int $teamId): self
     {
         $this->teamId = $teamId;
+
+        return $this;
     }
 
-    public function getTime(): array 
+    public function getCardsType(): ?int 
     {
-        return [
-            $this->minTime,
-            $this->maxTime
-        ];
+        return $this->cardsType;
     }
 
-    public function setTime(int $min, int $max): void
+    public function setCardsType(?int $cardsType): self
     {
-        $this->minTime = $min;
-        $this->maxTime = $max;
+        $this->cardsType = $cardsType;
+
+        return $this;
+    }
+
+    public function getGoalsRange(): ?SeekCriteriaRange
+    {
+        return $this->goalsRange;
+    }
+
+    public function setGoalsRange(?int $min, ?int $max): self
+    {
+        $this->goalsRange = new SeekCriteriaRange($min, $max);
+        
+        return $this;
+    }
+
+    public function getPlayTimeRange(): ?SeekCriteriaRange
+    {
+        return $this->playTimeRange;
+    }
+    
+    public function setPlayTimeRange(?int $min, ?int $max): self 
+    {
+        $this->playTimeRange = new SeekCriteriaRange($min, $max);
+        
+        return $this;
+    }
+
+    public function getCardsRange(): ?SeekCriteriaRange
+    {
+        return $this->cardsRange;
+    }
+
+    public function setCardsRange(?int $min, ?int $max): self
+    {
+        $this->cardsRange = new SeekCriteriaRange($min, $max);
+        
+        return $this;
     }
 }

@@ -154,11 +154,17 @@ class Player extends PlayerSerializable
      */
     private $assists;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Substitution", mappedBy="player")
+     */
+    private $substitutions;
+
     public function __construct()
     {
         $this->cards = new ArrayCollection();
         $this->goals = new ArrayCollection();
         $this->assists = new ArrayCollection();
+        $this->substitutions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -531,6 +537,37 @@ class Player extends PlayerSerializable
             // set the owning side to null (unless already changed)
             if ($assist->getPlayer() === $this) {
                 $assist->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Substitution[]
+     */
+    public function getSubstitutions(): Collection
+    {
+        return $this->substitutions;
+    }
+
+    public function addSubstitution(Substitution $substitution): self
+    {
+        if (!$this->substitutions->contains($substitution)) {
+            $this->substitutions[] = $substitution;
+            $substitution->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubstitution(Substitution $substitution): self
+    {
+        if ($this->substitutions->contains($substitution)) {
+            $this->substitutions->removeElement($substitution);
+            // set the owning side to null (unless already changed)
+            if ($substitution->getPlayer() === $this) {
+                $substitution->setPlayer(null);
             }
         }
 

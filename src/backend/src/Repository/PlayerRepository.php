@@ -36,23 +36,36 @@ class PlayerRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findByCriteria(SeekCriteria $seekCriteria)
+    public function findByCriteria(SeekCriteria $seekCriteria, string $orderBy="id", string $orderDirection="ASC", int $offset = 0, int $limit = 100)
     {
-        $qb = $this->createQueryBuilder('p')
-            ->join(Game::class, 'g', 'WITH', 'g.homeTeam = p.team OR g.guestTeam = p.team')
-        ;
-        
-        if($seekCriteria->getDatePeriod()) {
-            $qb->where('g.date BETWEEN :from AND :to')
-                ->setParameter('from', $seekCriteria->getDatePeriod()->getStartDate()->format("Y-m-d"))
-                ->setParameter('to', $seekCriteria->getDatePeriod()->getEndDate()->format("Y-m-d"))
-            ;
+        switch ($orderBy) {
+            case "goals": $orderBy="COUNT(goals.id)"; break;
+            case "cards": $orderBy="COUNT(cards.id)"; break;
+            case "playTime": $orderBy="SUM(s.playTime)"; break;
+            default: $orderBy = "p." . $orderBy; break;
         }
 
-        if($seekCriteria->getLeagueId()) {
-            $qb->andWhere('g.league=:leagueId')
-                ->setParameter('leagueId', $seekCriteria->getLeagueId())
-            ;
+        $qb = $this->createQueryBuilder('p')
+            ->groupBy('p.id')
+            ->orderBy($orderBy, $orderDirection)
+            ->setFirstResult($offset)
+            ->setMaxResults($limit)
+        ;
+        
+        if($seekCriteria->getDatePeriod() || $seekCriteria->getLeagueId()) {
+            $qb->join(Game::class, 'g', 'WITH', 'g.homeTeam = p.team OR g.guestTeam = p.team');
+            if ($seekCriteria->getDatePeriod()) {
+                $qb->andWhere('g.date BETWEEN :from AND :to')
+                    ->setParameter('from', $seekCriteria->getDatePeriod()->getStartDate()->format("Y-m-d"))
+                    ->setParameter('to', $seekCriteria->getDatePeriod()->getEndDate()->format("Y-m-d"))
+                ;
+            }
+
+            if ($seekCriteria->getLeagueId()) {
+                $qb->andWhere('g.league=:leagueId')
+                    ->setParameter('leagueId', $seekCriteria->getLeagueId())
+                ;
+            }
         }
         
         if($seekCriteria->getTeamId()) {
@@ -60,7 +73,43 @@ class PlayerRepository extends ServiceEntityRepository
                 ->setParameter('teamId', $seekCriteria->getTeamId())
             ;
         }
+
+        if($seekCriteria->getGoalsRange()) {
+            $qb
+                ->join('p.goals', 'goals')
+                ->groupBy('p.id')
+                ->having('COUNT(goals.id) BETWEEN :minGoals AND :maxGoals')
+                ->setParameter('minGoals', $seekCriteria->getGoalsRange()->min)
+                ->setParameter('maxGoals', $seekCriteria->getGoalsRange()->max)
+            ;
+        }
+
+        if($seekCriteria->getCardsRange()) {
+            $qb
+                ->join('p.cards', 'cards')
+                ->having('COUNT(cards.id) BETWEEN :minCards AND :maxCards')
+                ->setParameter('minCards', $seekCriteria->getCardsRange()->min)
+                ->setParameter('maxCards', $seekCriteria->getCardsRange()->max)
+            ;
+            
+            if($seekCriteria->getCardsType()) {
+                $qb->andWhere('cards.type=:cardsType')
+                    ->setParameter('cardsType', $seekCriteria->getCardsType())
+                ;
+            }
+        }
         
+        if($seekCriteria->getPlayTimeRange()) {
+            $qb
+                ->addSelect('SUM(s.playTime)')
+                ->join('p.substitutions', 's')
+                ->having('SUM(s.playTime) BETWEEN :minPlayTime AND :maxPlayTime')
+                ->setParameter('minPlayTime', $seekCriteria->getPlayTimeRange()->min)
+                ->setParameter('maxPlayTime', $seekCriteria->getPlayTimeRange()->max)                
+            ;
+        }
+
+
         return $qb
             ->getQuery()
             ->getResult()

@@ -11,6 +11,7 @@ use App\Http\ErrorJsonResponse;
 use App\Service\RESTRequestService;
 use App\Service\ValidateService;
 use App\Type\SeekCriteria\SeekCriteria;
+use App\Type\SeekCriteria\SeekCriteriaRange;
 use Doctrine\ORM\ORMException;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -208,18 +209,28 @@ class PlayerController extends Controller
                 $criteria->setDatePeriod($data["dateFrom"], $data["dateTo"]);
             }
 
-            if($data["leagueId"]) {
-                $criteria->setLeagueId($data["leagueId"]);
+            $criteria->setLeagueId($data["leagueId"]);
+            $criteria->setTeamId($data["teamId"]);
+            
+            if($data["minGoals"] && $data["maxGoals"]) {
+                $criteria->setGoalsRange($data["minGoals"], $data["maxGoals"]);
             }
             
-            if($data["teamId"]) {
-                $criteria->setTeamId($data["teamId"]);
+            if($data["minCards"] && $data["maxCards"]) {
+                $criteria
+                    ->setCardsRange($data["minCards"], $data["maxCards"])
+                    ->setCardsType($data["cardsType"])
+                ;
             }
+
+            if($data["minPlayTime"] && $data["maxPlayTime"]) {
+                $criteria->setPlayTimeRange($data["minPlayTime"], $data["maxPlayTime"]);
+            }            
 
             $players = $this
                 ->getDoctrine()
                 ->getRepository(Player::class)
-                ->findByCriteria($criteria)
+                ->findByCriteria($criteria, $data["orderBy"], $data["orderDirection"], $data["offset"], $data["limit"])
             ;
 
         } catch (BadRestRequestHttpException $e) {

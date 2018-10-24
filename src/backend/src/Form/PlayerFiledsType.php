@@ -9,7 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PlayerFiledsType extends AbstractType
 {
-    private $availableFields = ["id", "birthday", "birthPlace", "foot", "role", "height", "number", "country", "team"];
+    private $availableFields = ["id", "birthday", "birthPlace", "foot", "role", "height", "number", "country", "team", "goals", "cards", "playTime"];
 
     public function configureOptions(OptionsResolver $resolver)
     {

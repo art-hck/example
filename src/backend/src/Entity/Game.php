@@ -102,10 +102,16 @@ class Game extends GameSerializable
      */
     private $tmId;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Substitution", mappedBy="game")
+     */
+    private $substitutions;
+
     public function __construct()
     {
         $this->goals = new ArrayCollection();
         $this->cards = new ArrayCollection();
+        $this->substitutions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -327,6 +333,37 @@ class Game extends GameSerializable
     public function setTmId(int $tmId): self
     {
         $this->tmId = $tmId;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Substitution[]
+     */
+    public function getSubstitutions(): Collection
+    {
+        return $this->substitutions;
+    }
+
+    public function addSubstitution(Substitution $substitution): self
+    {
+        if (!$this->substitutions->contains($substitution)) {
+            $this->substitutions[] = $substitution;
+            $substitution->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeSubstitution(Substitution $substitution): self
+    {
+        if ($this->substitutions->contains($substitution)) {
+            $this->substitutions->removeElement($substitution);
+            // set the owning side to null (unless already changed)
+            if ($substitution->getGame() === $this) {
+                $substitution->setGame(null);
+            }
+        }
 
         return $this;
     }

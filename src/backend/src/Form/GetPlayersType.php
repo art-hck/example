@@ -23,8 +23,8 @@ class GetPlayersType extends AbstractType
                 "invalid_message" => "Available values: `ASC`, `DESC`",
                 "empty_data" => "ASC"
             ])
-            ->add('limit', IntegerType::class, ["empty_data" => 20]) // @TODO: always invalid if not defined!
-            ->add('offset', IntegerType::class, ["empty_data" => 0]) // @TODO: always invalid if not defined!
+            ->add('limit', IntegerType::class, ["empty_data" => "20"])
+            ->add('offset', IntegerType::class, ["empty_data" => "0"])
         ;
     }
 }
