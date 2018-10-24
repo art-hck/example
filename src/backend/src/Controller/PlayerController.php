@@ -61,36 +61,11 @@ class PlayerController extends Controller
 
     /**
      *
-     * @SWG\Parameter(
-     *     name="orderBy",
-     *     in="query",
-     *     type="string",
-     *     description="Order by"
-     * )
-     *
-     * @SWG\Parameter(
-     *     name="orderDirection",
-     *     in="query",
-     *     type="string",
-     *     description="Order direction"
-     * )
-     * 
-     * @SWG\Parameter(
-     *     name="limit",
-     *     in="query",
-     *     type="integer",
-     *     description="Limit"
-     * )
-     *      
-     * @SWG\Parameter(
-     *     name="offset",
-     *     in="query",
-     *     type="integer",
-     *     description="Offset"
-     * )
-     * 
+     * @SWG\Parameter(name="orderBy", in="query", type="string", description="Order by")
+     * @SWG\Parameter(name="orderDirection", in="query", type="string", description="Order direction")
+     * @SWG\Parameter(name="limit", in="query", type="integer", description="Limit")
+     * @SWG\Parameter(name="offset", in="query", type="integer", description="Offset")
      * @SWG\Tag(name="Player")
-     *
      * @SWG\Response(
      *     response=200,
      *     description="Returns array of players",
@@ -99,11 +74,7 @@ class PlayerController extends Controller
      *         @SWG\Items(ref=@Model(type=App\Entity\Player::class))
      *     )
      * )
-     *
-     * @SWG\Response(
-     *     response=404,
-     *     description="When no players|team found"
-     * )
+     * @SWG\Response(response=404, description="When no players|team found")
      * 
      * @Route("/players/by/{field}/{value}", requirements={"by"="\d+"}, methods={"GET"})
      *
@@ -148,46 +119,24 @@ class PlayerController extends Controller
 
 
     /**
-     * /**
-     *
-     * @SWG\Parameter(
-     *     name="dateFrom",
-     *     in="query",
-     *     type="string",
-     *     description="Date from"
-     * )
-     *
-     * @SWG\Parameter(
-     *     name="dateTo",
-     *     in="query",
-     *     type="string",
-     *     description="Date to"
-     * )
-     *
-     * @SWG\Parameter(
-     *     name="leagueId",
-     *     in="query",
-     *     type="integer",
-     *     description="League id"
-     * )
-     *
-     * @SWG\Parameter(
-     *     name="teamId",
-     *     in="query",
-     *     type="integer",
-     *     description="Team id"
-     * )
-     *
-     * @SWG\Response(
-     *     response=200,
-     *     description="Returns player"
-     * )
-     *
-     * @SWG\Response(
-     *     response=404,
-     *     description="When no player found"
-     * )
-     *
+     * Getting players by dates of games, scored balls, cards received, game time etc.
+     * 
+     * @SWG\Parameter(name="dateFrom", in="query", type="string", description="")
+     * @SWG\Parameter(name="dateTo", in="query", type="string", description="")
+     * @SWG\Parameter(name="leagueId", in="query", type="integer", description="")
+     * @SWG\Parameter(name="teamId", in="query", type="integer", description="")
+     * @SWG\Parameter(name="minGoals", in="query", type="integer", description="")
+     * @SWG\Parameter(name="maxGoals", in="query", type="integer", description="")
+     * @SWG\Parameter(name="minCards", in="query", type="integer", description="")
+     * @SWG\Parameter(name="maxCards", in="query", type="integer", description="")
+     * @SWG\Parameter(name="cardsType", in="query", type="integer", description="")
+     * @SWG\Parameter(name="minPlayTime", in="query", type="integer", description="")
+     * @SWG\Parameter(name="maxPlayTime", in="query", type="integer", description="")
+     * @SWG\Parameter(name="orderBy", in="query", type="string", description="")
+     * @SWG\Parameter(name="orderDirection", in="query", type="string", description="")
+     * @SWG\Parameter(name="offset", in="query", type="integer", description="")
+     * @SWG\Parameter(name="limit", in="query", type="integer", description="")
+     * @SWG\Response(response=200, description="Returns players")
      * @SWG\Tag(name="Player")
      * @Route("/players/filter", methods={"GET"})
      * @param Request $request

@@ -23,9 +23,6 @@ class PlayersFilterType extends AbstractType
             ->add('minGoals', IntegerType::class)
             ->add('maxGoals', IntegerType::class)
 
-            ->add('minTime', IntegerType::class) // TODO!
-            ->add('maxTime', IntegerType::class)
-
             ->add('minCards', IntegerType::class)
             ->add('maxCards', IntegerType::class)
             ->add('cardsType', IntegerType::class)
@@ -39,8 +36,8 @@ class PlayersFilterType extends AbstractType
                 "invalid_message" => "Available values: `ASC`, `DESC`",
                 "empty_data" => "ASC"
             ])
-            ->add('limit', IntegerType::class, ["empty_data" => "100"])
             ->add('offset', IntegerType::class, ["empty_data" => "0"])
+            ->add('limit', IntegerType::class, ["empty_data" => "100"])
         ;
     }
 }
