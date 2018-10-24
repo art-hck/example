@@ -3,8 +3,7 @@ import {RouteHelperService} from "../../Service/RouteHelperService";
 
 @Component({
     selector: "application",
-    templateUrl: "./template.pug",
-    styleUrls: ["./style.shadow.scss"]
+    templateUrl: "./template.pug"
 })
 export class ApplicationComponent {
     

@@ -7,6 +7,7 @@ import {
     Router
 } from "@angular/router";
 import {PlatformService} from "./PlatformService";
+import {filter, map, mergeMap} from "rxjs/internal/operators";
 
 @Injectable()
 export class RouteHelperService {
@@ -24,16 +25,16 @@ export class RouteHelperService {
     }
 
     public metaTagsWatcher(): void {
-        this.router.events
-            .filter(event => event instanceof NavigationEnd)
-            .map(() => this.activatedRoute)
-            .map(route => {
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd),
+            map(() => this.activatedRoute),
+            map(route => {
                 while (route.firstChild) route = route.firstChild;
                 return route;
-            })
-            .filter(route => route.outlet === "primary")
-            .mergeMap(route => route.data)
-            .subscribe((data) => {
+            }),
+            filter(route => route.outlet === "primary"),
+            mergeMap(route => route.data)
+        ).subscribe((data) => {
                 if(data["title"]) {
                     if(this.pl.isPlatformServer()) {
                         this.document.title = data["title"];
