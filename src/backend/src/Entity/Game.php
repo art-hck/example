@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GameRepository")
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="IDX_DATE", columns={"date"})
+ * })
  */
 class Game extends GameSerializable
 {

@@ -3,7 +3,6 @@
 namespace App\Repository;
 
 use App\Entity\Game;
-use App\Type\SeekCriteria\SeekCriteria;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 

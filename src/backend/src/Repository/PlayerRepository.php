@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Game;
 use App\Entity\Player;
-use App\Type\SeekCriteria\SeekCriteria;
+use App\Type\SeekCriteria\Types\SeekCriteriaPlayerFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -21,7 +21,6 @@ class PlayerRepository extends ServiceEntityRepository
         parent::__construct($registry, Player::class);
     }
 
-
     /**
      * @param array $ids
      * @return Player[]
@@ -36,80 +35,106 @@ class PlayerRepository extends ServiceEntityRepository
         ;
     }
 
-    public function findByCriteria(SeekCriteria $seekCriteria, string $orderBy="id", string $orderDirection="ASC", int $offset = 0, int $limit = 100)
+    public function findByCriteria(SeekCriteriaPlayerFilter $seekCriteria)
     {
-        switch ($orderBy) {
+        switch ($seekCriteria->getOrderBy()) {
             case "goals": $orderBy="COUNT(goals.id)"; break;
             case "cards": $orderBy="COUNT(cards.id)"; break;
             case "playTime": $orderBy="SUM(s.playTime)"; break;
-            default: $orderBy = "p." . $orderBy; break;
+            default: $orderBy = "p." . $seekCriteria->getOrderBy(); break;
         }
 
         $qb = $this->createQueryBuilder('p')
             ->groupBy('p.id')
-            ->orderBy($orderBy, $orderDirection)
-            ->setFirstResult($offset)
-            ->setMaxResults($limit)
+            ->orderBy($orderBy, $seekCriteria->getOrderDirection())
+            ->setFirstResult($seekCriteria->getOffset())
+            ->setMaxResults($seekCriteria->getLimit())
         ;
-        
-        if($seekCriteria->getDatePeriod() || $seekCriteria->getLeagueId()) {
-            $qb->join(Game::class, 'g', 'WITH', 'g.homeTeam = p.team OR g.guestTeam = p.team');
-            if ($seekCriteria->getDatePeriod()) {
-                $qb->andWhere('g.date BETWEEN :from AND :to')
-                    ->setParameter('from', $seekCriteria->getDatePeriod()->getStartDate()->format("Y-m-d"))
-                    ->setParameter('to', $seekCriteria->getDatePeriod()->getEndDate()->format("Y-m-d"))
-                ;
-            }
 
-            if ($seekCriteria->getLeagueId()) {
-                $qb->andWhere('g.league=:leagueId')
-                    ->setParameter('leagueId', $seekCriteria->getLeagueId())
-                ;
-            }
+        // DATE FILTER
+        if($seekCriteria->getDatePeriod() || $seekCriteria->getLeagueId()) { 
+            $qb->join(Game::class, 'g', 'WITH', 'g.homeTeam = p.team OR g.guestTeam = p.team');
+
         }
+
+        if ($seekCriteria->getDatePeriod()) {
+            /** @var \DateTime $dateFrom */
+            $dateFrom = $seekCriteria->getDatePeriod()->min;
+            /** @var \DateTime $dateTo */
+            $dateTo = $seekCriteria->getDatePeriod()->max;
+
+            $qb
+                ->andHaving('MIN(g.date) >= :dateFrom OR :dateFrom IS NULL')
+                ->andHaving('MAX(g.date) <= :dateTo OR :dateTo IS NULL')
+                ->setParameter('dateFrom', $dateFrom ? $dateFrom->format(DATE_ISO8601) : null)
+                ->setParameter('dateTo', $dateTo ? $dateTo->format(DATE_ISO8601): null)
+            ;
+        } // END DATE FILTER
         
-        if($seekCriteria->getTeamId()) {
+
+        // LEAGUE FILTER
+        if ($seekCriteria->getLeagueId()) { 
+            $qb->andHaving('g.league=:leagueId')
+                ->setParameter('leagueId', $seekCriteria->getLeagueId())
+            ;
+        } // END LEAGUE FILTER
+        
+
+        // TEAM FILTER
+        if($seekCriteria->getTeamId()) { 
             $qb->andWhere('p.team=:teamId')
                 ->setParameter('teamId', $seekCriteria->getTeamId())
             ;
-        }
-
+        } // END TEAM FILTER
+        
+        
+        // GOALS FILTER
         if($seekCriteria->getGoalsRange()) {
             $qb
                 ->join('p.goals', 'goals')
-                ->groupBy('p.id')
-                ->having('COUNT(goals.id) BETWEEN :minGoals AND :maxGoals')
+                ->andHaving('COUNT(goals.id) >= :minGoals OR :minGoals IS NULL')
+                ->andHaving('COUNT(goals.id) <= :maxGoals OR :maxGoals IS NULL')
                 ->setParameter('minGoals', $seekCriteria->getGoalsRange()->min)
                 ->setParameter('maxGoals', $seekCriteria->getGoalsRange()->max)
             ;
+        } // END GOALS FILTER
+        
+
+        // CARDS FILTER
+        if($seekCriteria->getCardsRange() || $seekCriteria->getCardsType()) {
+            $qb->join('p.cards', 'cards');
         }
 
         if($seekCriteria->getCardsRange()) {
             $qb
-                ->join('p.cards', 'cards')
-                ->having('COUNT(cards.id) BETWEEN :minCards AND :maxCards')
+                ->andHaving('COUNT(cards.id) >= :minCards OR :minCards IS NULL')
+                ->andHaving('COUNT(cards.id) <= :maxCards OR :maxCards IS NULL')
                 ->setParameter('minCards', $seekCriteria->getCardsRange()->min)
                 ->setParameter('maxCards', $seekCriteria->getCardsRange()->max)
             ;
-            
-            if($seekCriteria->getCardsType()) {
-                $qb->andWhere('cards.type=:cardsType')
-                    ->setParameter('cardsType', $seekCriteria->getCardsType())
-                ;
-            }
         }
         
-        if($seekCriteria->getPlayTimeRange()) {
-            $qb
-                ->addSelect('SUM(s.playTime)')
-                ->join('p.substitutions', 's')
-                ->having('SUM(s.playTime) BETWEEN :minPlayTime AND :maxPlayTime')
-                ->setParameter('minPlayTime', $seekCriteria->getPlayTimeRange()->min)
-                ->setParameter('maxPlayTime', $seekCriteria->getPlayTimeRange()->max)                
+        if($seekCriteria->getCardsType()) {
+            $qb->andWhere('cards.type=:cardsType')
+                ->setParameter('cardsType', $seekCriteria->getCardsType())
             ;
-        }
+        } // END CARDS FILTER
+        
+        // PLAY TIME FILTER
+        if($seekCriteria->getPlayTimeRange()) { 
+            $qb
+                ->join('p.substitutions', 's')
+                ->andHaving('SUM(s.playTime) >= :minPlayTime OR :minPlayTime IS NULL')
+                ->andHaving('SUM(s.playTime) <= :maxPlayTime OR :maxPlayTime IS NULL')
+                ->setParameter('minPlayTime', $seekCriteria->getPlayTimeRange()->min)
+                ->setParameter('maxPlayTime', $seekCriteria->getPlayTimeRange()->max)
+            ;
+        } // END PLAY TIME FILTER
 
-
+        dump($qb
+            ->getQuery()
+            ->getResult());
+        die;
         return $qb
             ->getQuery()
             ->getResult()

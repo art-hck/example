@@ -9,15 +9,15 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PlayerFiledsType extends AbstractType
 {
-    private $availableFields = ["id", "birthday", "birthPlace", "foot", "role", "height", "number", "country", "team", "goals", "cards", "playTime"];
+    protected const availableFields = ["id", "birthday", "birthPlace", "foot", "role", "height", "number", "country", "team", "goals", "cards", "playTime"];
 
     public function configureOptions(OptionsResolver $resolver)
     {
-        $resolver->setDefaults(array(
-            'choices' => $this->availableFields,
-            "invalid_message" => "Available values: `" . implode("`, `", $this->availableFields) . "`",
-            "empty_data" => $this->availableFields[0],
-        ));
+        $resolver->setDefaults([
+            'choices' => self::availableFields,
+            "invalid_message" => "Available values: `" . implode("`, `", self::availableFields) . "`",
+            "empty_data" => self::availableFields[0],
+        ]);
     }
 
     public function getParent()

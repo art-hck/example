@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use App\Type\SeekCriteria\SeekCriteria;
+use App\Type\SeekCriteria\Types\SeekCriteriaPlayerFilter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -30,11 +32,15 @@ class PlayersFilterType extends AbstractType
             ->add('minPlayTime', IntegerType::class)
             ->add('maxPlayTime', IntegerType::class)
 
-            ->add('orderBy', PlayerFiledsType::class, ["empty_data" => "id"])
+            ->add('orderBy', ChoiceType::class, [
+                    'choices' => SeekCriteriaPlayerFilter::getOrderByFields(),
+                    "invalid_message" => "Available values: `" . implode("`, `", SeekCriteriaPlayerFilter::getOrderByFields()) . "`",
+                    "empty_data" => SeekCriteriaPlayerFilter::getOrderByFields()[0],
+                ])
             ->add('orderDirection', ChoiceType::class, [
-                "choices" => ["ASC", "DESC"],
-                "invalid_message" => "Available values: `ASC`, `DESC`",
-                "empty_data" => "ASC"
+                "choices" => SeekCriteria::validOrderDirections,
+                "invalid_message" => "Available values: `" . implode("`, `", SeekCriteria::validOrderDirections) . "`",
+                "empty_data" => SeekCriteria::validOrderDirections[0]
             ])
             ->add('offset', IntegerType::class, ["empty_data" => "0"])
             ->add('limit', IntegerType::class, ["empty_data" => "100"])

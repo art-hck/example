@@ -2,97 +2,74 @@
 
 namespace App\Type\SeekCriteria;
 
-class SeekCriteria
+abstract class SeekCriteria
 {
-    private $datePeriod;
-    private $leagueId;
-    private $teamId;
-    private $goalsRange;
-    private $playTimeRange;
-    private $cardsRange;
-    private $cardsType;
+    private $orderBy;
+    private $orderDirection;
+    private $offset;
+    private $limit;
 
-    public function getDatePeriod(): ?\DatePeriod
-    {
-        return $this->datePeriod;
-    }
-
-    public function setDatePeriod(\DateTime $dateFrom, \DateTime $dateTo): self
-    {
-        $this->datePeriod = new \DatePeriod($dateFrom, new \DateInterval("P2Y"), $dateTo);
-
-        return $this;
-    }
-
-    public function getLeagueId()
-    {
-        return $this->leagueId;
-    }
-
-    public function setLeagueId(?int $leagueId): self
-    {
-        $this->leagueId = $leagueId;
-
-        return $this;
-    }
-
-    public function getTeamId(): ?int
-    {
-        return $this->teamId;
-    }
-
-    public function setTeamId(?int $teamId): self
-    {
-        $this->teamId = $teamId;
-
-        return $this;
-    }
-
-    public function getCardsType(): ?int 
-    {
-        return $this->cardsType;
-    }
-
-    public function setCardsType(?int $cardsType): self
-    {
-        $this->cardsType = $cardsType;
-
-        return $this;
-    }
-
-    public function getGoalsRange(): ?SeekCriteriaRange
-    {
-        return $this->goalsRange;
-    }
-
-    public function setGoalsRange(?int $min, ?int $max): self
-    {
-        $this->goalsRange = new SeekCriteriaRange($min, $max);
-        
-        return $this;
-    }
-
-    public function getPlayTimeRange(): ?SeekCriteriaRange
-    {
-        return $this->playTimeRange;
-    }
+    public const validOrderDirections = ["ASC", "DESC"];
     
-    public function setPlayTimeRange(?int $min, ?int $max): self 
+    abstract static function getOrderByFields() : array;
+
+    public function getOrderBy(): ?string 
     {
-        $this->playTimeRange = new SeekCriteriaRange($min, $max);
+        return $this->orderBy;
+    }
+
+    public function setOrderBy(?string $orderBy): self
+    {
+        if(!in_array($orderBy, $this->getOrderByFields())) {
+            throw new SeekCriteriaException(
+                "Invalid `orderBy` (${orderBy}). Available values: `" . implode("`, `", $this->getOrderByFields()) . "`"
+            );
+        }
         
+        $this->orderBy = $orderBy;
+
         return $this;
     }
 
-    public function getCardsRange(): ?SeekCriteriaRange
+    public function getOrderDirection(): ?string 
     {
-        return $this->cardsRange;
+        return $this->orderDirection;
     }
 
-    public function setCardsRange(?int $min, ?int $max): self
+    public function setOrderDirection($orderDirection): self
     {
-        $this->cardsRange = new SeekCriteriaRange($min, $max);
+        if(!in_array($orderDirection, self::validOrderDirections)) {
+            throw new SeekCriteriaException(
+                "Invalid `orderDirection` (${orderDirection}). Available values: `" . implode("`, `", self::validOrderDirections) . "`"
+            );
+        }
         
+        $this->orderDirection = $orderDirection;
+
+        return $this;
+    }
+
+    public function getOffset(): ?int
+    {
+        return $this->offset;
+    }
+
+    public function setOffset($offset): self
+    {
+        $this->offset = $offset;
+
+        return $this;
+    }
+
+    public function getLimit(): ?int
+    {
+        return $this->limit;
+    }
+
+    public function setLimit($limit): self
+    {
+        $this->limit = $limit;
+
         return $this;
     }
 }

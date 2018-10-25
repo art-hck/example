@@ -8,10 +8,9 @@ use App\Form\GetPlayersType;
 use App\Form\PlayersFilterType;
 use App\Http\ErrorJsonResponse;
 
+use App\Type\SeekCriteria\Types\SeekCriteriaPlayerFilter;
 use App\Service\RESTRequestService;
 use App\Service\ValidateService;
-use App\Type\SeekCriteria\SeekCriteria;
-use App\Type\SeekCriteria\SeekCriteriaRange;
 use Doctrine\ORM\ORMException;
 use Nelmio\ApiDocBundle\Annotation\Model;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -152,36 +151,26 @@ class PlayerController extends Controller
                 ->getData()
             ;
 
-            $criteria = new SeekCriteria();
-
-            if ($data["dateFrom"] && $data["dateTo"]) {
-                $criteria->setDatePeriod($data["dateFrom"], $data["dateTo"]);
-            }
-
-            $criteria->setLeagueId($data["leagueId"]);
-            $criteria->setTeamId($data["teamId"]);
+            $criteria = new SeekCriteriaPlayerFilter();
             
-            if($data["minGoals"] && $data["maxGoals"]) {
-                $criteria->setGoalsRange($data["minGoals"], $data["maxGoals"]);
-            }
-            
-            if($data["minCards"] && $data["maxCards"]) {
-                $criteria
-                    ->setCardsRange($data["minCards"], $data["maxCards"])
-                    ->setCardsType($data["cardsType"])
-                ;
-            }
-
-            if($data["minPlayTime"] && $data["maxPlayTime"]) {
-                $criteria->setPlayTimeRange($data["minPlayTime"], $data["maxPlayTime"]);
-            }            
-
-            $players = $this
-                ->getDoctrine()
-                ->getRepository(Player::class)
-                ->findByCriteria($criteria, $data["orderBy"], $data["orderDirection"], $data["offset"], $data["limit"])
+            $criteria
+                ->setLeagueId($data["leagueId"])
+                ->setTeamId($data["teamId"])
+                ->setCardsType($data["cardsType"])
+                ->setDatePeriod($data["dateFrom"], $data["dateTo"])
+                ->setGoalsRange($data["minGoals"], $data["maxGoals"])
+                ->setCardsRange($data["minCards"], $data["maxCards"])
+                ->setPlayTimeRange($data["minPlayTime"], $data["maxPlayTime"])
+                ->setOrderBy($data["orderBy"])
+                ->setOrderDirection($data["orderDirection"])
+                ->setOffset($data["offset"])
+                ->setLimit($data["limit"])
             ;
 
+            $players = $this->getDoctrine()
+                ->getRepository(Player::class)
+                ->findByCriteria($criteria)
+            ;
         } catch (BadRestRequestHttpException $e) {
             return new ErrorJsonResponse($e->getMessage(), $e->getErrors(), $e->getStatusCode());
         } catch (HttpException $e) {
