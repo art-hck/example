@@ -1,2 +1,7 @@
-.debug
-    | {{ player | json }}
+a.player
+  img(src="https://tmssl.akamaized.net/{{player.avatar}}")
+  div Имя: {{player.first_name }} {{player.last_name }} ({{player.native_name }})
+  div Др: {{player.birthday | date}} {{player.birthplace}}
+  div Рост: {{player.height }}см
+  div Номер: {{player.number }}
+      

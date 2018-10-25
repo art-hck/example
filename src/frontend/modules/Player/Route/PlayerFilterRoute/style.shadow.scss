@@ -1,0 +1,25 @@
+form {
+  margin:auto;
+  display:block;
+  width:600px;
+  background: beige;
+  padding: 10px;
+
+  input {
+    border: 1px solid;
+    padding: 5px;
+  }
+
+  button {
+    background: #eee;
+    margin:10px;
+    padding: 5px;
+    border-radius: 4px;
+  }
+
+  .players{
+    display: flex;
+    flex-wrap: wrap;
+  }
+}
+

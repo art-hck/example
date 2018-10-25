@@ -9,7 +9,6 @@ import {appRoutes} from "../../app/routes";
 import "../../assets/styles/index.scss";
 
 import {ApplicationComponent} from "./Component/Application";
-import {MainRoute} from "./Routes/MainRoute/MainRoute";
 import {PlatformService} from "./Service/PlatformService";
 import {RouteHelperService} from "./Service/RouteHelperService";
 import {PlayerModule} from "../Player/PlayerModule";
@@ -27,8 +26,7 @@ registerLocaleData(localeRu);
     ],
 
     declarations: [
-        ApplicationComponent,
-        MainRoute,
+        ApplicationComponent
     ],
     providers: [
         RouteHelperService,

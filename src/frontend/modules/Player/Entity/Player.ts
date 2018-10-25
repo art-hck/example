@@ -13,7 +13,7 @@ export interface Player {
     position: string
     height: number
     number: number
-    preview: string
+    avatar: string
     created: number
     updated: number
     status: number

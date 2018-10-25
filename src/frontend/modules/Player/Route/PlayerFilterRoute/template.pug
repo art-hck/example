@@ -1,0 +1,46 @@
+form([formGroup]="form", (ngSubmit)="submit()")
+  label date from: 
+  input(type="text", formControlName="dateFrom")
+
+  label date to: 
+  input(type="text", formControlName="dateTo")
+
+  label league id: 
+  input(type="text", formControlName="leagueId")
+  
+  label team id: 
+  input(type="text", formControlName="teamId")
+  
+  label min goals: 
+  input(type="text", formControlName="minGoals")
+  
+  label max goals: 
+  input(type="text", formControlName="maxGoals")
+  
+  label min cards: 
+  input(type="text", formControlName="minCards")
+  
+  label max cards: 
+  input(type="text", formControlName="maxCards")
+  
+  label cards type: 
+  input(type="text", formControlName="cardsType")
+  
+  label min play time: 
+  input(type="text", formControlName="minPlayTime")
+  
+  label max play time: 
+  input(type="text", formControlName="maxPlayTime")
+  button(type="submit", [disabled]="isLoading || form.invalid") Show players
+    
+  
+  .players
+    a.player(
+      *ngFor="let player of players;",
+      [routerLink]="['/player', player.id]"
+      )
+      img(src="https://tmssl.akamaized.net/{{player.avatar}}")
+      .name {{player.last_name }}
+    
+    
+    div(*ngIf="isLoading") Loading.....
