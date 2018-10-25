@@ -16,9 +16,7 @@ abstract class TeamSerializable implements \JsonSerializable
             "updated" => $this->getUpdated(),
             "tm_id" => $this->getTmId(),
             "country" => $this->getCountry(),
-            "players" => $this->getPlayers(),
-            "homeGames" => $this->getHomeGames(),
-            "guestGames" => $this->getGuestGames(),
+            "players" => $this->getPlayers()
         ];
     }
     
@@ -31,6 +29,4 @@ abstract class TeamSerializable implements \JsonSerializable
     abstract public function getTmId();
     abstract public function getCountry();
     abstract public function getPlayers();
-    abstract public function getHomeGames();
-    abstract public function getGuestGames();
 }

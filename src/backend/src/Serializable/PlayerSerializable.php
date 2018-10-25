@@ -16,7 +16,7 @@ abstract class PlayerSerializable implements \JsonSerializable
             "last_name" => $this->getLastName(),
             "native_name" => $this->getNativeName(),
             "alias" => $this->getAlias(),
-            "birthday" => $this->getBirthday(),
+            "birthday" => $this->getBirthday()->format(DATE_ISO8601),
             "birthPlace" => $this->getBirthPlace(),
             "foot" => $this->getFoot(),
             "role" => $this->getRole(),

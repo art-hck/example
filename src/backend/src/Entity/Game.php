@@ -62,20 +62,6 @@ class Game extends GameSerializable
     private $referee;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Team", inversedBy="homeGames")
-     * @ORM\JoinColumn(nullable=true)
-     * @TODO: nullable must be false!!!!
-     */
-    private $homeTeam;
-
-    /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\Team", inversedBy="guestGames")
-     * @ORM\JoinColumn(nullable=true)
-     * @TODO: nullable must be false!!!!
-     */
-    private $guestTeam;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Goal", mappedBy="game", orphanRemoval=true)
      */
     private $goals;
@@ -110,11 +96,17 @@ class Game extends GameSerializable
      */
     private $substitutions;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\TeamGame", mappedBy="game")
+     */
+    private $teamGames;
+
     public function __construct()
     {
         $this->goals = new ArrayCollection();
         $this->cards = new ArrayCollection();
         $this->substitutions = new ArrayCollection();
+        $this->teamGames = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -202,30 +194,6 @@ class Game extends GameSerializable
     public function setReferee(?Referee $referee): self
     {
         $this->referee = $referee;
-
-        return $this;
-    }
-
-    public function getHomeTeam(): ?Team
-    {
-        return $this->homeTeam;
-    }
-
-    public function setHomeTeam(?Team $homeTeam): self
-    {
-        $this->homeTeam = $homeTeam;
-
-        return $this;
-    }
-
-    public function getGuestTeam(): ?Team
-    {
-        return $this->guestTeam;
-    }
-
-    public function setGuestTeam(?Team $guestTeam): self
-    {
-        $this->guestTeam = $guestTeam;
 
         return $this;
     }
@@ -365,6 +333,37 @@ class Game extends GameSerializable
             // set the owning side to null (unless already changed)
             if ($substitution->getGame() === $this) {
                 $substitution->setGame(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|TeamGame[]
+     */
+    public function getTeamGames(): Collection
+    {
+        return $this->teamGames;
+    }
+
+    public function addTeamGame(TeamGame $teamGame): self
+    {
+        if (!$this->teamGames->contains($teamGame)) {
+            $this->teamGames[] = $teamGame;
+            $teamGame->setGame($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeamGame(TeamGame $teamGame): self
+    {
+        if ($this->teamGames->contains($teamGame)) {
+            $this->teamGames->removeElement($teamGame);
+            // set the owning side to null (unless already changed)
+            if ($teamGame->getGame() === $this) {
+                $teamGame->setGame(null);
             }
         }
 

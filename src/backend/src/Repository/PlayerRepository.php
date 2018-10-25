@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Game;
 use App\Entity\Player;
+use App\Entity\TeamGame;
 use App\Type\SeekCriteria\Types\SeekCriteriaPlayerFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -53,8 +54,10 @@ class PlayerRepository extends ServiceEntityRepository
 
         // DATE FILTER
         if($seekCriteria->getDatePeriod() || $seekCriteria->getLeagueId()) { 
-            $qb->join(Game::class, 'g', 'WITH', 'g.homeTeam = p.team OR g.guestTeam = p.team');
-
+            $qb
+                ->join(TeamGame::class, 'tg', 'WITH', 'tg.team = p.team')
+                ->join(Game::class, 'g', 'WITH', 'tg.game = g.id')
+            ;
         }
 
         if ($seekCriteria->getDatePeriod()) {
@@ -64,8 +67,8 @@ class PlayerRepository extends ServiceEntityRepository
             $dateTo = $seekCriteria->getDatePeriod()->max;
 
             $qb
-                ->andHaving('MIN(g.date) >= :dateFrom OR :dateFrom IS NULL')
-                ->andHaving('MAX(g.date) <= :dateTo OR :dateTo IS NULL')
+                ->andWhere('g.date >= :dateFrom OR :dateFrom IS NULL')
+                ->andWhere('g.date <= :dateTo OR :dateTo IS NULL')
                 ->setParameter('dateFrom', $dateFrom ? $dateFrom->format(DATE_ISO8601) : null)
                 ->setParameter('dateTo', $dateTo ? $dateTo->format(DATE_ISO8601): null)
             ;
@@ -131,10 +134,6 @@ class PlayerRepository extends ServiceEntityRepository
             ;
         } // END PLAY TIME FILTER
 
-        dump($qb
-            ->getQuery()
-            ->getResult());
-        die;
         return $qb
             ->getQuery()
             ->getResult()

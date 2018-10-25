@@ -23,8 +23,6 @@ abstract class GameSerializable implements \JsonSerializable
             "score" => $this->getScore(),
             "stadium" => $this->getStadium(),
             "referee" => $this->getReferee(),
-            "homeTeam" => $this->getHomeTeam(),
-            "guestTeam" => $this->getGuestTeam(),
             "goals" => $this->getGoals(),
             "cards" => $this->getCards(),
             "status" => $this->getStatus(),
@@ -42,8 +40,6 @@ abstract class GameSerializable implements \JsonSerializable
     abstract public function getScore(): ?string;
     abstract public function getStadium(): ?Stadium;
     abstract public function getReferee(): ?Referee;
-    abstract public function getHomeTeam(): ?Team;
-    abstract public function getGuestTeam(): ?Team;
     abstract public function getGoals(): Collection;
     abstract public function getCards(): Collection;
     abstract public function getStatus(): ?int;

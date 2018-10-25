@@ -7,6 +7,7 @@ use App\Entity\League;
 use App\Entity\Referee;
 use App\Entity\Stadium;
 use App\Entity\Team;
+use App\Entity\TeamGame;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
@@ -22,7 +23,7 @@ class MainFixtures extends Fixture implements ContainerAwareInterface, Dependent
 
     public function load(ObjectManager $manager)
     {
-        return;
+//        return;
         try {
             gc_enable();
 
@@ -52,16 +53,19 @@ class MainFixtures extends Fixture implements ContainerAwareInterface, Dependent
                     ->setDate(new \DateTime("@" . $row["datestamp"]))
                     ->setDay($row["matchDay"])
                     ->setDuration($row["duration"])
-                    ->setHomeTeam($homeTeam)
-                    ->setGuestTeam($guestTeam)
                     ->setStatus($row["status"])
                     ->setUpdated(new \DateTime("@" . $row["updated"]))
                 ;
+
+                $homeTeamGame = (new TeamGame())->setType(1)->setGame($game)->setTeam($homeTeam);
+                $guestTeamGame = (new TeamGame())->setType(2)->setGame($game)->setTeam($guestTeam);
 
                 if ($row["stadiumAttendance"] !== "false")
                     $game->setAttendance((float)$row["stadiumAttendance"]);
 
                 $manager->persist($game);
+                $manager->persist($homeTeamGame);
+                $manager->persist($guestTeamGame);
 
                 if (++$i % 1000 == 0) {
                     echo "Cleaning......." . PHP_EOL;
