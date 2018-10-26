@@ -1,25 +1,40 @@
 form {
-  margin:auto;
-  display:block;
-  width:600px;
-  background: beige;
+  margin: auto;
+  display: flex;
+  justify-content: center;
   padding: 10px;
 
-  input {
-    border: 1px solid;
-    padding: 5px;
+  mat-expansion-panel {
+    text-align: center;
   }
+  
+  mat-form-field {
+    margin: 0 5px;
+    width: 30vw;
 
-  button {
-    background: #eee;
-    margin:10px;
-    padding: 5px;
-    border-radius: 4px;
-  }
-
-  .players{
-    display: flex;
-    flex-wrap: wrap;
+    &.short {
+      width: 19.82vw;
+    }
   }
 }
 
+.players {
+  display: flex;
+  flex-wrap: wrap;
+  padding: 0 5%;
+  line-height:normal;
+
+  mat-card {
+    cursor: pointer;
+    width: 24%;
+    margin: .5%;
+  }
+}
+.info {
+  display: flex;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: calc(100vh - 480px);
+}

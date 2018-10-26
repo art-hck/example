@@ -1,1 +1,16 @@
-router-outlet
+doctype html
+mat-toolbar(color="primary")
+  mat-icon extension
+  span Genie filter
+  
+  button(mat-icon-button, [mat-menu-trigger-for]="menu") 
+    mat-icon more_vert
+      
+mat-menu( x-position="before", #menu="matMenu")
+  button(mat-menu-item, routerLink="players/filter") Open filter
+
+  
+mat-sidenav-container
+  mat-sidenav-content
+    router-outlet
+//mat-drawer-container

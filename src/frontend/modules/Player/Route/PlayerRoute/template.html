@@ -1,0 +1,20 @@
+<mat-card>
+  <mat-card-header>
+    <mat-card-title>{{ player.native_name  || player.first_name + " " + player. last_name }}</mat-card-title>
+  </mat-card-header>
+  <img mat-card-image src="https://tmssl.akamaized.net/{{player.avatar}}" />
+  <mat-card-content>
+    <table mat-table="mat-table" [dataSource]="playerArray">
+      <ng-container matColumnDef="field">
+        <th mat-header-cell="mat-header-cell" *matHeaderCellDef></th>
+        <td mat-cell="mat-cell" *matCellDef="let element">{{element.field}}</td>
+      </ng-container>
+      <ng-container matColumnDef="value">
+        <th mat-header-cell="mat-header-cell" *matHeaderCellDef></th>
+        <td mat-cell="mat-cell" *matCellDef="let element">{{element.value}}</td>
+      </ng-container>
+      <tr mat-header-row *matHeaderRowDef="['field', 'value']"></tr>
+      <tr mat-row *matRowDef="let row; columns: ['field', 'value'];"></tr>      
+    </table>
+  </mat-card-content>
+</mat-card>

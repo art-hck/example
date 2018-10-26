@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Validator\Constraints\Range;
 
 class PlayersFilterType extends AbstractType
 {
@@ -43,7 +44,16 @@ class PlayersFilterType extends AbstractType
                 "empty_data" => SeekCriteria::validOrderDirections[0]
             ])
             ->add('offset', IntegerType::class, ["empty_data" => "0"])
-            ->add('limit', IntegerType::class, ["empty_data" => "100"])
+            ->add(
+                'limit', 
+                IntegerType::class, 
+                [
+                    "empty_data" => "100",
+                    "constraints"=>[
+                        new Range(["max" => 300])
+                    ]
+                ]
+            )
         ;
     }
 }

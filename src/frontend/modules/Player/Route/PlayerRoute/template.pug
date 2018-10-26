@@ -1,7 +1,23 @@
-a.player
-  img(src="https://tmssl.akamaized.net/{{player.avatar}}")
-  div Имя: {{player.first_name }} {{player.last_name }} ({{player.native_name }})
-  div Др: {{player.birthday | date}} {{player.birthplace}}
-  div Рост: {{player.height }}см
-  div Номер: {{player.number }}
+mat-card
+  mat-card-header
+    mat-card-title {{ player.native_name  || player.first_name + " " + player. last_name }}
+  //img(mat-card-image, src="https://tmssl.akamaized.net/{{player.avatar}}")
+  mat-card-content
+    //.debug {{ player | json }}
       
+    table(mat-table, [dataSource]="playerArray")
+      ng-container(matColumnDef="field")
+        th(mat-header-cell, *matHeaderCellDef) field
+        td(mat-cell *matCellDef="let element") {{element.field}}
+      ng-container(matColumnDef="value")
+        th(mat-header-cell, *matHeaderCellDef) value
+        td(mat-cell *matCellDef="let element") {{element.value}}
+//</ng-container>      
+        
+//a.player
+//  img(src="https://tmssl.akamaized.net/{{player.avatar}}")
+//  div Имя: {{player.first_name }} {{player.last_name }} ({{player.native_name }})
+//  div Др: {{player.birthday | date}} {{player.birthplace}}
+//  div Рост: {{player.height }}см
+//  div Номер: {{player.number }}
+//      

@@ -15,6 +15,8 @@ import {PlayerModule} from "../Player/PlayerModule";
 import {RESTInterceptorConfig} from "./Interceptor/RESTInterceptorConfig";
 import {RESTInterceptor} from "./Interceptor/RESTInterceptor";
 
+import {MaterialModule} from "./MaterialModule";
+
 registerLocaleData(localeRu);
 
 @NgModule({
@@ -22,7 +24,8 @@ registerLocaleData(localeRu);
         BrowserModule,
         RouterModule.forRoot(appRoutes),
         HttpClientModule,
-        PlayerModule
+        PlayerModule,
+        MaterialModule,
     ],
 
     declarations: [

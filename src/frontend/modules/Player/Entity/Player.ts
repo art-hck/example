@@ -1,16 +1,18 @@
+import {PlayerRole} from "./PlayerRole";
+
 export interface Player {
     first_name: string
     last_name: string
     native_name: string
     alias: string
     birthday: number
-    birthplace: string
+    birthPlace: string
     country_id: number
     nationality: number
     nationality_f: number
     nationality_m: number
     foot: string
-    position: string
+    role: PlayerRole
     height: number
     number: number
     avatar: string
