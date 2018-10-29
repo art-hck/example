@@ -46,6 +46,8 @@ class PlayerRepository extends ServiceEntityRepository
         }
 
         $qb = $this->createQueryBuilder('p')
+            ->join(TeamGame::class, 'tg', 'WITH', 'tg.team = p.team')
+            ->join(Game::class, 'g', 'WITH', 'tg.game = g.id')
             ->groupBy('p.id')
             ->orderBy($orderBy, $seekCriteria->getOrderDirection())
             ->setFirstResult($seekCriteria->getOffset())
@@ -53,13 +55,6 @@ class PlayerRepository extends ServiceEntityRepository
         ;
 
         // DATE FILTER
-        if($seekCriteria->getDatePeriod() || $seekCriteria->getLeagueId() || $seekCriteria->getGoalsRange() || $seekCriteria->getPlayTimeRange() || true) { 
-            $qb
-                ->join(TeamGame::class, 'tg', 'WITH', 'tg.team = p.team')
-                ->join(Game::class, 'g', 'WITH', 'tg.game = g.id')
-            ;
-        }
-
         if ($seekCriteria->getDatePeriod()) {
             /** @var \DateTime $dateFrom */
             $dateFrom = $seekCriteria->getDatePeriod()->min;
@@ -77,22 +72,22 @@ class PlayerRepository extends ServiceEntityRepository
 
         // LEAGUE FILTER
         if ($seekCriteria->getLeagueId()) {
-            $qb->andWhere('g.league=:leagueId')
+            $qb->andWhere('p.league=:leagueId')
                 ->setParameter('leagueId', $seekCriteria->getLeagueId())
             ;
         }
-        
-        $qb->join('g.league', 'l')
-            ->andWhere('l.name LIKE :leagueName')
-            ->setParameter("leagueName", "1. Liga group 1%")
-        ;
-        
+
+//        @TODO: implement!
+//        $qb->join('g.league', 'l')
+//            ->andWhere('l.name LIKE :leagueName')
+//            ->setParameter("leagueName", "1. Liga group 1%")
+//        ;
         // END LEAGUE FILTER
         
 
         // TEAM FILTER
         if($seekCriteria->getTeamId()) {
-            $qb->andWhere('p.team=:teamId')
+            $qb->andWhere('tg.team=:teamId')
                 ->setParameter('teamId', $seekCriteria->getTeamId())
             ;
         } // END TEAM FILTER
@@ -101,7 +96,7 @@ class PlayerRepository extends ServiceEntityRepository
         // GOALS FILTER
         if($seekCriteria->getGoalsRange()) {
             $qb
-                ->join('g.goals', 'goals')
+                ->join('p.goals', 'goals')
                 ->andHaving('COUNT(goals.id) >= :minGoals OR :minGoals IS NULL')
                 ->andHaving('COUNT(goals.id) <= :maxGoals OR :maxGoals IS NULL')
                 ->setParameter('minGoals', $seekCriteria->getGoalsRange()->min)
@@ -133,7 +128,7 @@ class PlayerRepository extends ServiceEntityRepository
         // PLAY TIME FILTER
         if($seekCriteria->getPlayTimeRange()) { 
             $qb
-                ->join('g.substitutions', 's')
+                ->join('p.substitutions', 's')
                 ->andHaving('SUM(s.playTime) >= :minPlayTime OR :minPlayTime IS NULL')
                 ->andHaving('SUM(s.playTime) <= :maxPlayTime OR :maxPlayTime IS NULL')
                 ->setParameter('minPlayTime', $seekCriteria->getPlayTimeRange()->min)

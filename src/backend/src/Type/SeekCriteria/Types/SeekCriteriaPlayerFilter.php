@@ -3,6 +3,7 @@
 namespace App\Type\SeekCriteria\Types;
 
 use App\Type\SeekCriteria\SeekCriteria;
+use App\Type\SeekCriteria\SeekCriteriaException;
 use App\Type\SeekCriteria\SeekCriteriaRange;
 
 class SeekCriteriaPlayerFilter extends SeekCriteria
@@ -81,9 +82,9 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
 
     public function setGoalsRange(?int $min, ?int $max): self
     {
-        if($min || $max) {
+        try {
             $this->goalsRange = new SeekCriteriaRange($min, $max);
-        }
+        } catch (SeekCriteriaException $e) {}
 
         return $this;
     }
@@ -95,9 +96,9 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
 
     public function setPlayTimeRange(?int $min, ?int $max): self
     {
-        if($min || $max) {
+        try {
             $this->playTimeRange = new SeekCriteriaRange($min, $max);
-        }
+        } catch (SeekCriteriaException $e) {}
 
         return $this;
     }
@@ -109,9 +110,9 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
 
     public function setCardsRange(?int $min, ?int $max): self
     {
-        if($min || $max) {
+        try {
             $this->cardsRange = new SeekCriteriaRange($min, $max);
-        }
+        } catch (SeekCriteriaException $e) {}
 
         return $this;
     }
