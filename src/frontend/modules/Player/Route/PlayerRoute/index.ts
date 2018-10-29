@@ -1,7 +1,7 @@
 import {Component, Inject, LOCALE_ID} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {Player} from "../../Entity/Player";
-import {DatePipe, formatDate} from "@angular/common";
+import {formatDate} from "@angular/common";
 
 @Component({
     templateUrl: "./template.html",
@@ -36,8 +36,5 @@ export class PlayerRoute {
                 .filter(item => !!item.value)
             ;
         });
-
-
-        
     }
 }

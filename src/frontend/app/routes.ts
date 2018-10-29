@@ -1,8 +1,10 @@
 import {GenieRoutes} from "../modules/Application/Entity/Route";
 import {PlayerRoute} from "../modules/Player/Route/PlayerRoute";
 import {PlayerResolver} from "../modules/Player/Resolver/PlayerResolver";
-import {PlayerFilterRoute} from "../modules/Player/Route/PlayerFilterRoute";
+import {PlayersFilterRoute} from "../modules/Player/Route/PlayersFilterRoute";
 import {PageNotFoundRoute} from "../modules/Application/Route/PageNotFoundRoute";
+import {PlayersFilterResolver} from "../modules/Player/Resolver/PlayersFilterResolver";
+import {PlayersRoute} from "../modules/Player/Route/PlayersRoute";
 
 export const appRoutes: GenieRoutes = [
     {
@@ -23,8 +25,18 @@ export const appRoutes: GenieRoutes = [
         
     },
     {
-        path: "players/filter",
-        component: PlayerFilterRoute,
+        path: "players",
+        component: PlayersRoute, 
+        children: [
+            {
+                path: "filter",
+                component: PlayersFilterRoute,
+                runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+                resolve: {
+                    players: PlayersFilterResolver
+                },
+            }
+        ],
         data: {
             title: "Genie  filter",
             description: "Genie description"

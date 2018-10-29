@@ -72,7 +72,7 @@ class PlayerRepository extends ServiceEntityRepository
 
         // LEAGUE FILTER
         if ($seekCriteria->getLeagueId()) {
-            $qb->andWhere('p.league=:leagueId')
+            $qb->andWhere('g.league=:leagueId')
                 ->setParameter('leagueId', $seekCriteria->getLeagueId())
             ;
         }

@@ -6,8 +6,10 @@ import {CommonModule} from "@angular/common";
 import {PlayerRESTService} from "./Service/PlayerRESTService";
 import {PlayerRoute} from "./Route/PlayerRoute";
 import {PlayerResolver} from "./Resolver/PlayerResolver";
-import {PlayerFilterRoute} from "./Route/PlayerFilterRoute";
+import {PlayersFilterRoute} from "./Route/PlayersFilterRoute";
 import {MaterialModule} from "../Application/MaterialModule";
+import {PlayersFilterResolver} from "./Resolver/PlayersFilterResolver";
+import {PlayersRoute} from "./Route/PlayersRoute";
 
 @NgModule({
     imports: [
@@ -15,17 +17,19 @@ import {MaterialModule} from "../Application/MaterialModule";
         FormsModule,
         RouterModule,
         ReactiveFormsModule,
-        MaterialModule        
+        MaterialModule,    
     ],
     declarations: [
         PlayerRoute,
-        PlayerFilterRoute
+        PlayersRoute,
+        PlayersFilterRoute,
     ],
     exports: [
     ],
     providers: [
         PlayerRESTService,
-        PlayerResolver
+        PlayerResolver,
+        PlayersFilterResolver,
     ]
 })
 export class PlayerModule {

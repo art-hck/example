@@ -7,58 +7,58 @@ mat-accordion
 
       mat-form-field
         input(matInput, type="text", placeholder="Date from",
-          (dateChange)="form.get('dateFrom').setValue(toDateISO($event.value)+'')",
-          [matDatepicker]="dateFromEl",
-          [value]="form.get('dateFrom').value"
+        (dateChange)="form.get('dateFrom').setValue(toDateISO($event.value)+'')",
+        [matDatepicker]="dateFromEl",
+        [value]="form.get('dateFrom').value"
         )
         mat-datepicker-toggle(matSuffix, [for]="dateFromEl")
         mat-datepicker(#dateFromEl)
-        
+
       mat-form-field
         input(matInput, type="text", placeholder="Date to",
-          (dateChange)="form.get('dateTo').setValue(toDateISO($event.value)+'')",
-          [matDatepicker]="dateToEl",
-          [value]="form.get('dateTo').value"
+        (dateChange)="form.get('dateTo').setValue(toDateISO($event.value)+'')",
+        [matDatepicker]="dateToEl",
+        [value]="form.get('dateTo').value"
         )
         mat-datepicker-toggle(matSuffix, [for]="dateToEl")
         mat-datepicker(#dateToEl, [disabled]="false")
 
-      br  
-      
+      br
+
       mat-form-field
         input(matInput, type="text", formControlName="leagueId", placeholder="League id")
-      
+
       mat-form-field
         input(matInput, type="text", formControlName="teamId", placeholder="Team id")
-      
+
       br
       mat-form-field
         input(matInput, type="text", formControlName="minGoals", placeholder="Min goals")
-      
+
       mat-form-field
         input(matInput, type="text", formControlName="maxGoals", placeholder="Max goals")
       br
-    
+
       mat-form-field.short
         input(matInput, type="text", formControlName="minCards", placeholder="Min cards")
-      
+
       mat-form-field.short
         input(matInput, type="text", formControlName="maxCards", placeholder="Max cards")
-    
-        
+
+
       mat-form-field.short
         mat-select(placeholder="Card type", formControlName="cardsType")
           mat-option([value]="0") Yellow
           mat-option([value]="1") Red
           mat-option([value]="2") Both
-          
+
       br
       mat-form-field
         input(matInput, type="text", formControlName="minPlayTime", placeholder="Min play time")
-      
+
       mat-form-field
         input(matInput, type="text", formControlName="maxPlayTime", placeholder="Max play time")
-        
+
       br
       button(type="submit", [disabled]="isLoading || form.invalid", mat-stroked-button, color="primary") Show players
   //mat-select(formControlName="orderDirection")
@@ -66,17 +66,7 @@ mat-accordion
   //  mat-option DESC
   //mat-form-field
   //  input(matInput,formControlName="orderBy", placeholder="Order by")
-
-.players
-  mat-card(*ngFor="let player of players;", [routerLink]="['/player', player.id]")
-    mat-card-header    
-      img(mat-card-avatar, src="https://tmssl.akamaized.net/{{player.avatar}}")
-      mat-card-title {{ player.native_name  || player.first_name + " " + player. last_name }} 
-      mat-card-subtitle {{ player.role.name }}
-
-div.info(*ngIf="!isLoading && players && players.length==0")
-  h1 No players found
-  h5 Please try again
-
+  
+router-outlet(*ngIf="!isLoading")
 div.info(*ngIf="isLoading")
   mat-spinner

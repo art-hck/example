@@ -1,22 +1,4 @@
-form {
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  padding: 10px;
 
-  mat-expansion-panel {
-    text-align: center;
-  }
-  
-  mat-form-field {
-    margin: 0 5px;
-    width: 30vw;
-
-    &.short {
-      width: 19.82vw;
-    }
-  }
-}
 
 .players {
   display: flex;
