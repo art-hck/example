@@ -16,6 +16,8 @@ import {RESTInterceptorConfig} from "./Interceptor/RESTInterceptorConfig";
 import {RESTInterceptor} from "./Interceptor/RESTInterceptor";
 
 import {MaterialModule} from "./MaterialModule";
+import {PageNotFoundRoute} from "./Route/PageNotFoundRoute";
+import {ForbiddenRoute} from "./Route/ForbiddenRoute";
 
 registerLocaleData(localeRu);
 
@@ -29,7 +31,9 @@ registerLocaleData(localeRu);
     ],
 
     declarations: [
-        ApplicationComponent
+        ApplicationComponent,
+        PageNotFoundRoute,
+        ForbiddenRoute
     ],
     providers: [
         RouteHelperService,

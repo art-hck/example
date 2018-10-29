@@ -2,14 +2,18 @@
 
 namespace App\Entity;
 
+use App\Serializable\LeagueSerializable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\LeagueRepository")
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="IDX_LEAGUE_NAME", columns={"name"})
+ * })
  */
-class League
+class League extends LeagueSerializable 
 {
     /**
      * @ORM\Id()

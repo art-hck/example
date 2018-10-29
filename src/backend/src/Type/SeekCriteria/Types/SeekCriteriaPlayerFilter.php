@@ -16,6 +16,8 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
 
     private $datePeriod;
     private $leagueId;
+    private $leagueName;
+    private $leagueSeason;
     private $teamId;
     private $goalsRange;
     private $playTimeRange;
@@ -117,5 +119,29 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     public static function getOrderByFields(): array
     {
         return self::orderByFields;
+    }
+
+    public function getLeagueSeason(): ?int
+    {
+        return $this->leagueSeason;
+    }
+    
+    public function setLeagueSeason(int $leagueSeason): self 
+    {
+        $this->leagueSeason = $leagueSeason;
+
+        return $this;
+    }
+
+    public function getLeagueName(): ?string 
+    {
+        return $this->leagueName;
+    }
+
+    public function setLeagueName($leagueName): self
+    {
+        $this->leagueName = $leagueName;
+        
+        return $this;
     }
 }

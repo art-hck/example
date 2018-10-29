@@ -23,6 +23,7 @@ app.set('view engine', 'html');
 app.set('views', 'modules');
 app.use(cookieParser());
 
+app.get('/favicon.ico', express.static("../web/"));
 
 app.get("*", (req: Request, res: Response) => {
     console.time(`GET: ${req.originalUrl}`);

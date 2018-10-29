@@ -128,5 +128,9 @@ module.exports = {
         new HtmlWebpackPlugin({
             template: 'app/template.pug'
         }),
-    ]
+    ],
+    performance: {
+        maxEntrypointSize: 20971520,
+        maxAssetSize: 20971520
+    }
 };

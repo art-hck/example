@@ -53,7 +53,7 @@ class PlayerRepository extends ServiceEntityRepository
         ;
 
         // DATE FILTER
-        if($seekCriteria->getDatePeriod() || $seekCriteria->getLeagueId()) { 
+        if($seekCriteria->getDatePeriod() || $seekCriteria->getLeagueId() || $seekCriteria->getGoalsRange() || $seekCriteria->getPlayTimeRange() || true) { 
             $qb
                 ->join(TeamGame::class, 'tg', 'WITH', 'tg.team = p.team')
                 ->join(Game::class, 'g', 'WITH', 'tg.game = g.id')
@@ -77,10 +77,17 @@ class PlayerRepository extends ServiceEntityRepository
 
         // LEAGUE FILTER
         if ($seekCriteria->getLeagueId()) {
-            $qb->andHaving('g.league=:leagueId')
+            $qb->andWhere('g.league=:leagueId')
                 ->setParameter('leagueId', $seekCriteria->getLeagueId())
             ;
-        } // END LEAGUE FILTER
+        }
+        
+        $qb->join('g.league', 'l')
+            ->andWhere('l.name LIKE :leagueName')
+            ->setParameter("leagueName", "1. Liga group 1%")
+        ;
+        
+        // END LEAGUE FILTER
         
 
         // TEAM FILTER
@@ -94,7 +101,7 @@ class PlayerRepository extends ServiceEntityRepository
         // GOALS FILTER
         if($seekCriteria->getGoalsRange()) {
             $qb
-                ->join('p.goals', 'goals')
+                ->join('g.goals', 'goals')
                 ->andHaving('COUNT(goals.id) >= :minGoals OR :minGoals IS NULL')
                 ->andHaving('COUNT(goals.id) <= :maxGoals OR :maxGoals IS NULL')
                 ->setParameter('minGoals', $seekCriteria->getGoalsRange()->min)
@@ -126,14 +133,14 @@ class PlayerRepository extends ServiceEntityRepository
         // PLAY TIME FILTER
         if($seekCriteria->getPlayTimeRange()) { 
             $qb
-                ->join('p.substitutions', 's')
+                ->join('g.substitutions', 's')
                 ->andHaving('SUM(s.playTime) >= :minPlayTime OR :minPlayTime IS NULL')
                 ->andHaving('SUM(s.playTime) <= :maxPlayTime OR :maxPlayTime IS NULL')
                 ->setParameter('minPlayTime', $seekCriteria->getPlayTimeRange()->min)
                 ->setParameter('maxPlayTime', $seekCriteria->getPlayTimeRange()->max)
             ;
         } // END PLAY TIME FILTER
-
+        
         return $qb
             ->getQuery()
             ->getResult()

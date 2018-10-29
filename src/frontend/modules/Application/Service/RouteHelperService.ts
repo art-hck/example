@@ -7,7 +7,7 @@ import {
     Router
 } from "@angular/router";
 import {PlatformService} from "./PlatformService";
-import {filter, map, mergeMap} from "rxjs/internal/operators";
+import {filter, map, mergeMap} from "Rxjs/internal/operators";
 
 @Injectable()
 export class RouteHelperService {

@@ -4,7 +4,7 @@ import {Player} from "../../Entity/Player";
 import {FormControl, FormGroup} from "@angular/forms";
 import {PlayerRESTService} from "../../Service/PlayerRESTService";
 import {DateISO} from "../../../Application/Entity/ISODate";
-import {finalize} from "rxjs/internal/operators";
+import {finalize} from "Rxjs/internal/operators";
 import {formatDate} from "@angular/common";
 
 @Component({

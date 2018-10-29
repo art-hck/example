@@ -1,6 +1,7 @@
 import {Injectable} from "@angular/core";
-import {HttpClient, HttpParams} from "@angular/common/http";
-import {Observable} from "rxjs/Observable";
+import {HttpClient} from "@angular/common/http";
+import {Observable} from 'rxjs';
+
 import {PlayerFilterRequest} from "../Http/PlayerFilterRequest";
 import {Player} from "../Entity/Player";
 
@@ -9,7 +10,7 @@ export class PlayerRESTService {
 
     constructor(private http: HttpClient) {}
 
-    public get(id: number)
+    public get(id: number): Observable<Player>
     {
         let url = `/player/${id}`;
 
@@ -18,7 +19,7 @@ export class PlayerRESTService {
         ;
     }
     
-    public filter(playerFilterRequest: PlayerFilterRequest): Observable<any>
+    public filter(playerFilterRequest: PlayerFilterRequest): Observable<Player[]>
     {
         let url = `/players/filter`;
         

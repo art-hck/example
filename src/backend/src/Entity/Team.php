@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TeamRepository")
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="IDX_TEAM_NAME", columns={"name"})
+ * })
  */
 class Team extends TeamSerializable
 {

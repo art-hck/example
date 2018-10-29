@@ -54,9 +54,9 @@ module.exports = webpackMerge(commonConfig, {
                 }
             })
         ],
-        splitChunks: {
-            chunks: 'all',
-            maxSize: 249856
-        }
+        // splitChunks: {
+        //     chunks: 'all',
+        //     maxSize: 249856
+        // }
     }
 });
