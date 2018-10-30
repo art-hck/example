@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Observable} from "rxjs";
-import {catchError, tap} from "Rxjs/internal/operators";
+import {catchError, tap} from "rxjs/internal/operators";
 
 import {CacheService} from "../../Application/Service/CacheService";
 import {Player} from "../Entity/Player";

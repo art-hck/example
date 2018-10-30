@@ -1,8 +1,8 @@
 import {Injectable, Optional} from '@angular/core';
 import {HttpEvent, HttpInterceptor, HttpHandler, HttpRequest, HttpErrorResponse} from '@angular/common/http';
 
-import {catchError} from "Rxjs/internal/operators";
-import {throwError as observableThrow} from "Rxjs/internal/observable/throwError";
+import {catchError} from "rxjs/internal/operators";
+import {throwError as observableThrow} from "rxjs/internal/observable/throwError";
 import {Observable} from 'rxjs';
 
 import {RESTInterceptorConfig} from "./RESTInterceptorConfig";
