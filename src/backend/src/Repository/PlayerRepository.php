@@ -46,8 +46,11 @@ class PlayerRepository extends ServiceEntityRepository
         }
 
         $qb = $this->createQueryBuilder('p')
-            ->join(TeamGame::class, 'tg', 'WITH', 'tg.team = p.team')
-            ->join(Game::class, 'g', 'WITH', 'tg.game = g.id')
+            ->join('p.team', 't')
+            ->join('t.teamGames', 'tg')
+            ->join('tg.game', 'g')
+//            ->join(TeamGame::class, 'tg', 'WITH', 'tg.team = p.team')
+//            ->join(Game::class, 'g', 'WITH', 'tg.game = g.id')
             ->groupBy('p.id')
             ->orderBy($orderBy, $seekCriteria->getOrderDirection())
             ->setFirstResult($seekCriteria->getOffset())
@@ -87,7 +90,7 @@ class PlayerRepository extends ServiceEntityRepository
 
         // TEAM FILTER
         if($seekCriteria->getTeamId()) {
-            $qb->andWhere('tg.team=:teamId')
+            $qb->andWhere('p.team=:teamId')
                 ->setParameter('teamId', $seekCriteria->getTeamId())
             ;
         } // END TEAM FILTER
@@ -96,7 +99,7 @@ class PlayerRepository extends ServiceEntityRepository
         // GOALS FILTER
         if($seekCriteria->getGoalsRange()) {
             $qb
-                ->join('p.goals', 'goals')
+                ->join('p.goals', 'goals', 'WITH', 'goals.game = g.id')
                 ->andHaving('COUNT(goals.id) >= :minGoals OR :minGoals IS NULL')
                 ->andHaving('COUNT(goals.id) <= :maxGoals OR :maxGoals IS NULL')
                 ->setParameter('minGoals', $seekCriteria->getGoalsRange()->min)
@@ -107,7 +110,7 @@ class PlayerRepository extends ServiceEntityRepository
 
         // CARDS FILTER
         if($seekCriteria->getCardsRange() || $seekCriteria->getCardsType()) {
-            $qb->join('p.cards', 'cards');
+            $qb->join('p.cards', 'cards', 'WITH', 'cards.game = g.id');
         }
 
         if($seekCriteria->getCardsRange()) {
@@ -128,7 +131,7 @@ class PlayerRepository extends ServiceEntityRepository
         // PLAY TIME FILTER
         if($seekCriteria->getPlayTimeRange()) { 
             $qb
-                ->join('p.substitutions', 's')
+                ->join('p.substitutions', 's', 'WITH', 's.game = g.id')
                 ->andHaving('SUM(s.playTime) >= :minPlayTime OR :minPlayTime IS NULL')
                 ->andHaving('SUM(s.playTime) <= :maxPlayTime OR :maxPlayTime IS NULL')
                 ->setParameter('minPlayTime', $seekCriteria->getPlayTimeRange()->min)

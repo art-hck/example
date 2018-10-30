@@ -6,6 +6,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\SubstitutionRepository")
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="IDX_PLAY_TIME", columns={"play_time"})
+ * })
  */
 class Substitution
 {
