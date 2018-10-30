@@ -1,3 +1,16 @@
+:host.loading {
+  mat-toolbar {
+    opacity: .2
+  }
+}
+
 mat-toolbar {
   justify-content: space-between;
+  transition: opacity 200ms;
+}
+
+mat-progress-bar {
+  width: 100%;
+  position: absolute;
+  z-index: 9999;
 }

@@ -1,5 +1,6 @@
-import {Component}  from "@angular/core";
+import {Component, HostBinding} from "@angular/core";
 import {RouteHelperService} from "../../Service/RouteHelperService";
+import {Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from "@angular/router";
 
 @Component({
     selector: "application",
@@ -8,8 +9,29 @@ import {RouteHelperService} from "../../Service/RouteHelperService";
 })
 export class ApplicationComponent {
     
-    constructor(private routeHelperService: RouteHelperService){}
+    @HostBinding('class.loading')
+    public isLoading = false;
+
+    constructor(
+        private routeHelperService: RouteHelperService,
+        private router: Router
+    ){}
+    
     ngOnInit() {
         this.routeHelperService.metaTagsWatcher();
+
+        this.router.events.subscribe((event: Event) => {
+
+            switch (event.constructor) {
+                case NavigationStart:
+                    this.isLoading = true;
+                    break;
+                case NavigationEnd:
+                case NavigationCancel:
+                case NavigationError:
+                    this.isLoading = false;
+                    break;
+            }
+        });
     }
 }

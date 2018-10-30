@@ -18,13 +18,14 @@ import {RESTInterceptor} from "./Interceptor/RESTInterceptor";
 import {MaterialModule} from "./MaterialModule";
 import {PageNotFoundRoute} from "./Route/PageNotFoundRoute";
 import {ForbiddenRoute} from "./Route/ForbiddenRoute";
+import {CacheService} from "./Service/CacheService";
 
 registerLocaleData(localeRu);
 
 @NgModule({
     imports: [
         BrowserModule,
-        RouterModule.forRoot(appRoutes),
+        RouterModule.forRoot(appRoutes, {scrollPositionRestoration: 'enabled', onSameUrlNavigation: "reload"}),
         HttpClientModule,
         PlayerModule,
         MaterialModule,
@@ -38,6 +39,7 @@ registerLocaleData(localeRu);
     providers: [
         RouteHelperService,
         PlatformService,
+        CacheService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: RESTInterceptor,

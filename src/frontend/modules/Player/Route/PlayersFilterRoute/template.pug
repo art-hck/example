@@ -1,9 +1,10 @@
 .players
-  mat-card(*ngFor="let player of players;", [routerLink]="['/player', player.id]")
-    mat-card-header    
-      img(mat-card-avatar, src="https://tmssl.akamaized.net/{{player.avatar}}")
-      mat-card-title {{ player.native_name  || player.first_name + " " + player. last_name }} 
-      mat-card-subtitle {{ player.role.name }}
+  a(*ngFor="let player of players;", [routerLink]="['/player', player.id]")
+    mat-card
+      mat-card-header    
+        img(mat-card-avatar, src="https://tmssl.akamaized.net/{{player.avatar}}")
+        mat-card-title {{ player.native_name  || player.first_name + " " + player. last_name }} 
+        mat-card-subtitle {{ player.role.name }}
 
 div.info(*ngIf="players && players.length==0")
   h1 No players found

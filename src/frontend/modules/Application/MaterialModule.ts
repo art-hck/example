@@ -7,7 +7,7 @@ import {
     MatGridListModule,
     MatIconModule,
     MatInputModule, MatListModule,
-    MatMenuModule, MatNativeDateModule, MatProgressSpinnerModule,
+    MatMenuModule, MatNativeDateModule, MatProgressBarModule, MatProgressSpinnerModule,
     MatSelectModule,
     MatSidenavModule,
     MatSliderModule, MatTableModule,
@@ -32,7 +32,8 @@ import {
         MatExpansionModule,
         MatProgressSpinnerModule,
         MatListModule,
-        MatTableModule
+        MatTableModule,
+        MatProgressBarModule
     ]
 })
 export class MaterialModule {

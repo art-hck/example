@@ -1,12 +1,12 @@
 import {Injectable} from "@angular/core";
 import {ActivatedRouteSnapshot, Resolve} from "@angular/router";
 import {Observable} from "rxjs";
-import {PlayerRESTService} from "../Service/PlayerRESTService";
+import {PlayersFilterService} from "../Service/PlayersFilterService";
 import {PlayerFilterRequest} from "../Http/PlayerFilterRequest";
 
 @Injectable()
 export class PlayersFilterResolver implements Resolve<any> {
-    constructor(private playerRESTService: PlayerRESTService) {}
+    constructor(private playersFilterService: PlayersFilterService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<any> | any {
         if(Object.keys(route.queryParams).length === 0) 
@@ -31,6 +31,6 @@ export class PlayersFilterResolver implements Resolve<any> {
         // if(route.queryParams.hasOwnProperty("offset")) {}
         // if(route.queryParams.hasOwnProperty("limit")) {}
 
-        return this.playerRESTService.filter(playerFilterRequest);
+        return this.playersFilterService.filter(playerFilterRequest);
     }
 }

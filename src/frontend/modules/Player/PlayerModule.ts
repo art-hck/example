@@ -10,6 +10,8 @@ import {PlayersFilterRoute} from "./Route/PlayersFilterRoute";
 import {MaterialModule} from "../Application/MaterialModule";
 import {PlayersFilterResolver} from "./Resolver/PlayersFilterResolver";
 import {PlayersRoute} from "./Route/PlayersRoute";
+import {PlayersFilterService} from "./Service/PlayersFilterService";
+import {PlayerService} from "./Service/PlayerService";
 
 @NgModule({
     imports: [
@@ -28,6 +30,8 @@ import {PlayersRoute} from "./Route/PlayersRoute";
     ],
     providers: [
         PlayerRESTService,
+        PlayersFilterService,
+        PlayerService,
         PlayerResolver,
         PlayersFilterResolver,
     ]
