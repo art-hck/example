@@ -1,16 +1,45 @@
 doctype html
 mat-progress-bar(mode="indeterminate", *ngIf="isLoading")
-mat-toolbar
-  mat-icon extension
-  span Genie filter
-  
-  button(mat-icon-button, [mat-menu-trigger-for]="menu") 
-    mat-icon more_vert
-      
-mat-menu(x-position="before", #menu="matMenu")
-  button(mat-menu-item, routerLink="players/filter") Open filter
 
-  
 mat-sidenav-container
+  mat-sidenav(#snav, [mode]="device.isMobile() ? 'over' : 'side'", [fixedInViewport]="device.isMobile()",  [opened]="true")
+    mat-toolbar
+      img(src="../../../../assets/images/logo.png")
+      //mat-icon.logo extension
+      //span 
+      //  | GENIE
+      //  br
+      //  | FOOTBALL
+      //.flex-space
+    mat-nav-list
+      ul
+        li 
+          a 
+            //mat-icon pie_chart
+            i(icon="../../../../assets/images/icons/__market.png")
+            span MARKET VIEW
+        li 
+          a(routerLink="/players/filter", routerLinkActive="active")
+            //mat-icon layers
+            i(icon="../../../../assets/images/icons/__data.png")
+
+            span PLAYERS
+
+      ul
+        li 
+          a 
+            //mat-icon person_outline
+            i(icon="../../../../assets/images/icons/__user.png")
+            span PROFILE
+        li 
+          a
+            //mat-icon fingerprint
+            i(icon="../../../../assets/images/icons/__logout.png")
+            span LOGOUT
+
   mat-sidenav-content
+    mat-toolbar
+      button(mat-icon-button, (click)="snav.toggle()")
+        mat-icon menu
+    
     router-outlet

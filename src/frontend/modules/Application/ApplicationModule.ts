@@ -19,6 +19,7 @@ import {MaterialModule} from "./MaterialModule";
 import {PageNotFoundRoute} from "./Route/PageNotFoundRoute";
 import {ForbiddenRoute} from "./Route/ForbiddenRoute";
 import {CacheService} from "./Service/CacheService";
+import {IconDirective} from "./Directive/IconDirective";
 
 registerLocaleData(localeRu);
 
@@ -34,6 +35,7 @@ registerLocaleData(localeRu);
     declarations: [
         ApplicationComponent,
         PageNotFoundRoute,
+        IconDirective,
         ForbiddenRoute
     ],
     providers: [

@@ -1,3 +1,41 @@
+:host {
+  mat-sidenav-container {
+    min-height: calc(100vh - 64px);
+
+    mat-sidenav {
+      width: 260px;
+      box-shadow: 0 0 40px #ddd;
+      label {
+        font-size: 13px;
+      }
+    }
+    mat-sidenav-content {
+      .toggler {
+        position: absolute;
+        top: 40%;
+        right: 0;
+        box-shadow: 0 6px 0 0 rgba(0, 0, 0, .01), 0 15px 32px 0 rgba(0, 0, 0, .06);
+        //border-bottom: 1px solid #455094;
+        //border-top: 1px solid #b4b0ff;
+        transform: rotate(270deg) translate(0%, 100%);
+        //transform-origin: 100% 50%;
+        
+        div {
+          background: #514ae0;
+          font-size: 12px;
+          border-radius: 10px 10px 0 0;
+          padding: 10px;
+          color: #fff;
+          letter-spacing: 2px;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+}
+
+
+
 form {
   margin: auto;
   display: flex;

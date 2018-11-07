@@ -3,6 +3,7 @@ import {formatDate} from "@angular/common";
 import {FormControl, FormGroup} from "@angular/forms";
 import {Router} from "@angular/router";
 import {DateISO} from "../../../Application/Entity/ISODate";
+import {Device} from "../../../Application/Service/Device";
 
 @Component({
     selector: "player-filter-form",
@@ -11,6 +12,7 @@ import {DateISO} from "../../../Application/Entity/ISODate";
 })
 
 export class PlayersRoute {
+    public device = Device;
     public isLoading: boolean = false;
     public isFilterActive: boolean = true;
     public form: FormGroup = new FormGroup({

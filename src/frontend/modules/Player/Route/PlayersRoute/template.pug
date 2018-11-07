@@ -1,70 +1,82 @@
 doctype html
-mat-accordion
-  form([formGroup]="form", (ngSubmit)="submit()")
-    mat-expansion-panel([expanded]="isFilterActive", (opened)="isFilterActive = true", (closed)="isFilterActive = false")
-      mat-expansion-panel-header
-        mat-panel-title Players filter
 
-      mat-form-field
-        input(matInput, type="text", placeholder="Date from",
-        (dateChange)="form.get('dateFrom').setValue(toDateISO($event.value)+'')",
-        [matDatepicker]="dateFromEl",
-        [value]="form.get('dateFrom').value"
-        )
-        mat-datepicker-toggle(matSuffix, [for]="dateFromEl")
-        mat-datepicker(#dateFromEl)
-
-      mat-form-field
-        input(matInput, type="text", placeholder="Date to",
-        (dateChange)="form.get('dateTo').setValue(toDateISO($event.value)+'')",
-        [matDatepicker]="dateToEl",
-        [value]="form.get('dateTo').value"
-        )
-        mat-datepicker-toggle(matSuffix, [for]="dateToEl")
-        mat-datepicker(#dateToEl, [disabled]="false")
-
-      br
-
-      mat-form-field
-        input(matInput, type="text", formControlName="leagueId", placeholder="League id")
-
-      mat-form-field
-        input(matInput, type="text", formControlName="teamId", placeholder="Team id")
-
-      br
-      mat-form-field
-        input(matInput, type="text", formControlName="minGoals", placeholder="Min goals")
-
-      mat-form-field
-        input(matInput, type="text", formControlName="maxGoals", placeholder="Max goals")
-      br
-
-      mat-form-field.short
-        input(matInput, type="text", formControlName="minCards", placeholder="Min cards")
-
-      mat-form-field.short
-        input(matInput, type="text", formControlName="maxCards", placeholder="Max cards")
-
-
-      mat-form-field.short
-        mat-select(placeholder="Card type", formControlName="cardsType")
-          mat-option([value]="0") Yellow
-          mat-option([value]="1") Red
-          mat-option([value]="2") Both
-
-      br
-      mat-form-field
-        input(matInput, type="text", formControlName="minPlayTime", placeholder="Min play time")
-
-      mat-form-field
-        input(matInput, type="text", formControlName="maxPlayTime", placeholder="Max play time")
-
-      br
-      button(type="submit", [disabled]="isLoading || form.invalid", mat-stroked-button, color="primary") Show players
-  //mat-select(formControlName="orderDirection")
-  //  mat-option ASC
-  //  mat-option DESC
-  //mat-form-field
-  //  input(matInput,formControlName="orderBy", placeholder="Order by")
+mat-sidenav-container
+  mat-sidenav(position="end", #filter, [mode]="device.isMobile() ? 'over' : 'side'", [fixedInViewport]="device.isMobile()",  [opened]="true")
+    label Dates
   
-router-outlet(*ngIf="!isLoading")
+    h1 Foo
+
+  mat-sidenav-content
+    .toggler((click)="filter.toggle()") 
+      div FILTERS
+    mat-accordion
+      button(mat-icon-button, (click)="filter.toggle()")
+        mat-icon menu
+      form([formGroup]="form", (ngSubmit)="submit()")
+        mat-expansion-panel([expanded]="isFilterActive", (opened)="isFilterActive = true", (closed)="isFilterActive = false")
+          mat-expansion-panel-header
+            mat-panel-title Players filter
+    
+          mat-form-field
+            input(matInput, type="text", placeholder="Date from",
+            (dateChange)="form.get('dateFrom').setValue(toDateISO($event.value)+'')",
+            [matDatepicker]="dateFromEl",
+            [value]="form.get('dateFrom').value"
+            )
+            mat-datepicker-toggle(matSuffix, [for]="dateFromEl")
+            mat-datepicker(#dateFromEl)
+    
+          mat-form-field
+            input(matInput, type="text", placeholder="Date to",
+            (dateChange)="form.get('dateTo').setValue(toDateISO($event.value)+'')",
+            [matDatepicker]="dateToEl",
+            [value]="form.get('dateTo').value"
+            )
+            mat-datepicker-toggle(matSuffix, [for]="dateToEl")
+            mat-datepicker(#dateToEl, [disabled]="false")
+    
+          br
+    
+          mat-form-field
+            input(matInput, type="text", formControlName="leagueId", placeholder="League id")
+    
+          mat-form-field
+            input(matInput, type="text", formControlName="teamId", placeholder="Team id")
+    
+          br
+          mat-form-field
+            input(matInput, type="text", formControlName="minGoals", placeholder="Min goals")
+    
+          mat-form-field
+            input(matInput, type="text", formControlName="maxGoals", placeholder="Max goals")
+          br
+    
+          mat-form-field.short
+            input(matInput, type="text", formControlName="minCards", placeholder="Min cards")
+    
+          mat-form-field.short
+            input(matInput, type="text", formControlName="maxCards", placeholder="Max cards")
+    
+    
+          mat-form-field.short
+            mat-select(placeholder="Card type", formControlName="cardsType")
+              mat-option([value]="0") Yellow
+              mat-option([value]="1") Red
+              mat-option([value]="2") Both
+    
+          br
+          mat-form-field
+            input(matInput, type="text", formControlName="minPlayTime", placeholder="Min play time")
+    
+          mat-form-field
+            input(matInput, type="text", formControlName="maxPlayTime", placeholder="Max play time")
+    
+          br
+          button(type="submit", [disabled]="isLoading || form.invalid", mat-stroked-button, color="primary") Show players
+      //mat-select(formControlName="orderDirection")
+      //  mat-option ASC
+      //  mat-option DESC
+      //mat-form-field
+      //  input(matInput,formControlName="orderBy", placeholder="Order by")
+      
+    router-outlet(*ngIf="!isLoading")

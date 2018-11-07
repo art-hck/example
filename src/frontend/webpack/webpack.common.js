@@ -90,7 +90,7 @@ module.exports = {
             },
             {
                 test: /\.(jade|pug)$/,
-                use: ['html-loader?attrs=link:href img:src', 'pug-html-loader']
+                use: ['html-loader?attrs=link:href img:src i:icon', 'pug-html-loader']
             },
             {
                 test: /manifest.json$/,

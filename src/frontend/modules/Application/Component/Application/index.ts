@@ -1,6 +1,7 @@
 import {Component, HostBinding} from "@angular/core";
 import {RouteHelperService} from "../../Service/RouteHelperService";
 import {Event, NavigationCancel, NavigationEnd, NavigationError, NavigationStart, Router} from "@angular/router";
+import {Device} from "../../Service/Device";
 
 @Component({
     selector: "application",
@@ -11,6 +12,7 @@ export class ApplicationComponent {
     
     @HostBinding('class.loading')
     public isLoading = false;
+    public device = Device;
 
     constructor(
         private routeHelperService: RouteHelperService,
