@@ -2,6 +2,7 @@
 
 namespace App\Type\SeekCriteria\Types;
 
+use App\Type\PlayerRole\PlayerRole;
 use App\Type\SeekCriteria\SeekCriteria;
 use App\Type\SeekCriteria\SeekCriteriaException;
 use App\Type\SeekCriteria\SeekCriteriaRange;
@@ -20,7 +21,9 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     private $leagueName;
     private $leagueSeason;
     private $teamId;
+    private $role;
     private $goalsRange;
+    private $ageRange;
     private $playTimeRange;
     private $cardsRange;
     private $cardsType;
@@ -142,6 +145,32 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     public function setLeagueName($leagueName): self
     {
         $this->leagueName = $leagueName;
+        
+        return $this;
+    }
+
+    public function getAgeRange(): ?SeekCriteriaRange
+    {
+        return $this->ageRange;
+    }
+
+    public function setAgeRange($min, $max): self
+    {
+        try {
+            $this->ageRange = new SeekCriteriaRange($min, $max);
+        } catch (SeekCriteriaException $e) {}
+        
+        return $this;
+    }
+
+    public function getRole(): ?PlayerRole
+    {
+        return $this->role;
+    }
+
+    public function setRole(?PlayerRole $role): self
+    {
+        $this->role = $role;
         
         return $this;
     }

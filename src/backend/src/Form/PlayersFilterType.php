@@ -2,6 +2,8 @@
 
 namespace App\Form;
 
+use App\DBAL\Types\PlayerRoleType;
+use App\Type\PlayerRole\PlayerRoleFactory;
 use App\Type\SeekCriteria\SeekCriteria;
 use App\Type\SeekCriteria\Types\SeekCriteriaPlayerFilter;
 use Symfony\Component\Form\AbstractType;
@@ -23,8 +25,24 @@ class PlayersFilterType extends AbstractType
 
             ->add('teamId', IntegerType::class)
 
+            ->add("role", ChoiceType::class, [
+                "choices" => array_map(
+                    function($roleName) {
+                        return PlayerRoleFactory::createFromString($roleName);
+                    }, PlayerRoleType::getChoices()
+                ),
+                "empty_data" => null,
+                // будет использоваться метод getStringCode
+                // (см. http://symfony.com/doc/current/reference/forms/types/choice.html#choice-label)
+                "choice_value" => "name",
+                "required" => false,
+            ])
+
             ->add('minGoals', IntegerType::class)
             ->add('maxGoals', IntegerType::class)
+
+            ->add('minAge', IntegerType::class)
+            ->add('maxAge', IntegerType::class)
 
             ->add('minCards', IntegerType::class)
             ->add('maxCards', IntegerType::class)

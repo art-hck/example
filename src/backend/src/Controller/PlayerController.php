@@ -150,7 +150,6 @@ class PlayerController extends Controller
                 ->validate($request, PlayersFilterType::class, $restService->getAllParams($request))
                 ->getData()
             ;
-
             $criteria = new SeekCriteriaPlayerFilter();
             
             $criteria
@@ -160,7 +159,9 @@ class PlayerController extends Controller
                 ->setDatePeriod($data["dateFrom"], $data["dateTo"])
                 ->setGoalsRange($data["minGoals"], $data["maxGoals"])
                 ->setCardsRange($data["minCards"], $data["maxCards"])
+                ->setAgeRange($data["minAge"], $data["maxAge"])
                 ->setPlayTimeRange($data["minPlayTime"], $data["maxPlayTime"])
+                ->setRole($data["role"])
                 ->setOrderBy($data["orderBy"])
                 ->setOrderDirection($data["orderDirection"])
                 ->setOffset($data["offset"])

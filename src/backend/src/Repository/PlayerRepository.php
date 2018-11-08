@@ -2,9 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Game;
 use App\Entity\Player;
-use App\Entity\TeamGame;
 use App\Type\SeekCriteria\Types\SeekCriteriaPlayerFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
@@ -94,7 +92,41 @@ class PlayerRepository extends ServiceEntityRepository
                 ->setParameter('teamId', $seekCriteria->getTeamId())
             ;
         } // END TEAM FILTER
+
+        // AGE FILTER
+        if($seekCriteria->getAgeRange()) {
+            if($seekCriteria->getAgeRange()->max) {
+                $minBirthday = (new \DateTime())
+                    ->sub(new \DateInterval('P' . $seekCriteria->getAgeRange()->max . 'Y'))
+                    ->format("Y");
+                
+                
+            }
+
+            if($seekCriteria->getAgeRange()->min) {
+                $maxBirthday = (new \DateTime())
+                    ->sub(new \DateInterval('P' . ($seekCriteria->getAgeRange()->min - 1) . 'Y'))
+                    ->format("Y");
+            }
+            
+            $qb
+                ->andWhere('p.birthday >= :minBirthday OR :minBirthday IS NULL')
+                ->andWhere('p.birthday <= :maxBirthday OR :maxBirthday IS NULL')
+                ->setParameter('minBirthday', $minBirthday ?? null)
+                ->setParameter('maxBirthday', $maxBirthday ?? null)
+            ;
+        }
+        // END AGE FILTER
         
+        //ROLE FILTER
+        if($seekCriteria->getRole()) {
+            $qb
+                ->andWhere("p.role = :role")
+                ->setParameter("role", $seekCriteria->getRole()->getId())
+            ;
+        }
+        
+        // END ROLE FILTER
         
         // GOALS FILTER
         if($seekCriteria->getGoalsRange()) {

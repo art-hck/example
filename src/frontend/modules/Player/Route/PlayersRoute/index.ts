@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import {DateISO} from "../../../Application/Entity/ISODate";
 import {Device} from "../../../Application/Service/Device";
 import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
+import {debounceTime} from "rxjs/operators";
 
 @Component({
     selector: "player-filter-form",
@@ -47,7 +48,13 @@ export class PlayersRoute {
     constructor(
         private router: Router,
         @Inject(LOCALE_ID) private locale: string,
-    ) {}
+    ) {
+        this.form
+            .valueChanges
+            .pipe(debounceTime(400))
+            .subscribe(() => this.submit())
+        ;
+    }
 
     submit() {
         
