@@ -96,56 +96,14 @@
     }
 
     mat-sidenav-content {
-
-      .toggler {
+      &.disabled:before {
+        content: "";
+        background: rgba(#fff, 0.5);
         position: absolute;
-        top: 40%;
-        right: 0;
-        box-shadow: 0 6px 0 0 rgba(0, 0, 0, .01), 0 15px 32px 0 rgba(0, 0, 0, .06);
-        //border-bottom: 1px solid #455094;
-        //border-top: 1px solid #b4b0ff;
-        transform: rotate(270deg) translate(0%, 100%);
-        //transform-origin: 100% 50%;
-
-        div {
-          background: #514ae0;
-          font-size: 12px;
-          border-radius: 10px 10px 0 0;
-          padding: 10px;
-          color: #fff;
-          letter-spacing: 2px;
-          cursor: pointer;
-        }
+        width: 100%;
+        height: 100%;
+        z-index: 1;
       }
     }
   }
-}
-
-mat-sidenav-content form {
-  margin: auto;
-  display: flex;
-  justify-content: center;
-  padding: 10px;
-
-  mat-expansion-panel {
-    text-align: center;
-  }
-
-  mat-form-field {
-    margin: 0 5px;
-    width: 30vw;
-
-    &.short {
-      width: 19.82vw;
-    }
-  }
-}
-
-.info {
-  display: flex;
-  overflow: hidden;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: calc(100vh - 480px);
 }

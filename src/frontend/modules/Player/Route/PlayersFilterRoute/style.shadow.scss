@@ -1,22 +1,61 @@
-.players {
-  display: flex;
-  flex-wrap: wrap;
-  padding: 0 5%;
-  line-height:normal;
+:host {
+  display: block;
+  background-color: #f5f7fa;
+  
+  .players {
+    display: flex;
+    align-items: stretch;
+    flex-wrap: wrap;
+    padding: 0 5%;
+    line-height:normal;
+    justify-content:center;
 
-  a {
-    display: block;
-    cursor: pointer;
-    width: 24%;
-    margin: .5%;
+    a {
+      //display: block;
+      cursor: pointer;
+      width: 32%;
+      border-radius: 4px;
+      margin: 5px;
+      background: #fff;
+      overflow: hidden;
+      text-align: left;
+      border: 1px solid #eee;
+      min-width: 300px;
+      flex-basis: auto;
+      box-shadow: none;
+      display: flex;
+
+      .avatar{
+        position: relative;
+
+        &:after{
+          content: '';
+          position: absolute;
+          top: 0;
+          right: 0;
+          height: 100%;
+          width: 50px;
+          border: 350px solid transparent;
+          border-right: 30px solid white;
+        }
+
+      .info {
+        padding: 14px 15px 10px 15px;
+      }
+    }
+
+    }
+
+    a {
+    }
   }
-}
 
-.info {
-  display: flex;
-  overflow: hidden;
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  height: calc(100vh - 480px);
+  .info {
+    display: flex;
+    overflow: hidden;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height: calc(100vh - 480px);
+  }
 }

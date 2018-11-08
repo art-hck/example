@@ -36,8 +36,8 @@ export class PlayersRoute {
     // });
 
     form = new FormGroup({
-        dateFrom: new FormControl(formatDate(new Date(), 'yyyy-MM-dd', this.locale)),
-        dateTo: new FormControl(formatDate(new Date(), 'yyyy-MM-dd', this.locale)),
+        dateFrom: new FormControl(""), // formatDate(new Date(), 'yyyy-MM-dd', this.locale)
+        dateTo: new FormControl(""),
         age: new FormControl([15, 48]),
         teamId: new FormControl(""),
         positionId: new FormControl(""),
@@ -65,13 +65,17 @@ export class PlayersRoute {
         delete request.age;
         
         for (let key in request) {
-            if (request.hasOwnProperty(key) && request[key] === "") {
+            if (request.hasOwnProperty(key) && (request[key] === "")) {
                 delete request[key];
             }
         }
         this.isLoading = true;
         this.isFilterActive = false;
 
+        // console.log(request);
+        // this.isLoading = false
+        // return; 
+        
         this.router
             .navigate(
                 ['players', 'filter'],
@@ -80,10 +84,10 @@ export class PlayersRoute {
             .then(() => this.isLoading = false)
         ;
     }
-
-    public toDateISO(value) {
+    
+    public formatDateISO(value) {
         if (value) {
-            return new DateISO(value);
+            return new DateISO(value).toString();
         }
     }
 }

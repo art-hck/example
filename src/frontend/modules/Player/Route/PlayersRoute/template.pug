@@ -7,7 +7,7 @@ mat-sidenav-container
         label Dates
         .dates
           input(matInput, type="text", 
-            (dateChange)="form.get('dateFrom').setValue(toDateISO($event.value)+'')",
+            (dateChange)="form.get('dateFrom').setValue(formatDateISO($event.value))",
             [matDatepicker]="dateFromEl",
             [value]="form.get('dateFrom').value",
             (click)="dateFromEl.open()"
@@ -15,7 +15,7 @@ mat-sidenav-container
           mat-datepicker(#dateFromEl)
     
           input(matInput, type="text", 
-            (dateChange)="form.get('dateTo').setValue(toDateISO($event.value)+'')",
+            (dateChange)="form.get('dateTo').setValue(formatDateISO($event.value))",
             [matDatepicker]="dateToEl",
             [value]="form.get('dateTo').value",
             (click)="dateToEl.open()"
@@ -67,75 +67,5 @@ mat-sidenav-container
         button(type="submit", [disabled]="isLoading || form.invalid", mat-stroked-button, color="primary") Show players
       
 
-  mat-sidenav-content
-    //mat-accordion
-    //  button(mat-icon-button, (click)="filter.toggle()")
-    //    mat-icon menu
-    //  form([formGroup]="form", (ngSubmit)="submit()")
-    //    mat-expansion-panel([expanded]="isFilterActive", (opened)="isFilterActive = true", (closed)="isFilterActive = false")
-    //      mat-expansion-panel-header
-    //        mat-panel-title Players filter
-    //
-    //      mat-form-field
-    //        input(matInput, type="text", placeholder="Date from",
-    //        (dateChange)="form.get('dateFrom').setValue(toDateISO($event.value)+'')",
-    //        [matDatepicker]="dateFromEl",
-    //        [value]="form.get('dateFrom').value"
-    //        )
-    //        mat-datepicker-toggle(matSuffix, [for]="dateFromEl")
-    //        mat-datepicker(#dateFromEl)
-    //
-    //      mat-form-field
-    //        input(matInput, type="text", placeholder="Date to",
-    //        (dateChange)="form.get('dateTo').setValue(toDateISO($event.value)+'')",
-    //        [matDatepicker]="dateToEl",
-    //        [value]="form.get('dateTo').value"
-    //        )
-    //        mat-datepicker-toggle(matSuffix, [for]="dateToEl")
-    //        mat-datepicker(#dateToEl, [disabled]="false")
-    //
-    //      br
-    //
-    //      mat-form-field
-    //        input(matInput, type="text", formControlName="leagueId", placeholder="League id")
-    //
-    //      mat-form-field
-    //        input(matInput, type="text", formControlName="teamId", placeholder="Team id")
-    //
-    //      br
-    //      mat-form-field
-    //        input(matInput, type="text", formControlName="minGoals", placeholder="Min goals")
-    //
-    //      mat-form-field
-    //        input(matInput, type="text", formControlName="maxGoals", placeholder="Max goals")
-    //      br
-    //
-    //      mat-form-field.short
-    //        input(matInput, type="text", formControlName="minCards", placeholder="Min cards")
-    //
-    //      mat-form-field.short
-    //        input(matInput, type="text", formControlName="maxCards", placeholder="Max cards")
-    //
-    //
-    //      mat-form-field.short
-    //        mat-select(placeholder="Card type", formControlName="cardsType")
-    //          mat-option([value]="0") Yellow
-    //          mat-option([value]="1") Red
-    //          mat-option([value]="2") Both
-    //
-    //      br
-    //      mat-form-field
-    //        input(matInput, type="text", formControlName="minPlayTime", placeholder="Min play time")
-    //
-    //      mat-form-field
-    //        input(matInput, type="text", formControlName="maxPlayTime", placeholder="Max play time")
-    //
-    //      br
-    //      button(type="submit", [disabled]="isLoading || form.invalid", mat-stroked-button, color="primary") Show players
-    //  //mat-select(formControlName="orderDirection")
-    //  //  mat-option ASC
-    //  //  mat-option DESC
-    //  //mat-form-field
-    //  //  input(matInput,formControlName="orderBy", placeholder="Order by")
-      
-    router-outlet(*ngIf="!isLoading")
+  mat-sidenav-content([class.disabled]="isLoading")
+    router-outlet
