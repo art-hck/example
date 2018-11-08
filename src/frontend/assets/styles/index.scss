@@ -4,6 +4,8 @@
 @import '~bootstrap/scss/bootstrap-reboot';
 @import '~bootstrap/scss/bootstrap-grid';
 @import "~@angular/material/prebuilt-themes/deeppurple-amber.css";
+@import "~nouislider/distribute/nouislider.min.css";
+@import "noUiTheme";
 @import url('https://fonts.googleapis.com/css?family=Roboto:400,500');
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
@@ -64,7 +66,7 @@ small { font-size: $small_size; }
   color:#fff;
 }
 
-button, a {
+button, a, div {
   outline: none!important;
   
   &:hover {

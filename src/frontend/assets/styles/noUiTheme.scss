@@ -1,0 +1,44 @@
+.noUi-horizontal {
+  height: 8px;
+}
+.noUi-horizontal .noUi-handle {
+  width: 22px;
+  height: 22px;
+  top: -10px;
+}
+html:not([dir="rtl"]) .noUi-horizontal .noUi-handle {
+  right: -12px;
+}
+
+.noUi-target {
+  background: #edeff2;
+  border: 2px solid #e8e8ff;
+}
+.noUi-connect {
+  background: #534bff;
+}
+
+.inactive .noUi-connect {
+  background: #f5f7fa;
+}
+.noUi-handle {
+  border: 1px solid #e8e6f2;
+  border-radius: 20px;
+  box-shadow: 0 3px 10px -1px #534bff;
+}
+
+.inactive .noUi-handle {
+  box-shadow: 0 3px 10px -1px #bbbae1;
+}
+.noUi-active {
+  opacity:.8
+}
+.noUi-handle:before,
+.noUi-handle:after {
+  height: 8px;
+  background: #11043642;
+  left: 8px;
+}
+.noUi-handle:after {
+  left: 11px;
+}

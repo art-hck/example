@@ -12,6 +12,7 @@ import {PlayersFilterResolver} from "./Resolver/PlayersFilterResolver";
 import {PlayersRoute} from "./Route/PlayersRoute";
 import {PlayersFilterService} from "./Service/PlayersFilterService";
 import {PlayerService} from "./Service/PlayerService";
+import {NouisliderModule} from "ng2-nouislider";
 
 @NgModule({
     imports: [
@@ -19,7 +20,8 @@ import {PlayerService} from "./Service/PlayerService";
         FormsModule,
         RouterModule,
         ReactiveFormsModule,
-        MaterialModule,    
+        MaterialModule,
+        NouisliderModule,
     ],
     declarations: [
         PlayerRoute,
