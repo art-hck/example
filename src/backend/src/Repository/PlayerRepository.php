@@ -105,16 +105,17 @@ class PlayerRepository extends ServiceEntityRepository
         if($seekCriteria->getAgeRange()) {
             if($seekCriteria->getAgeRange()->max) {
                 $minBirthday = (new \DateTime())
-                    ->sub(new \DateInterval('P' . $seekCriteria->getAgeRange()->max . 'Y'))
-                    ->format("Y");
-                
-                
+                    ->sub(new \DateInterval('P' . ($seekCriteria->getAgeRange()->max) . 'Y'))
+                    ->format("Y-m-d")
+                ;
             }
 
             if($seekCriteria->getAgeRange()->min) {
                 $maxBirthday = (new \DateTime())
-                    ->sub(new \DateInterval('P' . ($seekCriteria->getAgeRange()->min - 1) . 'Y'))
-                    ->format("Y");
+                    ->sub(new \DateInterval('P' . ($seekCriteria->getAgeRange()->min + 1) . 'Y'))
+                    ->add(new \DateInterval('P1D'))
+                    ->format("Y-m-d")
+                ;
             }
             
             $qb
