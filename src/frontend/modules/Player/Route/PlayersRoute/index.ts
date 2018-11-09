@@ -65,7 +65,7 @@ export class PlayersRoute {
                 return <ValidationErrors>{invalid_role: true};
             }
         })),
-        nationalityId: new FormControl(""),
+        nationalityId: new FormControl({value:"", disabled: true}),
         orderBy: new FormControl(""),
     });
 
@@ -91,8 +91,8 @@ export class PlayersRoute {
     
     public submit() {
         
-        let request: PlayerFilterRequest = this.form.value;
-        
+        let request: PlayerFilterRequest = {...this.form.value};
+        console.log(this.form.value);
         request.minAge = this.form.value.age[0];
         request.maxAge = this.form.value.age[1];
         delete request.age;
