@@ -5,7 +5,7 @@ br
       img(src="https://tmssl.akamaized.net/{{player.avatar}}")
     .player-info
       a.player-name([routerLink]="['/player', player.id]") {{ (player.first_name || "") + " " + player. last_name }} 
-      .player-role-age-height {{player.role.name | titlecase }} {{player.age}} - {{ player.height }}
+      .player-role-age-height {{player.role?.name | titlecase }} {{player.age}} - {{ player.height }}
       .player-team(*ngIf="player.team")
         img(src="https://tmssl.akamaized.net/{{player.team.preview }}")
         span {{ player.team.name }}
