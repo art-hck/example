@@ -1,4 +1,5 @@
 import {PlayerRole} from "./PlayerRole";
+import {Team} from "../../Team/Entity/Team";
 
 export interface Player {
     first_name: string
@@ -22,10 +23,14 @@ export interface Player {
     link_to_tm: string
     contract_until: number
     contract_ext: number
-    team_uid: number
+    team: Team
     in_team: number
     twitter: string
     facebook: string
     instagram: string
     agents: string
+    age: number
+    goals_count: number,
+    assists_count: number,
+    play_time: number,
 }

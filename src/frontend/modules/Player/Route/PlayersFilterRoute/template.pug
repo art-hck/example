@@ -1,11 +1,26 @@
+br
 .players
-  a(*ngFor="let player of players;", [routerLink]="['/player', player.id]").card
-    .avatar
+  .player(*ngFor="let player of players;")
+    a.player-avatar([routerLink]="['/player', player.id]")
       img(src="https://tmssl.akamaized.net/{{player.avatar}}")
-    .info
-      .name {{ player.native_name  || player.first_name + " " + player. last_name }} 
-      .subtitle {{ player.role.name }}
+    .player-info
+      a.player-name([routerLink]="['/player', player.id]") {{ (player.first_name || "") + " " + player. last_name }} 
+      .player-role-age-height {{player.role.name | titlecase }} {{player.age}} - {{ player.height }}
+      .player-team(*ngIf="player.team")
+        img(src="https://tmssl.akamaized.net/{{player.team.preview }}")
+        span {{ player.team.name }}
+      .player-dash
+        .player-goals 
+          b {{ player.goals_count }} 
+          span GOALS
+        .player-assists 
+          b {{ player.assists_count }}  
+          span ASSIST
+        .player-min 
+          b {{ player.play_time }}  
+          span MIN
+        
 
-div.info(*ngIf="players && players.length==0")
+div.not-found(*ngIf="players && players.length==0")
   h1 No players found
   h5 Please try again

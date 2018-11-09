@@ -1,7 +1,7 @@
 doctype html
 
 mat-sidenav-container
-  mat-sidenav(position="end", #filter, [mode]="device.isMobile() ? 'over' : 'side'", [fixedInViewport]="device.isMobile()",  [opened]="true")
+  mat-sidenav(position="end", #filter, [mode]="'side'", [fixedInViewport]="device.isMobile()",  [opened]="true")
     form([formGroup]="form", (ngSubmit)="submit()")
       .form-field
         label Dates
@@ -25,16 +25,16 @@ mat-sidenav-container
       .form-field
         label Sorting
         .sort
-          input(id="playerFilterSortName", type="radio", formControlName="orderBy", value="name")
+          input(id="playerFilterSortName", type="radio", formControlName="orderBy", value="name", (click)= "resetIfChecked($event)")
           label(for="playerFilterSortName") Name
   
-          input(id="playerFilterSortTeam", type="radio", formControlName="orderBy", value="team")
+          input(id="playerFilterSortTeam", type="radio", formControlName="orderBy", value="team", (click)= "resetIfChecked($event)")
           label(for="playerFilterSortTeam") Team
   
-          input(id="playerFilterSortPosition", type="radio", formControlName="orderBy", value="position")
+          input(id="playerFilterSortPosition", type="radio", formControlName="orderBy", value="role", (click)= "resetIfChecked($event)")
           label(for="playerFilterSortPosition") Position
   
-          input(id="playerFilterSortCountry", type="radio", formControlName="orderBy", value="country")
+          input(id="playerFilterSortCountry", type="radio", formControlName="orderBy", value="country", (click)= "resetIfChecked($event)")
           label(for="playerFilterSortCountry") Country
 
       .form-field

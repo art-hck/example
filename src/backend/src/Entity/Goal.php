@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use App\Serializable\GoalSerializable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\GoalRepository")
  */
-class Goal
+class Goal extends GoalSerializable
 {
     /**
      * @ORM\Id()

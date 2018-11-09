@@ -40,6 +40,8 @@ class PlayerRepository extends ServiceEntityRepository
             case "goals": $orderBy="COUNT(goals.id)"; break;
             case "cards": $orderBy="COUNT(cards.id)"; break;
             case "playTime": $orderBy="SUM(s.playTime)"; break;
+            case "name": $orderBy="p.firstName, p.lastName"; break;
+            case "team": $orderBy="t.name"; break;
             default: $orderBy = "p." . $seekCriteria->getOrderBy(); break;
         }
 
@@ -170,7 +172,8 @@ class PlayerRepository extends ServiceEntityRepository
                 ->setParameter('maxPlayTime', $seekCriteria->getPlayTimeRange()->max)
             ;
         } // END PLAY TIME FILTER
-        
+
+//        echo $qb->getQuery()->getSQL();die;
         return $qb
             ->getQuery()
             ->getResult()

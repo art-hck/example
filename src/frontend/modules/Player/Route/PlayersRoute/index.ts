@@ -35,7 +35,7 @@ export class PlayersRoute {
     //     limit: new FormControl(""),
     // });
 
-    form = new FormGroup({
+    public form = new FormGroup({
         dateFrom: new FormControl(""), // formatDate(new Date(), 'yyyy-MM-dd', this.locale)
         dateTo: new FormControl(""),
         age: new FormControl([15, 48]),
@@ -49,14 +49,20 @@ export class PlayersRoute {
         private router: Router,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        this.form
-            .valueChanges
-            .pipe(debounceTime(400))
-            .subscribe(() => this.submit())
-        ;
+         this.form
+             .valueChanges
+             .pipe(debounceTime(1000))
+             .subscribe(() => this.submit())
+         ;
     }
 
-    submit() {
+    public resetIfChecked(e) {
+        if(this.form.get('orderBy').value===e.target.value){
+            this.form.get('orderBy').reset();
+        }
+    }
+    
+    public submit() {
         
         let request: PlayerFilterRequest = this.form.value;
         
@@ -72,10 +78,6 @@ export class PlayersRoute {
         this.isLoading = true;
         this.isFilterActive = false;
 
-        // console.log(request);
-        // this.isLoading = false
-        // return; 
-        
         this.router
             .navigate(
                 ['players', 'filter'],

@@ -86,3 +86,10 @@ i[icon] {
   background-repeat: no-repeat;
   background-size: contain;
 }
+
+a {
+  color: #2A273C;
+  &:hover {
+    color: #544eed;
+  }
+}

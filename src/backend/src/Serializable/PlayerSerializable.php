@@ -2,6 +2,7 @@
 namespace App\Serializable;
 
 use App\Entity\Country;
+use App\Entity\Substitution;
 use App\Entity\Team;
 use App\Type\PlayerRole\PlayerRole;
 use Doctrine\Common\Collections\Collection;
@@ -17,6 +18,7 @@ abstract class PlayerSerializable implements \JsonSerializable
             "native_name" => $this->getNativeName(),
             "alias" => $this->getAlias(),
             "birthday" => $this->getBirthday() ? $this->getBirthday()->format(DATE_ISO8601) : null,
+            "age" => $this->getBirthday() ? $this->getBirthday()->diff(new \DateTime())->y : null,
             "birthPlace" => $this->getBirthPlace(),
             "foot" => $this->getFoot(),
             "role" => $this->getRole(),
@@ -35,8 +37,13 @@ abstract class PlayerSerializable implements \JsonSerializable
             "country" => $this->getCountry(),
             "team" => $this->getTeam(),
             "cards" => $this->getCards(),
-            "goals" => $this->getGoals(),
-            "assists" => $this->getAssists(),
+            "goals_count" => count($this->getGoals()),
+            "assists_count" => count($this->getAssists()),
+            "play_time" => array_sum(array_map(
+                function($substitution){
+                /** @var $substitution Substitution */
+                return $substitution->getPlayTime();
+            }, $this->getSubstitutions()->toArray())),
         ];
     }
 
@@ -67,4 +74,5 @@ abstract class PlayerSerializable implements \JsonSerializable
     abstract function getCards(): Collection;
     abstract function getGoals(): Collection;
     abstract function getAssists(): Collection;
+    abstract function getSubstitutions(): Collection;
 }

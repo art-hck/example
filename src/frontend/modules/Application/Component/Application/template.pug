@@ -2,7 +2,7 @@ doctype html
 mat-progress-bar(mode="indeterminate", *ngIf="isLoading")
 
 mat-sidenav-container
-  mat-sidenav(#snav, [mode]="device.isMobile() ? 'over' : 'side'", [fixedInViewport]="device.isMobile()",  [opened]="true")
+  mat-sidenav(#snav, [mode]="device.isMobile() ? 'over' : 'side'", [fixedInViewport]="device.isMobile()",  [opened]="!device.isMobile()")
     mat-toolbar
       img(src="../../../../assets/images/logo.png")
       //mat-icon.logo extension
