@@ -13,6 +13,9 @@ use Fresh\DoctrineEnumBundle\Validator\Constraints as DoctrineAssert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\PlayerRepository")
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="IDX_ROLE", columns={"role"})
+ * })
  */
 class Player extends PlayerSerializable
 {
@@ -258,7 +261,7 @@ class Player extends PlayerSerializable
 
     public function getRole(): ?PlayerRole
     {
-        return PlayerRoleFactory::createFromId($this->role);
+        return $this->role ? PlayerRoleFactory::createFromId($this->role) : null;
     }
 
     public function setRole(?PlayerRole $role): self
