@@ -9,8 +9,6 @@ export class PlayersFilterResolver implements Resolve<any> {
     constructor(private playersFilterService: PlayersFilterService) {}
 
     resolve(route: ActivatedRouteSnapshot): Observable<any> | any {
-        if(Object.keys(route.queryParams).length === 0) 
-            return undefined;
         
         let playerFilterRequest: PlayerFilterRequest = route.queryParams;
 

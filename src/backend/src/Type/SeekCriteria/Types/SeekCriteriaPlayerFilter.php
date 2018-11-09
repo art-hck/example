@@ -4,7 +4,6 @@ namespace App\Type\SeekCriteria\Types;
 
 use App\Type\PlayerRole\PlayerRole;
 use App\Type\SeekCriteria\SeekCriteria;
-use App\Type\SeekCriteria\SeekCriteriaException;
 use App\Type\SeekCriteria\SeekCriteriaRange;
 
 class SeekCriteriaPlayerFilter extends SeekCriteria
@@ -28,7 +27,7 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     private $playTimeRange;
     private $cardsRange;
     private $cardsType;
-    
+
     public function getDatePeriod(): ?SeekCriteriaRange
     {
         return $this->datePeriod;
@@ -36,7 +35,7 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
 
     public function setDatePeriod(?\DateTime $dateFrom, ?\DateTime $dateTo): self
     {
-        if($dateFrom || $dateTo) {
+        if ($dateFrom || $dateTo) {
             $this->datePeriod = new SeekCriteriaRange($dateFrom, $dateTo);
         }
 
@@ -84,11 +83,9 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
         return $this->goalsRange;
     }
 
-    public function setGoalsRange(?int $min, ?int $max): self
+    public function setGoalsRange(?SeekCriteriaRange $goalsRange): self
     {
-        try {
-            $this->goalsRange = new SeekCriteriaRange($min, $max);
-        } catch (SeekCriteriaException $e) {}
+        $this->goalsRange = $goalsRange;
 
         return $this;
     }
@@ -98,11 +95,9 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
         return $this->playTimeRange;
     }
 
-    public function setPlayTimeRange(?int $min, ?int $max): self
+    public function setPlayTimeRange(?SeekCriteriaRange $playTimeRange): self
     {
-        try {
-            $this->playTimeRange = new SeekCriteriaRange($min, $max);
-        } catch (SeekCriteriaException $e) {}
+        $this->playTimeRange = $playTimeRange;
 
         return $this;
     }
@@ -112,11 +107,9 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
         return $this->cardsRange;
     }
 
-    public function setCardsRange(?int $min, ?int $max): self
+    public function setCardsRange(?SeekCriteriaRange $cardsRange): self
     {
-        try {
-            $this->cardsRange = new SeekCriteriaRange($min, $max);
-        } catch (SeekCriteriaException $e) {}
+        $this->cardsRange = $cardsRange;
 
         return $this;
     }
@@ -130,15 +123,15 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     {
         return $this->leagueSeason;
     }
-    
-    public function setLeagueSeason(int $leagueSeason): self 
+
+    public function setLeagueSeason(int $leagueSeason): self
     {
         $this->leagueSeason = $leagueSeason;
 
         return $this;
     }
 
-    public function getLeagueName(): ?string 
+    public function getLeagueName(): ?string
     {
         return $this->leagueName;
     }
@@ -146,7 +139,7 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     public function setLeagueName($leagueName): self
     {
         $this->leagueName = $leagueName;
-        
+
         return $this;
     }
 
@@ -155,12 +148,10 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
         return $this->ageRange;
     }
 
-    public function setAgeRange(?int $min, ?int $max): self
+    public function setAgeRange(?SeekCriteriaRange $ageRange): self
     {
-        try {
-            $this->ageRange = new SeekCriteriaRange($min, $max);
-        } catch (SeekCriteriaException $e) {}
-        
+        $this->ageRange = $ageRange;
+
         return $this;
     }
 
@@ -172,19 +163,19 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     public function setRole(?PlayerRole $role): self
     {
         $this->role = $role;
-        
+
         return $this;
     }
 
-    public function getTeamName(): ?string 
+    public function getTeamName(): ?string
     {
         return $this->teamName;
     }
 
-    public function setTeamName(?string $teamName): self 
+    public function setTeamName(?string $teamName): self
     {
         $this->teamName = $teamName;
-        
+
         return $this;
     }
 }

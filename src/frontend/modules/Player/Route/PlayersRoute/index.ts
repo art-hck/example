@@ -1,7 +1,6 @@
 import {Component, Inject, LOCALE_ID} from "@angular/core";
-import {formatDate} from "@angular/common";
 import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {DateISO} from "../../../Application/Entity/ISODate";
 import {Device} from "../../../Application/Service/Device";
 import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
@@ -18,50 +17,23 @@ export class PlayersRoute {
     public isLoading: boolean = false;
     public isFilterActive: boolean = true;
     public playerRoles = [
-        "goalkeeper",
-        "defender",
-        "left back",
-        "centre back",
-        "right back",
-        "defensive midfield",
-        "midfielder",
-        "attacking midfield",
-        "central midfield",
-        "left midfield",
-        "right midfield",
-        "left wing",
-        "centre forward",
-        "forward",
-        "striker",
-        "secondary striker",
-        "right wing",
-        "sweeper",
+        "goalkeeper", "defender", "left back",
+        "centre back", "right back", "defensive midfield",
+        "midfielder", "attacking midfield", "central midfield",
+        "left midfield", "right midfield", "left wing",
+        "centre forward", "forward", "striker",
+        "secondary striker", "right wing", "sweeper",
     ];
-    // public form: FormGroup = new FormGroup({
-    //     dateFrom: new FormControl(null),
-    //     dateTo: new FormControl(formatDate(new Date(), 'yyyy-MM-dd', this.locale)),
-    //     leagueId: new FormControl(""),
-    //     teamId: new FormControl(""),
-    //     minGoals: new FormControl(""),
-    //     maxGoals: new FormControl(""),
-    //     minCards: new FormControl(""),
-    //     maxCards: new FormControl(""),
-    //     cardsType: new FormControl(""),
-    //     minPlayTime: new FormControl(""),
-    //     maxPlayTime: new FormControl(""),
-    //     orderBy: new FormControl(""),
-    //     orderDirection: new FormControl(""),
-    //     offset: new FormControl(""),
-    //     limit: new FormControl(""),
-    // });
+    public minAge = 1;
+    public maxAge = 64;
 
     public form = new FormGroup({
         dateFrom: new FormControl(""), // formatDate(new Date(), 'yyyy-MM-dd', this.locale)
         dateTo: new FormControl(""),
-        age: new FormControl([15, 48]),
+        age: new FormControl([this.minAge, this.maxAge]),
         teamName: new FormControl("", Validators.minLength(3)),
         role: new FormControl("", ((role: FormControl) => {
-            if (role.value &&   !~this.playerRoles.indexOf(role.value)) {
+            if (role.value && !~this.playerRoles.indexOf(role.value)) {
                 return <ValidationErrors>{invalid_role: true};
             }
         })),
@@ -71,6 +43,7 @@ export class PlayersRoute {
 
     constructor(
         private router: Router,
+        private route: ActivatedRoute,
         @Inject(LOCALE_ID) private locale: string,
     ) {
          this.form
@@ -81,10 +54,22 @@ export class PlayersRoute {
                     this.submit()
              })
          ;
+
+        this.route.queryParams.subscribe(params => {
+            for(let param in params) {
+                if(this.form.get(param) ) {
+                    try {
+                        this.form.get(param).setValue(JSON.parse(params[param]));
+                    } catch (e) {
+                        this.form.get(param).setValue(params[param]);
+                    }
+                }
+            }
+        });
     }
 
-    public resetIfChecked(e) {
-        if(this.form.get('orderBy').value===e.target.value){
+    public resetIfChecked(value) {
+        if(this.form.get('orderBy').value===value){
             this.form.get('orderBy').reset();
         }
     }
@@ -92,10 +77,12 @@ export class PlayersRoute {
     public submit() {
         
         let request: PlayerFilterRequest = {...this.form.value};
-        console.log(this.form.value);
-        request.minAge = this.form.value.age[0];
-        request.maxAge = this.form.value.age[1];
-        delete request.age;
+
+        if([this.minAge, this.maxAge] != this.form.value.age)
+            request.age = JSON.stringify(request.age);
+        else {
+            delete request.age;
+        }
         
         for (let key in request) {
             if (request.hasOwnProperty(key) && (request[key] === "")) {

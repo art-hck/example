@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\DBAL\Types\PlayerRoleType;
+use App\Form\Extension\Core\Type\SeekCriteriaRangeType;
 use App\Type\PlayerRole\PlayerRoleFactory;
 use App\Type\SeekCriteria\SeekCriteria;
 use App\Type\SeekCriteria\Types\SeekCriteriaPlayerFilter;
@@ -40,18 +41,11 @@ class PlayersFilterType extends AbstractType
                 "required" => false,
             ])
 
-            ->add('minGoals', IntegerType::class)
-            ->add('maxGoals', IntegerType::class)
-
-            ->add('minAge', IntegerType::class)
-            ->add('maxAge', IntegerType::class)
-
-            ->add('minCards', IntegerType::class)
-            ->add('maxCards', IntegerType::class)
+            ->add('goals', SeekCriteriaRangeType::class)
+            ->add('age', SeekCriteriaRangeType::class)
+            ->add('playTime', SeekCriteriaRangeType::class)
+            ->add('cards', SeekCriteriaRangeType::class)
             ->add('cardsType', IntegerType::class)
-
-            ->add('minPlayTime', IntegerType::class)
-            ->add('maxPlayTime', IntegerType::class)
 
             ->add('orderBy', ChoiceType::class, [
                     'choices' => SeekCriteriaPlayerFilter::getOrderByFields(),
