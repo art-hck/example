@@ -7,7 +7,7 @@ class SeekCriteriaRange {
     public $min;
     public $max;
 
-    public function __construct(?int $min, ?int $max)
+    public function __construct($min, $max)
     {
         if(is_null($min) && is_null($max)) {
             throw new SeekCriteriaException(("Invalid range. At least one of `min` or `max` shold be defined."));
