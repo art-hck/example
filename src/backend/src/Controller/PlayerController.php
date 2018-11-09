@@ -150,11 +150,13 @@ class PlayerController extends Controller
                 ->validate($request, PlayersFilterType::class, $restService->getAllParams($request))
                 ->getData()
             ;
+            
             $criteria = new SeekCriteriaPlayerFilter();
             
             $criteria
                 ->setLeagueId($data["leagueId"])
                 ->setTeamId($data["teamId"])
+                ->setTeamName($data["teamName"])
                 ->setCardsType($data["cardsType"])
                 ->setDatePeriod($data["dateFrom"], $data["dateTo"])
                 ->setGoalsRange($data["minGoals"], $data["maxGoals"])

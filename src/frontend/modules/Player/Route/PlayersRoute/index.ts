@@ -1,6 +1,6 @@
 import {Component, Inject, LOCALE_ID} from "@angular/core";
 import {formatDate} from "@angular/common";
-import {FormControl, FormGroup} from "@angular/forms";
+import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {Router} from "@angular/router";
 import {DateISO} from "../../../Application/Entity/ISODate";
 import {Device} from "../../../Application/Service/Device";
@@ -17,6 +17,26 @@ export class PlayersRoute {
     public device = Device;
     public isLoading: boolean = false;
     public isFilterActive: boolean = true;
+    public playerRoles = [
+        "goalkeeper",
+        "defender",
+        "left back",
+        "centre back",
+        "right back",
+        "defensive midfield",
+        "midfielder",
+        "attacking midfield",
+        "central midfield",
+        "left midfield",
+        "right midfield",
+        "left wing",
+        "centre forward",
+        "forward",
+        "striker",
+        "secondary striker",
+        "right wing",
+        "sweeper",
+    ];
     // public form: FormGroup = new FormGroup({
     //     dateFrom: new FormControl(null),
     //     dateTo: new FormControl(formatDate(new Date(), 'yyyy-MM-dd', this.locale)),
@@ -39,8 +59,12 @@ export class PlayersRoute {
         dateFrom: new FormControl(""), // formatDate(new Date(), 'yyyy-MM-dd', this.locale)
         dateTo: new FormControl(""),
         age: new FormControl([15, 48]),
-        teamId: new FormControl(""),
-        positionId: new FormControl(""),
+        teamName: new FormControl("", Validators.minLength(3)),
+        role: new FormControl("", ((role: FormControl) => {
+            if (role.value &&   !~this.playerRoles.indexOf(role.value)) {
+                return <ValidationErrors>{invalid_role: true};
+            }
+        })),
         nationalityId: new FormControl(""),
         orderBy: new FormControl(""),
     });
@@ -52,7 +76,10 @@ export class PlayersRoute {
          this.form
              .valueChanges
              .pipe(debounceTime(1000))
-             .subscribe(() => this.submit())
+             .subscribe(() => {
+                 if(this.form.valid)
+                    this.submit()
+             })
          ;
     }
 

@@ -21,6 +21,7 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     private $leagueName;
     private $leagueSeason;
     private $teamId;
+    private $teamName;
     private $role;
     private $goalsRange;
     private $ageRange;
@@ -154,7 +155,7 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
         return $this->ageRange;
     }
 
-    public function setAgeRange($min, $max): self
+    public function setAgeRange(?int $min, ?int $max): self
     {
         try {
             $this->ageRange = new SeekCriteriaRange($min, $max);
@@ -171,6 +172,18 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     public function setRole(?PlayerRole $role): self
     {
         $this->role = $role;
+        
+        return $this;
+    }
+
+    public function getTeamName(): ?string 
+    {
+        return $this->teamName;
+    }
+
+    public function setTeamName(?string $teamName): self 
+    {
+        $this->teamName = $teamName;
         
         return $this;
     }

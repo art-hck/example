@@ -10,6 +10,7 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Range;
 
@@ -22,8 +23,9 @@ class PlayersFilterType extends AbstractType
             ->add('dateTo', DateType::class, ["widget" => "single_text"])
 
             ->add('leagueId', IntegerType::class)
-
+            
             ->add('teamId', IntegerType::class)
+            ->add('teamName', TextType::class)
 
             ->add("role", ChoiceType::class, [
                 "choices" => array_map(

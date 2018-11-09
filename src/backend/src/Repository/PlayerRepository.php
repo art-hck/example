@@ -93,6 +93,12 @@ class PlayerRepository extends ServiceEntityRepository
             $qb->andWhere('p.team=:teamId')
                 ->setParameter('teamId', $seekCriteria->getTeamId())
             ;
+        }
+        
+        if ($seekCriteria->getTeamName()) {
+            $qb->andWhere('t.name LIKE :teamName')
+                ->setParameter('teamName', $seekCriteria->getTeamName() . "%")
+            ;
         } // END TEAM FILTER
 
         // AGE FILTER

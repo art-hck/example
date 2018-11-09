@@ -10,6 +10,10 @@
         padding: 12px 20px 15px;
         border-bottom: 1px solid #eaeaeac4;
         
+        &.disabled {
+          opacity: .3;
+        }
+        
         input[type=text] {
           padding: 8px 14px;
           font-size: 14px;
@@ -21,6 +25,10 @@
           color: #463cff;
           background: #ffffff;
           height: 38px;
+          
+          &.ng-invalid {
+            border-color: #ff000033;
+          }
         }
 
         .age-tooltip {

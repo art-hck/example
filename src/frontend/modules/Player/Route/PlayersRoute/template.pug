@@ -46,20 +46,22 @@ mat-sidenav-container
       .form-field
         label Team
         .input-box
-          input(type="text", formControlName="teamId")
-          .clear(*ngIf="form.get('teamId').value", (click)="form.get('teamId').reset()") × 
+          input(type="text", formControlName="teamName")
+          .clear(*ngIf="form.get('teamName').value", (click)="form.get('teamName').reset()") × 
 
 
       .form-field
         label Position
         .input-box
-          input(type="text", formControlName="positionId")
-          .clear(*ngIf="form.get('positionId').value", (click)="form.get('positionId').reset()") × 
+          input(matInput, type="text", formControlName="role", [matAutocomplete]="autocompletePos")
+          .clear(*ngIf="form.get('role').value", (click)="form.get('role').reset()") ×
+          mat-autocomplete(#autocompletePos="matAutocomplete")
+            mat-option(*ngFor="let role of playerRoles", [value]="role") {{ role | titlecase }}
 
-      .form-field
+      .form-field.disabled
         label Nationality
         .input-box
-          input(type="text", formControlName="nationalityId")
+          input(type="text", formControlName="nationalityId", disabled="", placeholder="Not implemented yet")
           .clear(*ngIf="form.get('nationalityId').value", (click)="form.get('nationalityId').reset()") ×
 
 
