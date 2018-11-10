@@ -47,15 +47,26 @@ class PlayerRepository extends ServiceEntityRepository
 
         $qb = $this->createQueryBuilder('p')
             ->join('p.team', 't')
-            ->join('t.teamGames', 'tg')
-            ->join('tg.game', 'g')
-//            ->join(TeamGame::class, 'tg', 'WITH', 'tg.team = p.team')
-//            ->join(Game::class, 'g', 'WITH', 'tg.game = g.id')
             ->groupBy('p.id')
+            ->andWhere($orderBy . " IS NOT NULL")
             ->orderBy($orderBy, $seekCriteria->getOrderDirection())
             ->setFirstResult($seekCriteria->getOffset())
             ->setMaxResults($seekCriteria->getLimit())
         ;
+
+        if (
+            $seekCriteria->getDatePeriod() || 
+            $seekCriteria->getLeagueId() || 
+            $seekCriteria->getGoalsRange() || 
+            $seekCriteria->getCardsRange() || 
+            $seekCriteria->getCardsType() || 
+            $seekCriteria->getPlayTimeRange()) 
+        {
+            $qb
+                ->join('t.teamGames', 'tg')
+                ->join('tg.game', 'g')
+            ;
+        }
 
         // DATE FILTER
         if ($seekCriteria->getDatePeriod()) {
