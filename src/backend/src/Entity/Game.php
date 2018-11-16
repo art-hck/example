@@ -24,7 +24,8 @@ class Game extends GameSerializable
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\League", inversedBy="games")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
+     * @TODO: nullable must be false!!!!
      */
     private $league;
 

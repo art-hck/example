@@ -25,72 +25,74 @@ class GoalFixtures extends Fixture implements ContainerAwareInterface, Dependent
     public function load(ObjectManager $manager)
     {
         return;
+        echo 123;
         try {
+//            $offset = 324000;
             $offset = 0;
-            $limit = 5000;
+            $limit = 2000;
+            $microtime = microtime(true);
             while (true) {
-                $gameIds = $playersIds = [];
-                $games = $this->getGames($limit, $offset);
+                $gameUIDs = $playersUIDs = [];
+                $rows = $this->getGames($limit, $offset);
 
-                foreach ($games as $game) {
-                    $gameIds[] = $game["gameUID"];
-                    foreach ($game["goals"] as $goal) {
-                        $playersIds[] = $goal[0];
-                        $playersIds[] = $goal[4];
+                foreach ($rows as $row) {
+                    $gameUIDs[] = $row["gameUID"];
+                    foreach ($row["goals"] as $goal) {
+                        $playersUIDs[] = $goal[0];
+                        $playersUIDs[] = $goal[4];
                     }
                 }
 
-                $playerEntities = $manager->getRepository(Player::class)->findByIds($playersIds);
-                $gameEntities = $manager->getRepository(Game::class)->findByIds($gameIds);
+                $playerIDsUIDs = $this->em->createQueryBuilder()->select("p.id, p.tmId")->from(Player::class, "p")->where("p.tmId IN (:uids)")->setParameter('uids', $playersUIDs)->getQuery()->getArrayResult();
+                $gameIDsUIDs = $this->em->createQueryBuilder()->select("g.id, g.tmId")->from(Game::class, "g")->where("g.tmId IN (:uids)")->setParameter('uids', $gameUIDs)->getQuery()->getArrayResult();
 
-                foreach ($games as $game) {
+                foreach ($rows as $row) {
 
-                    /** @var Game[] $gameEntity */
-                    $gameEntity = array_filter($gameEntities, function (Game $gameEntity) use ($game) {
-                        return $gameEntity->getTmId() === (int)$game["gameUID"];
-                    });
+                    /** @var Game $game */
+                    $game = current(array_filter($gameIDsUIDs, function ($game) use ($row) {
+                        return $game["tmId"] == $row["gameUID"];
+                    }));
+                    
+                    if ($game) $game = $this->em->getReference(Game::class, $game["id"]);
 
-                    $gameEntity = array_shift($gameEntity);
-
-                    foreach ($game["goals"] as $goal) {
+                    foreach ($row["goals"] as $goal) {
                         list($tmId, $time, $score, $description, $assistTmId, $assistDescription) = $goal;
 
-                        if($tmId !== false && $tmId!="false") {
-                            /** @var Player[] $playerEntity */
-                            $playerEntity = array_filter($playerEntities, function (Player $playerEntity) use ($tmId) {
-                                return $playerEntity->getTmId() == $tmId;
-                            });
+                        if ($tmId !== false && $tmId != "false") {
+                            /** @var Player $player */
+                            $player = current(array_filter($playerIDsUIDs, function ($player) use ($tmId) {
+                                return $player["tmId"] == $tmId;
+                            }));
+                            if ($player) $player = $this->em->getReference(Player::class, $player["id"]);
+                            else $player = null;
 
-                            $playerEntity = array_shift($playerEntity);
-                            
                             $goal = (new Goal())
                                 ->setScore($score)
                                 ->setDescription($description)
-                                ->setGame($gameEntity)
-                                ->setTime($time)
-                            ;
-                            if($playerEntity)
-                                $goal->setPlayer($playerEntity);
+                                ->setGame($game)
+                                ->setTime((int)$time)
+                                ->setPlayer($player);;
 
                             $manager->persist($goal);
 
-                            if($assistTmId !== false && $assistTmId!="false") {
-                                $assistEntity = array_filter($playerEntities, function (Player $playerEntity) use ($tmId) {
-                                    return $playerEntity->getTmId() == $tmId;
-                                });
+                            if ($assistTmId !== false && $assistTmId != "false") {
+                                /** @var Player $assistPlayer */
+                                $assistPlayer = current(array_filter($playerIDsUIDs, function ($player) use ($assistTmId) {
+                                    return $player["tmId"] == $assistTmId;
+                                }));
 
-                                $assistEntity = array_shift($assistEntity);
+                                if ($assistPlayer) {
+                                    $assistPlayer = $this->em->getReference(Player::class, (int)$assistPlayer["id"]);
+                                } else $assistPlayer = null;
+
                                 $assist = (new Assist())
                                     ->setDescription($assistDescription)
                                     ->setGoal($goal)
-                                ;
-                                if($assistEntity)
-                                    $assist->setPlayer($assistEntity);
-                                
+                                    ->setPlayer($assistPlayer);
+
                                 $manager->persist($assist);
                             }
-                            
-                        }                        
+                        }
                     }
                 }
 
@@ -99,9 +101,14 @@ class GoalFixtures extends Fixture implements ContainerAwareInterface, Dependent
                 $manager->flush();
                 $manager->clear();
                 gc_collect_cycles();
-                echo "Offset ${offset}\t" . TeamFixtures::convert(memory_get_usage()) . PHP_EOL;
+                echo "Offset: ${offset}\t";
+                echo "Memory: " . TeamFixtures::convert(memory_get_usage()) . "\t";
+                echo "Peak:" . TeamFixtures::convert(memory_get_usage()) . "\t";
+                echo "Time: " . time() . "\t";
 
-                if (count($games) < $limit) break;
+                echo "Time left: " . number_format((microtime(true) - $microtime) / $offset * 780795 / 60, 1) . "min";
+                echo PHP_EOL;
+                if (count($rows) < $limit) break;
             }
 
             $manager->flush();
@@ -112,82 +119,6 @@ class GoalFixtures extends Fixture implements ContainerAwareInterface, Dependent
         }
 
     }
-    
-//    public function load2(ObjectManager $manager)
-//    {
-//        return;
-//        try {
-//            gc_enable();
-//
-//            /** @var EntityManager $em */
-//            $em = $this->container->get('doctrine.orm.entity_manager');
-//            $em->getConnection()->getConfiguration()->setSQLLogger(null);
-//
-//            $stmt = $em->getConnection()->executeQuery("SELECT * FROM tm.games");
-//            $i = 0;
-//            while ($row = $stmt->fetch()) {
-//
-//                $game = $manager->getRepository(Game::class)->findOneBy([
-//                    "tmId" => $row["gameUID"],
-//                ]);
-//
-//                foreach(explode('][', $row['goals']) as $item) {
-//                    if(empty($item)) continue;
-//                    
-//                    list($tmId, $time, $score, $description, $assistTmId, $assistDescription) = array_pad(explode("_@", $item), 6, false);
-//                    
-//                    if($tmId !== false && $tmId!="false") {
-//                        $player = $manager->getRepository(Player::class)->findOneBy(["tmId" => $tmId]);
-//                        if($player) {
-//                            $goal = (new Goal())
-//                                ->setPlayer($player)
-//                                ->setScore($score)
-//                                ->setDescription($description)
-//                                ->setGame($game)
-//                                ->setTime($time)
-//                            ;
-//
-//                            $manager->persist($goal);
-//    
-//                            if($assistTmId !== false && $assistTmId!="false") {
-//                                $assistant = $manager->getRepository(Player::class)->findOneBy(["tmId" =>  $assistTmId]);
-//                                if($assistant) {
-//                                    $assist = (new Assist())
-//                                        ->setDescription($assistDescription)
-//                                        ->setPlayer($assistant)
-//                                        ->setGoal($goal)
-//                                    ;
-//                                    $manager->persist($assist);
-//                                }
-//                            }
-//                            }
-//                    }
-//                    
-//                }
-//
-//                if(++$i % 1000 == 0) {
-//                    echo "Cleaning......." . PHP_EOL;
-//                    $manager->flush();
-//                    $manager->clear();
-//                    gc_collect_cycles();
-//                }
-//
-//                echo "Index: " . $i . "\trowId:" . $row["id"] . "\t";
-//                echo TeamFixtures::convert(memory_get_usage()) . PHP_EOL;
-////                unset($row, $league, $stadium, $referee, $homeTeam, $guestTeam, $game);
-//            }
-//
-//
-//            $manager->flush();
-//            $manager->clear();
-//
-//        } catch (DBALException $e) {
-//
-//            die($e->getMessage());
-//        }
-//
-//    }
-
 
     /**
      * @param $limit
@@ -219,8 +150,8 @@ class GoalFixtures extends Fixture implements ContainerAwareInterface, Dependent
 
         return $games;
     }
-    
-    public function setContainer( ContainerInterface $container = null )
+
+    public function setContainer(ContainerInterface $container = null)
     {
         $this->container = $container;
     }

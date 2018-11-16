@@ -48,11 +48,18 @@ class PlayerRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p')
             ->join('p.team', 't')
             ->groupBy('p.id')
-            ->andWhere($orderBy . " IS NOT NULL")
             ->orderBy($orderBy, $seekCriteria->getOrderDirection())
             ->setFirstResult($seekCriteria->getOffset())
             ->setMaxResults($seekCriteria->getLimit())
         ;
+        
+        if($seekCriteria->getOrderBy() == "name") {
+            $qb
+                ->andWhere("p.firstName IS NOT NULL")
+                ->andWhere("p.lastName IS NOT NULL");
+        } else {
+            $qb->andWhere($orderBy . " IS NOT NULL");
+        }
 
         if (
             $seekCriteria->getDatePeriod() || 

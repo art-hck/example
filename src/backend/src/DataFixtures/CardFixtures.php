@@ -25,39 +25,35 @@ class CardFixtures extends Fixture implements ContainerAwareInterface, Dependent
         return;
         try {
             $offset = 0;
-            $limit = 5000;
+            $limit = 1000;
             while (true) {
-                $gameIds = $playersIds = [];
-                $games = $this->getGames($limit, $offset);
+                $microtime = microtime(true);
+                
+                $rows = $this->getGames($limit, $offset);
+                $gameUIDs = $playersUIDs = [];
 
-                foreach ($games as $game) {
-                    $gameIds[] = $game["gameUID"];
-                    foreach ($game["cards"] as $card) {
-                        $playersIds[] = $card[0];
+                foreach ($rows as $row) {
+                    $gameUIDs[] = $row["gameUID"];
+                    foreach ($row["cards"] as $card) {
+                        $playersUIDs[] = $card[0];
                     }
                 }
 
-                $playerEntities = $manager->getRepository(Player::class)->findByIds($playersIds);
-                $gameEntities = $manager->getRepository(Game::class)->findByIds($gameIds);
+                $playerIDsUIDs = $this->em->createQueryBuilder()->select("p.id, p.tmId")->from(Player::class, "p")->where("p.tmId IN (:uids)")->setParameter('uids', $playersUIDs)->getQuery()->getArrayResult();
+                $gameIDsUIDs = $this->em->createQueryBuilder()->select("g.id, g.tmId")->from(Game::class, "g")->where("g.tmId IN (:uids)")->setParameter('uids', $gameUIDs)->getQuery()->getArrayResult();
 
-                foreach ($games as $game) {
+                foreach ($rows as $row) {
+                    /** @var Game $game */
+                    $game = current(array_filter($gameIDsUIDs, function ($game) use ($row) {return $game["tmId"] == $row["gameUID"];}));
+                    if($game) $game = $this->em->getReference(Game::class, $game["id"]);
 
-                    /** @var Game[] $gameEntity */
-                    $gameEntity = array_filter($gameEntities, function (Game $gameEntity) use ($game) {
-                        return $gameEntity->getTmId() === (int)$game["gameUID"];
-                    });
-
-                    $gameEntity = array_shift($gameEntity);
-
-                    foreach ($game["cards"] as $card) {
+                    
+                    foreach ($row["cards"] as $card) {
                         list($tmId, $time, $reason, $isYellow, $isRed) = $card;
 
-                        /** @var Player[] $playerEntity */
-                        $playerEntity = array_filter($playerEntities, function (Player $playerEntity) use ($tmId) {
-                            return $playerEntity->getTmId() == $tmId;
-                        });
-
-                        $playerEntity = array_shift($playerEntity);
+                        /** @var Player $player */
+                        $player = current(array_filter($playerIDsUIDs, function ($player) use ($tmId) {return $player["tmId"] == $tmId;}));
+                        if($player) $player = $this->em->getReference(Player::class, $player["id"]);
 
                         switch (true) {
                             case $isYellow && $isRed: $type = 2; break;
@@ -69,11 +65,11 @@ class CardFixtures extends Fixture implements ContainerAwareInterface, Dependent
                         if ($type !== false) {
                             $card = (new Card())
                                 ->setTime($time)
-                                ->setGame($gameEntity)
+                                ->setGame($game)
                                 ->setType($type)
                             ;
-                            if ($playerEntity) {
-                                $card->setPlayer($playerEntity);
+                            if ($player) {
+                                $card->setPlayer($player);
                             }
                             if ($reason !== "false") {
                                 $card->setReason($reason);
@@ -89,9 +85,15 @@ class CardFixtures extends Fixture implements ContainerAwareInterface, Dependent
                 $manager->flush();
                 $manager->clear();
                 gc_collect_cycles();
-                echo "Offset ${offset}\t" . TeamFixtures::convert(memory_get_usage()) . PHP_EOL;
 
-                if (count($games) < $limit) break;
+                echo "Offset: ${offset}\t";
+                echo "Memory: " . TeamFixtures::convert(memory_get_usage()) . "\t";
+                echo "Peak:" . TeamFixtures::convert(memory_get_usage()) . "\t";
+                echo "Time: " . time() . "\t";
+                echo "Time left: " . number_format((microtime(true) - $microtime) / $limit * (780795 - $offset) / 60, 1). "min";
+                echo PHP_EOL;
+
+                if (count($rows) < $limit) break;
             }
 
             $manager->flush();

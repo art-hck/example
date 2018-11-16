@@ -23,53 +23,55 @@ class SubstitutionFixtures extends Fixture implements ContainerAwareInterface, D
 
     public function load(ObjectManager $manager)
     {
+        //return;
         try {
-            $offset = 0;
-            $limit = 5000;
+            $offset = 200000;
+            $limit = 500;
+            $end = 10000000;
+            $end += $offset;
+            
+            $microtime = microtime(true);
+            
             while (true) {
-                $gameIds = $playersIds = [];
-                $games = $this->getGames($limit, $offset);
+                $cycleMicrotime = microtime(true);
+                
+                $gameUIDs = $playersUIDs = [];
+                $rows = $this->getGames($limit, $offset);
 
-                foreach ($games as $game) {
-                    $gameIds[] = $game["gameUID"];
-                    foreach (array_merge($games[0]["awayTeamPlayers"], $games[0]["homeTeamPlayers"]) as $player) {
-                        $playersIds[] = $player[0];
+                foreach ($rows as $i => $row) {
+                    $gameUIDs[] = $row["gameUID"];
+                    foreach (array_merge($row["awayTeamPlayers"], $row["homeTeamPlayers"]) as $player) {
+                        $playersUIDs[] = $player[0];
                     }
                 }
+                $gameUIDs = array_unique($gameUIDs);
+                $playersUIDs = array_unique($playersUIDs);
+                
+                $playerIDsUIDs = $this->em->createQueryBuilder()->select("p.id, p.tmId")->from(Player::class, "p")->where("p.tmId IN (:uids)")->setParameter('uids', $playersUIDs)->getQuery()->getArrayResult();
+                $gameIDsUIDs = $this->em->createQueryBuilder()->select("g.id, g.tmId")->from(Game::class, "g")->where("g.tmId IN (:uids)")->setParameter('uids', $gameUIDs)->getQuery()->getArrayResult();
 
-                $playerEntities = $manager->getRepository(Player::class)->findByIds($playersIds);
-                $gameEntities = $manager->getRepository(Game::class)->findByIds($gameIds);
+                foreach ($rows as $row) {
 
-                foreach ($games as $game) {
+                    /** @var Game $game */
+                    $game = current(array_filter($gameIDsUIDs, function ($game) use ($row) {return $game["tmId"] == $row["gameUID"];}));
+                    if($game) $game = $this->em->getReference(Game::class, $game["id"]);
 
-                    /** @var Game[] $gameEntity */
-                    $gameEntity = array_filter($gameEntities, function (Game $gameEntity) use ($game) {
-                        return $gameEntity->getTmId() === (int)$game["gameUID"];
-                    });
-
-                    $gameEntity = array_shift($gameEntity);
-
-                    foreach (array_merge($game["awayTeamPlayers"], $game["homeTeamPlayers"]) as $substitution) {
+                    foreach (array_merge($row["awayTeamPlayers"], $row["homeTeamPlayers"]) as $substitution) {
                         list($tmId, $name, $enterTime, $outTime) = $substitution;
-                        
-                        if($tmId !== false && $tmId!="false" && $enterTime && $outTime) {
-                            /** @var Player[] $playerEntity */
-                            $playerEntity = array_filter($playerEntities, function (Player $playerEntity) use ($tmId) {
-                                return $playerEntity->getTmId() == $tmId;
-                            });
 
-                            $playerEntity = array_shift($playerEntity);
+                        if ($tmId !== false && $tmId != "false" && $enterTime && $outTime) {
+                            /** @var Player $player */
+                            $player = current(array_filter($playerIDsUIDs, function ($player) use ($tmId) {return $player["tmId"] == $tmId;}));
+                            if($player) $player = $this->em->getReference(Player::class, $player["id"]);
+                            else $player = null;
 
                             $substitution = (new Substitution())
-                                ->setGame($gameEntity)
-                                ->setJoinTime($enterTime)
-                                ->setPlayTime($outTime)
+                                ->setGame($game)
+                                ->setJoinTime((int)$enterTime)
+                                ->setPlayTime((int)$outTime)
+                                ->setPlayer($player)
                             ;
                             
-                            if($playerEntity) {
-                                $substitution->setPlayer($playerEntity);
-                            }
-
                             $manager->persist($substitution);
 
                         }
@@ -81,9 +83,19 @@ class SubstitutionFixtures extends Fixture implements ContainerAwareInterface, D
                 $manager->flush();
                 $manager->clear();
                 gc_collect_cycles();
-                echo "Offset ${offset}\t" . TeamFixtures::convert(memory_get_usage()) . PHP_EOL;
+                
+                $time = \DateTime::createFromFormat('U.u', microtime(TRUE));
+                if($time) $time = $time->format("H:i:s.u");
+                echo "Offset: ${offset}\t";
+                echo "Memory: " . TeamFixtures::convert(memory_get_usage()) . "\t";
+//                echo "Peak:" . TeamFixtures::convert(memory_get_peak_usage()) . "\t";
+                echo "Time: " . $time . "\t";
+                echo "Time left: " . number_format((microtime(true) - $microtime) / $offset * 780795 / 60, 1) . "min\t";
+                echo "Cycle time: " . number_format((microtime(true) - $cycleMicrotime), 3) . "sec\t";
+                echo PHP_EOL;
 
-                if (count($games) < $limit) break;
+                if (count($rows) < $limit) break;
+                if($offset >= $end) break;
             }
 
             $manager->flush();
