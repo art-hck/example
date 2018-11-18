@@ -1,0 +1,21 @@
+export enum PlayerRoleEnum
+{
+    Goalkeeper = "goalkeeper",
+    Defender = "defender",
+    LeftBack = "left back",
+    CentreBack = "centre back",
+    RightBack = "right back",
+    DefensiveMidfield = "defensive midfield",
+    Midfielder = "midfielder",
+    AttackingMidfield = "attacking midfield",
+    CentralMidfield = "central midfield",
+    LeftMidfield = "left midfield",
+    RightMidfield = "right midfield",
+    LeftWing = "left wing",
+    CentreForward = "centre forward",
+    Forward = "forward",
+    Striker = "striker",
+    SecondaryStriker = "secondary striker",
+    RightWing = "right wing",
+    Sweeper = "sweeper",
+}

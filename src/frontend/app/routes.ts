@@ -5,6 +5,7 @@ import {PlayersFilterRoute} from "../modules/Player/Route/PlayersFilterRoute";
 import {PageNotFoundRoute} from "../modules/Application/Route/PageNotFoundRoute";
 import {PlayersFilterResolver} from "../modules/Player/Resolver/PlayersFilterResolver";
 import {PlayersRoute} from "../modules/Player/Route/PlayersRoute";
+import {CanActivatePlayerFilter} from "../modules/Player/CanActivate/CanActivatePlayerFilter";
 
 export const appRoutes: GenieRoutes = [
     {
@@ -35,6 +36,7 @@ export const appRoutes: GenieRoutes = [
                 resolve: {
                     players: PlayersFilterResolver
                 },
+                canActivate: [CanActivatePlayerFilter]
             }
         ],
         data: {

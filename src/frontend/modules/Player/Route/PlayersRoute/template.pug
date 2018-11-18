@@ -38,11 +38,17 @@ mat-sidenav-container
           label(for="playerFilterSortCountry") Country
 
       .form-field
-          label Age
-          .age-tooltip(*ngIf="form.get('age').value") {{ form.get('age').value[0] }} — {{ form.get('age').value[1] }}
-          
-          nouislider([connect]="true", [min]="minAge", [max]="maxAge", [step]="1", [formControl]="form.get('age')")
+        range-slider-form-control(label="Goals", [min]="1", [max]="100", [formControlName]="'goals'")
 
+      .form-field
+        range-slider-form-control(label="Cards", [min]="1", [max]="100", [formControlName]="'cards'")
+
+      .form-field
+        range-slider-form-control(label="Height", [min]="150", [max]="250", [formControlName]="'height'")
+
+      .form-field
+        range-slider-form-control(label="Age", [min]="15", [max]="64", [formControlName]="'age'")
+        
       .form-field
         label Team
         .input-box
@@ -67,7 +73,7 @@ mat-sidenav-container
 
       .form-field
         button(type="submit", [disabled]="isLoading || form.invalid", mat-stroked-button, color="primary") Show players
-      
+    
 
   mat-sidenav-content([class.disabled]="isLoading")
     router-outlet

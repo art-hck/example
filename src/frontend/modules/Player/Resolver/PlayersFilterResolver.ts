@@ -1,34 +1,16 @@
 import {Injectable} from "@angular/core";
 import {ActivatedRouteSnapshot, Resolve} from "@angular/router";
 import {Observable} from "rxjs";
-import {PlayersFilterService} from "../Service/PlayersFilterService";
-import {PlayerFilterRequest} from "../Http/PlayerFilterRequest";
+import {PlayerRESTService} from "../Service/PlayerRESTService";
+import {Player} from "../Entity/Player";
 
 @Injectable()
-export class PlayersFilterResolver implements Resolve<any> {
-    constructor(private playersFilterService: PlayersFilterService) {}
+export class PlayersFilterResolver implements Resolve<any>
+{
+    constructor(private playerService: PlayerRESTService) {}
 
-    resolve(route: ActivatedRouteSnapshot): Observable<any> | any {
-        
-        let playerFilterRequest: PlayerFilterRequest = route.queryParams;
-
-        //@TODO: check params!
-        // if(route.queryParams.hasOwnProperty("dateFrom")) {}
-        // if(route.queryParams.hasOwnProperty("dateTo")) {}
-        // if(route.queryParams.hasOwnProperty("leagueId")) {}
-        // if(route.queryParams.hasOwnProperty("teamId")) {}
-        // if(route.queryParams.hasOwnProperty("minGoals")) {}
-        // if(route.queryParams.hasOwnProperty("maxGoals")) {}
-        // if(route.queryParams.hasOwnProperty("minCards")) {}
-        // if(route.queryParams.hasOwnProperty("maxCards")) {}
-        // if(route.queryParams.hasOwnProperty("cardsType")) {}
-        // if(route.queryParams.hasOwnProperty("minPlayTime")) {}
-        // if(route.queryParams.hasOwnProperty("maxPlayTime")) {}
-        // if(route.queryParams.hasOwnProperty("orderBy")) {}
-        // if(route.queryParams.hasOwnProperty("orderDirection")) {}
-        // if(route.queryParams.hasOwnProperty("offset")) {}
-        // if(route.queryParams.hasOwnProperty("limit")) {}
-
-        return this.playersFilterService.filter(playerFilterRequest);
+    resolve(route: ActivatedRouteSnapshot): Observable<Player[]>
+    {
+        return this.playerService.filter(route.queryParams);
     }
 }

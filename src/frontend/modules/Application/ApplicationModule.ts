@@ -20,6 +20,7 @@ import {PageNotFoundRoute} from "./Route/PageNotFoundRoute";
 import {ForbiddenRoute} from "./Route/ForbiddenRoute";
 import {CacheService} from "./Service/CacheService";
 import {IconDirective} from "./Directive/IconDirective";
+import {CacheInterceptor} from "./Interceptor/CacheInterceptor";
 
 registerLocaleData(localeRu);
 
@@ -46,7 +47,12 @@ registerLocaleData(localeRu);
             provide: HTTP_INTERCEPTORS,
             useClass: RESTInterceptor,
             multi: true,
-        },        
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: CacheInterceptor,
+            multi: true,
+        },
         {
             provide: RESTInterceptorConfig,
             useValue: {

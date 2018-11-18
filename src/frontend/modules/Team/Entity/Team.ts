@@ -1,5 +1,4 @@
 import {Player} from "../../Player/Entity/Player";
-import {Country} from "../../Country/Entity/Country";
 
 export interface Team {
     id: number
@@ -9,7 +8,9 @@ export interface Team {
     created: string
     updated: string
     tmId: number
-    country: Country
+    country: {
+        id: number
+    }
     players: Player[]
     teamGames: []
 }

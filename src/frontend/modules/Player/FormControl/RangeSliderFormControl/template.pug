@@ -1,0 +1,12 @@
+label {{ label }}
+span(*ngIf="value") {{ value[0] }} — {{ value[1] }}
+nouislider(
+  [connect]="true",
+  [min]="min", [max]="max", [step]="1",
+  (slide)="writeValue($event)",
+  (change)="onChange($event)",
+  [disabled]="isDisabled",
+  [(ngModel)]="value"
+)
+
+button(type="button", *ngIf="!isReseted", (click)="writeValue(null); onChange(null)") RESET

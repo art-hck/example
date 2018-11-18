@@ -1,10 +1,12 @@
 import {Component, Inject, LOCALE_ID} from "@angular/core";
 import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
+import {debounceTime, filter} from "rxjs/operators";
+
 import {DateISO} from "../../../Application/Entity/ISODate";
 import {Device} from "../../../Application/Service/Device";
 import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
-import {debounceTime} from "rxjs/operators";
+import {PlayerRoleEnum} from "../../Entity/PlayerRoleEnum";
 
 @Component({
     selector: "player-filter-form",
@@ -15,30 +17,23 @@ import {debounceTime} from "rxjs/operators";
 export class PlayersRoute {
     public device = Device;
     public isLoading: boolean = false;
-    public isFilterActive: boolean = true;
-    public playerRoles = [
-        "goalkeeper", "defender", "left back",
-        "centre back", "right back", "defensive midfield",
-        "midfielder", "attacking midfield", "central midfield",
-        "left midfield", "right midfield", "left wing",
-        "centre forward", "forward", "striker",
-        "secondary striker", "right wing", "sweeper",
-    ];
-    public minAge = 1;
-    public maxAge = 64;
+    public playerRoles = Object.values(PlayerRoleEnum);
 
     public form = new FormGroup({
-        dateFrom: new FormControl(""), // formatDate(new Date(), 'yyyy-MM-dd', this.locale)
-        dateTo: new FormControl(""),
-        age: new FormControl([this.minAge, this.maxAge]),
-        teamName: new FormControl("", Validators.minLength(3)),
-        role: new FormControl("", ((role: FormControl) => {
+        dateFrom: new FormControl(), // formatDate(new Date(), 'yyyy-MM-dd', this.locale)
+        dateTo: new FormControl(),
+        age: new FormControl(),
+        cards: new FormControl(),
+        goals: new FormControl(),
+        height: new FormControl(),
+        teamName: new FormControl(null, Validators.minLength(3)),
+        role: new FormControl(null, ((role: FormControl) => {
             if (role.value && !~this.playerRoles.indexOf(role.value)) {
                 return <ValidationErrors>{invalid_role: true};
             }
         })),
-        nationalityId: new FormControl({value:"", disabled: true}),
-        orderBy: new FormControl(""),
+        nationalityId: new FormControl({value: "", disabled: true}),
+        orderBy: new FormControl(),
     });
 
     constructor(
@@ -46,22 +41,29 @@ export class PlayersRoute {
         private route: ActivatedRoute,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-         this.form
-             .valueChanges
-             .pipe(debounceTime(1000))
-             .subscribe(() => {
-                 if(this.form.valid)
-                    this.submit()
-             })
-         ;
+        this.form.valueChanges
+            .pipe(
+                debounceTime(500),
+                filter(() => this.form.valid)
+            )
+            .subscribe(() => this.submit())
+        ;
 
         this.route.queryParams.subscribe(params => {
-            for(let param in params) {
-                if(this.form.get(param) ) {
-                    try {
-                        this.form.get(param).setValue(JSON.parse(params[param]));
-                    } catch (e) {
-                        this.form.get(param).setValue(params[param]);
+            for (let param in this.form.value) {
+                if (this.form.value.hasOwnProperty(param)) {
+                    // Если в queryParams есть параметр и он не совпадает со значением формы - присваиваем                    
+                    if (params[param] && params[param] != this.form.get(param).value) {
+                        try {
+                            this.form.get(param).setValue(JSON.parse(params[param]));
+                        } catch (e) {
+                            this.form.get(param).setValue(params[param]);
+                        }
+                    }
+
+                    // Если в queryParams пусто , но в форме значение есть - обнуляем параметр в форме
+                    if (!params[param] && this.form.get(param).value) {
+                        this.form.get(param).reset();
                     }
                 }
             }
@@ -69,28 +71,19 @@ export class PlayersRoute {
     }
 
     public resetIfChecked(value) {
-        if(this.form.get('orderBy').value===value){
+        if (this.form.get('orderBy').value === value) {
             this.form.get('orderBy').reset();
         }
     }
-    
-    public submit() {
-        
-        let request: PlayerFilterRequest = {...this.form.value};
 
-        if([this.minAge, this.maxAge] != this.form.value.age)
-            request.age = JSON.stringify(request.age);
-        else {
-            delete request.age;
-        }
-        
-        for (let key in request) {
-            if (request.hasOwnProperty(key) && (request[key] === "")) {
-                delete request[key];
-            }
-        }
+    public submit() {
+        let request: PlayerFilterRequest = {};
+
+        Object.keys(this.form.controls).forEach(
+            k => request[k] = Array.isArray(this.form.value[k]) ? JSON.stringify(this.form.value[k]) : this.form.value[k]
+        );
+
         this.isLoading = true;
-        this.isFilterActive = false;
 
         this.router
             .navigate(
@@ -100,7 +93,7 @@ export class PlayersRoute {
             .then(() => this.isLoading = false)
         ;
     }
-    
+
     public formatDateISO(value) {
         if (value) {
             return new DateISO(value).toString();
