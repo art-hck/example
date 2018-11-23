@@ -119,15 +119,19 @@ class PlayerController extends Controller
 
     /**
      * Getting players by dates of games, scored balls, cards received, game time etc.
-     * 
-     * @SWG\Parameter(name="dateFrom", in="query", type="string", description="")
-     * @SWG\Parameter(name="dateTo", in="query", type="string", description="")
-     * @SWG\Parameter(name="leagueId", in="query", type="integer", description="")
-     * @SWG\Parameter(name="teamId", in="query", type="integer", description="")
-     * @SWG\Parameter(name="goals", in="query", type="string", description="")
+     *
+     * @SWG\Parameter(name="age", in="query", type="string", description="")
      * @SWG\Parameter(name="cards", in="query", type="string", description="")
      * @SWG\Parameter(name="cardsType", in="query", type="integer", description="")
+     * @SWG\Parameter(name="dateFrom", in="query", type="string", description="")
+     * @SWG\Parameter(name="dateTo", in="query", type="string", description="")
+     * @SWG\Parameter(name="goals", in="query", type="string", description="")
+     * @SWG\Parameter(name="height", in="query", type="string", description="")
+     * @SWG\Parameter(name="leagueId", in="query", type="integer", description="")
      * @SWG\Parameter(name="playTime", in="query", type="string", description="")
+     * @SWG\Parameter(name="role", in="query", type="string", description="")
+     * @SWG\Parameter(name="teamId", in="query", type="integer", description="")
+     * @SWG\Parameter(name="teamName", in="query", type="integer", description="")
      * @SWG\Parameter(name="orderBy", in="query", type="string", description="")
      * @SWG\Parameter(name="orderDirection", in="query", type="string", description="")
      * @SWG\Parameter(name="offset", in="query", type="integer", description="")
@@ -151,16 +155,17 @@ class PlayerController extends Controller
             $criteria = new SeekCriteriaPlayerFilter();
             
             $criteria
-                ->setLeagueId($data["leagueId"])
-                ->setTeamId($data["teamId"])
-                ->setTeamName($data["teamName"])
+                ->setAgeRange($data["age"])
+                ->setCardsRange($data["cards"])
                 ->setCardsType($data["cardsType"])
                 ->setDatePeriod($data["dateFrom"], $data["dateTo"])
                 ->setGoalsRange($data["goals"])
-                ->setCardsRange($data["cards"])
-                ->setAgeRange($data["age"])
+                ->setHeightRange($data["height"])
+                ->setLeagueId($data["leagueId"])
                 ->setPlayTimeRange($data["playTime"])
                 ->setRole($data["role"])
+                ->setTeamId($data["teamId"])
+                ->setTeamName($data["teamName"])
                 ->setOrderBy($data["orderBy"])
                 ->setOrderDirection($data["orderDirection"])
                 ->setOffset($data["offset"])

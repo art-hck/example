@@ -12,6 +12,9 @@ export class PlayerFilterRequest {
     playTime?: [number, number] = null;
     orderBy?: string = null;
     orderDirection?: "ASC | DESC" = null;
+    height?: number = null;
+    teamName?: string = null;
+    age?: string = null;
     offset?: number = null;
     limit?: number = null;
     role?: PlayerRoleEnum;

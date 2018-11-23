@@ -46,6 +46,7 @@ class PlayersFilterType extends AbstractType
             ->add('playTime', SeekCriteriaRangeType::class)
             ->add('cards', SeekCriteriaRangeType::class)
             ->add('cardsType', IntegerType::class)
+            ->add('height', SeekCriteriaRangeType::class)
 
             ->add('orderBy', ChoiceType::class, [
                     'choices' => SeekCriteriaPlayerFilter::getOrderByFields(),

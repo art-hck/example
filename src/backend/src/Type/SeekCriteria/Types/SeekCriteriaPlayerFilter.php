@@ -27,6 +27,7 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     private $playTimeRange;
     private $cardsRange;
     private $cardsType;
+    private $heightRange;
 
     public function getDatePeriod(): ?SeekCriteriaRange
     {
@@ -176,6 +177,18 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     {
         $this->teamName = $teamName;
 
+        return $this;
+    }
+
+    public function getHeightRange(): ?SeekCriteriaRange
+    {
+        return $this->heightRange;
+    }
+
+    public function setHeightRange(?SeekCriteriaRange $heightRange): self
+    {
+        $this->heightRange = $heightRange;
+        
         return $this;
     }
 }

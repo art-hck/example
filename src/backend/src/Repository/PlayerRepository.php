@@ -152,7 +152,17 @@ class PlayerRepository extends ServiceEntityRepository
                 ->setParameter("role", $seekCriteria->getRole()->getId())
             ;
         }
-        
+        // END ROLE FILTER
+
+        //HEIGHT FILTER
+        if($seekCriteria->getHeightRange()) {
+            $qb
+                ->andWhere("p.height >= :minHeight OR :minHeight IS NULL")
+                ->andWhere("p.height <= :maxHeight OR :maxHeight IS NULL")
+                ->setParameter('minHeight', $seekCriteria->getHeightRange()->min)
+                ->setParameter('maxHeight', $seekCriteria->getHeightRange()->max)
+            ;
+        }
         // END ROLE FILTER
         
         // GOALS FILTER
