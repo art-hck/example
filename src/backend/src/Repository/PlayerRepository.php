@@ -65,7 +65,9 @@ class PlayerRepository extends ServiceEntityRepository
             $seekCriteria->getDatePeriod() || 
             $seekCriteria->getLeagueId() || 
             $seekCriteria->getGoalsRange() || 
+            $seekCriteria->getAssistsRange() || 
             $seekCriteria->getCardsRange() || 
+            $seekCriteria->getIsInternational() || 
             $seekCriteria->getCardsType() || 
             $seekCriteria->getPlayTimeRange()) 
         {
@@ -92,19 +94,30 @@ class PlayerRepository extends ServiceEntityRepository
         
 
         // LEAGUE FILTER
+        if ($seekCriteria->getLeagueName() || $seekCriteria->getIsInternational()) {
+            $qb->join('g.league', 'l');
+        }
+
         if ($seekCriteria->getLeagueId()) {
             $qb->andWhere('g.league=:leagueId')
                 ->setParameter('leagueId', $seekCriteria->getLeagueId())
             ;
         }
 
-//        @TODO: implement!
-//        $qb->join('g.league', 'l')
-//            ->andWhere('l.name LIKE :leagueName')
-//            ->setParameter("leagueName", "1. Liga group 1%")
-//        ;
-        // END LEAGUE FILTER
+        if ($seekCriteria->getLeagueName()) {
+            $qb
+                ->andWhere('l.name LIKE :leagueName')
+                ->setParameter('leagueName', $seekCriteria->getLeagueName() . "%")
+            ;
+        } // END LEAGUE FILTER
         
+        // INTERNATIONAL FILTER
+        if($seekCriteria->getIsInternational()) {
+            $qb
+                ->andWhere('l.isInternational LIKE :isInternational')
+                ->setParameter('isInternational', $seekCriteria->getIsInternational())
+            ;
+        } // END INTERNATIONAL FILTER
 
         // TEAM FILTER
         if($seekCriteria->getTeamId()) {
@@ -142,8 +155,7 @@ class PlayerRepository extends ServiceEntityRepository
                 ->setParameter('minBirthday', $minBirthday ?? null)
                 ->setParameter('maxBirthday', $maxBirthday ?? null)
             ;
-        }
-        // END AGE FILTER
+        } // END AGE FILTER
         
         //ROLE FILTER
         if($seekCriteria->getRole()) {
@@ -151,8 +163,7 @@ class PlayerRepository extends ServiceEntityRepository
                 ->andWhere("p.role = :role")
                 ->setParameter("role", $seekCriteria->getRole()->getId())
             ;
-        }
-        // END ROLE FILTER
+        } // END ROLE FILTER
 
         //HEIGHT FILTER
         if($seekCriteria->getHeightRange()) {
@@ -162,20 +173,32 @@ class PlayerRepository extends ServiceEntityRepository
                 ->setParameter('minHeight', $seekCriteria->getHeightRange()->min)
                 ->setParameter('maxHeight', $seekCriteria->getHeightRange()->max)
             ;
-        }
-        // END ROLE FILTER
+        } // END ROLE FILTER
         
         // GOALS FILTER
+        if($seekCriteria->getGoalsRange() || $seekCriteria->getAssistsRange()) {
+            $qb->join('p.goals', 'goals', 'WITH', 'goals.game = g.id');
+        }
+
         if($seekCriteria->getGoalsRange()) {
             $qb
-                ->join('p.goals', 'goals', 'WITH', 'goals.game = g.id')
                 ->andHaving('COUNT(goals.id) >= :minGoals OR :minGoals IS NULL')
                 ->andHaving('COUNT(goals.id) <= :maxGoals OR :maxGoals IS NULL')
                 ->setParameter('minGoals', $seekCriteria->getGoalsRange()->min)
                 ->setParameter('maxGoals', $seekCriteria->getGoalsRange()->max)
             ;
         } // END GOALS FILTER
-        
+
+        // ASSISTS FILTER
+        if($seekCriteria->getAssistsRange()) {
+            $qb
+                ->join('goals.assist', 'assist')
+                ->andHaving('COUNT(assist.id) >= :minAssist OR :minAssist IS NULL')
+                ->andHaving('COUNT(goals.id) <= :maxAssist OR :maxAssist IS NULL')
+                ->setParameter('minAssist', $seekCriteria->getAssistsRange()->min)
+                ->setParameter('maxAssist', $seekCriteria->getAssistsRange()->max)
+            ;
+        } // END ASSISTS FILTER
 
         // CARDS FILTER
         if($seekCriteria->getCardsRange() || $seekCriteria->getCardsType()) {

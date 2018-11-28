@@ -37,6 +37,11 @@ class League extends LeagueSerializable
      */
     private $games;
 
+    /**
+     * @ORM\Column(type="boolean")
+     */
+    private $isInternational;
+
     public function __construct()
     {
         $this->games = new ArrayCollection();
@@ -98,6 +103,18 @@ class League extends LeagueSerializable
                 $game->setLeague(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getIsInternational(): ?bool
+    {
+        return $this->isInternational;
+    }
+
+    public function setIsInternational(bool $isInternational): self
+    {
+        $this->isInternational = $isInternational;
 
         return $this;
     }

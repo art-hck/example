@@ -20,13 +20,17 @@ export class PlayersRoute {
     public playerRoles = Object.values(PlayerRoleEnum);
 
     public form = new FormGroup({
+        age: new FormControl(),
+        assists: new FormControl(),
+        cards: new FormControl(),
         dateFrom: new FormControl(), // formatDate(new Date(), 'yyyy-MM-dd', this.locale)
         dateTo: new FormControl(),
-        age: new FormControl(),
-        cards: new FormControl(),
         goals: new FormControl(),
         height: new FormControl(),
+        international: new FormControl(false),
+        leagueName: new FormControl(null, Validators.minLength(3)),
         teamName: new FormControl(null, Validators.minLength(3)),
+        playTime: new FormControl(),
         role: new FormControl(null, ((role: FormControl) => {
             if (role.value && !~this.playerRoles.indexOf(role.value)) {
                 return <ValidationErrors>{invalid_role: true};
@@ -70,9 +74,10 @@ export class PlayersRoute {
         });
     }
 
-    public resetIfChecked(value) {
-        if (this.form.get('orderBy').value === value) {
-            this.form.get('orderBy').reset();
+    public resetIfChecked(controlName, value) {
+        console.log(value);
+        if (this.form.get(controlName).value === value) {
+            this.form.get(controlName).reset();
         }
     }
 

@@ -8,6 +8,7 @@ use App\Type\PlayerRole\PlayerRoleFactory;
 use App\Type\SeekCriteria\SeekCriteria;
 use App\Type\SeekCriteria\Types\SeekCriteriaPlayerFilter;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
@@ -27,6 +28,7 @@ class PlayersFilterType extends AbstractType
             
             ->add('teamId', IntegerType::class)
             ->add('teamName', TextType::class)
+            ->add('leagueName', TextType::class)
 
             ->add("role", ChoiceType::class, [
                 "choices" => array_map(
@@ -41,6 +43,8 @@ class PlayersFilterType extends AbstractType
                 "required" => false,
             ])
 
+            ->add('international', CheckboxType::class, ["false_values" => ['', 'false', 'null', false, null]])
+            ->add('assists', SeekCriteriaRangeType::class)
             ->add('goals', SeekCriteriaRangeType::class)
             ->add('age', SeekCriteriaRangeType::class)
             ->add('playTime', SeekCriteriaRangeType::class)

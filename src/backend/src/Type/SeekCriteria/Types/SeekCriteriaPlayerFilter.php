@@ -20,8 +20,10 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     private $leagueName;
     private $leagueSeason;
     private $teamId;
+    private $isInternational;
     private $teamName;
     private $role;
+    private $assistsRange;
     private $goalsRange;
     private $ageRange;
     private $playTimeRange;
@@ -189,6 +191,30 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     {
         $this->heightRange = $heightRange;
         
+        return $this;
+    }
+
+    public function getAssistsRange(): ?SeekCriteriaRange 
+    {
+        return $this->assistsRange;
+    }
+
+    public function setAssistsRange(?SeekCriteriaRange $assistsRange): self 
+    {
+        $this->assistsRange = $assistsRange;
+        
+        return $this;
+    }
+
+    public function getIsInternational(): ?bool 
+    {
+        return $this->isInternational;
+    }
+
+    public function setIsInternational(?bool $isInternational): self 
+    {
+        $this->isInternational = $isInternational;
+
         return $this;
     }
 }

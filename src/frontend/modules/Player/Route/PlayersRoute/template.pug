@@ -25,20 +25,32 @@ mat-sidenav-container
       .form-field
         label Sorting
         .sort
-          input(id="playerFilterSortName", type="radio", formControlName="orderBy", value="name", (click)="resetIfChecked($event.target.value)")
+          input(id="playerFilterSortName", type="radio", formControlName="orderBy", value="name", (click)="resetIfChecked('orderBy', $event.target.value)")
           label(for="playerFilterSortName") Name
   
-          input(id="playerFilterSortTeam", type="radio", formControlName="orderBy", value="team", (click)="resetIfChecked($event.target.value)")
+          input(id="playerFilterSortTeam", type="radio", formControlName="orderBy", value="team", (click)="resetIfChecked('orderBy', $event.target.value)")
           label(for="playerFilterSortTeam") Team
   
-          input(id="playerFilterSortPosition", type="radio", formControlName="orderBy", value="role", (click)="resetIfChecked($event.target.value)")
+          input(id="playerFilterSortPosition", type="radio", formControlName="orderBy", value="role", (click)="resetIfChecked('orderBy', $event.target.value)")
           label(for="playerFilterSortPosition") Position
   
-          input(id="playerFilterSortCountry", type="radio", formControlName="orderBy", value="country", (click)="resetIfChecked($event.target.value)")
+          input(id="playerFilterSortCountry", type="radio", formControlName="orderBy", value="country", (click)="resetIfChecked('orderBy', $event.target.value)")
           label(for="playerFilterSortCountry") Country
 
       .form-field
+        label International
+        .sort
+          input(id="internationalTrue", type="radio", formControlName="international", [value]="true", (click)="resetIfChecked('international', $event.target.checked)")
+          label(for="internationalTrue") Yes
+
+          input(id="internationalFalse", type="radio", formControlName="international", [value]="false", (click)="resetIfChecked('international', !$event.target.checked)")
+          label(for="internationalFalse") No
+
+      .form-field
         range-slider-form-control(label="Goals", [min]="1", [max]="100", [formControlName]="'goals'")
+
+      .form-field
+        range-slider-form-control(label="Assists", [min]="0", [max]="100", [formControlName]="'assists'")
 
       .form-field
         range-slider-form-control(label="Cards", [min]="1", [max]="100", [formControlName]="'cards'")
@@ -48,12 +60,21 @@ mat-sidenav-container
 
       .form-field
         range-slider-form-control(label="Age", [min]="15", [max]="64", [formControlName]="'age'")
+
+      .form-field
+        range-slider-form-control(label="Time played", [min]="0", [max]="5000", [formControlName]="'playTime'")
         
       .form-field
         label Team
         .input-box
           input(type="text", formControlName="teamName")
           .clear(*ngIf="form.get('teamName').value", (click)="form.get('teamName').reset()") × 
+
+      .form-field
+        label League
+        .input-box
+          input(type="text", formControlName="leagueName")
+          .clear(*ngIf="form.get('leagueName').value", (click)="form.get('leagueName').reset()") × 
 
 
       .form-field
