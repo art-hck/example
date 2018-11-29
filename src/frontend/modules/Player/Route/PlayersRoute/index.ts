@@ -27,7 +27,7 @@ export class PlayersRoute {
         dateTo: new FormControl(),
         goals: new FormControl(),
         height: new FormControl(),
-        international: new FormControl(false),
+        international: new FormControl(),
         leagueName: new FormControl(null, Validators.minLength(3)),
         teamName: new FormControl(null, Validators.minLength(3)),
         playTime: new FormControl(),
@@ -75,7 +75,6 @@ export class PlayersRoute {
     }
 
     public resetIfChecked(controlName, value) {
-        console.log(value);
         if (this.form.get(controlName).value === value) {
             this.form.get(controlName).reset();
         }

@@ -114,7 +114,7 @@ class PlayerRepository extends ServiceEntityRepository
         // INTERNATIONAL FILTER
         if($seekCriteria->getIsInternational()) {
             $qb
-                ->andWhere('l.isInternational LIKE :isInternational')
+                ->andWhere('l.isInternational = :isInternational')
                 ->setParameter('isInternational', $seekCriteria->getIsInternational())
             ;
         } // END INTERNATIONAL FILTER
