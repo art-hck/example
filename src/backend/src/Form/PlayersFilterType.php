@@ -43,7 +43,7 @@ class PlayersFilterType extends AbstractType
                 "required" => false,
             ])
 
-            ->add('international', CheckboxType::class, ["false_values" => ['', 'false', 'null', false, null]])
+            ->add('international', CheckboxType::class)
             ->add('assists', SeekCriteriaRangeType::class)
             ->add('goals', SeekCriteriaRangeType::class)
             ->add('age', SeekCriteriaRangeType::class)

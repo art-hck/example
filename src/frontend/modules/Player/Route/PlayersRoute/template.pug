@@ -38,13 +38,9 @@ mat-sidenav-container
           label(for="playerFilterSortCountry") Country
 
       .form-field
-        label International
         .sort
           input(id="internationalTrue", type="radio", formControlName="international", [value]="true", (click)="resetIfChecked('international', $event.target.checked)")
-          label(for="internationalTrue") Yes
-
-          input(id="internationalFalse", type="radio", formControlName="international", [value]="false", (click)="resetIfChecked('international', !$event.target.checked)")
-          label(for="internationalFalse") No
+          label(for="internationalTrue", [style.width.%]="100") International
 
       .form-field
         range-slider-form-control(label="Goals", [min]="1", [max]="100", [formControlName]="'goals'")
