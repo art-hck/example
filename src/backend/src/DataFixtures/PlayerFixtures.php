@@ -26,7 +26,7 @@ class PlayerFixtures extends Fixture implements ContainerAwareInterface, Depende
             $em = $this->container->get('doctrine.orm.entity_manager');
             $em->getConnection()->getConfiguration()->setSQLLogger(null);
         
-            $stmt = $em->getConnection()->executeQuery("SELECT * FROM player.builder_player");
+            $stmt = $em->getConnection()->executeQuery("SELECT * FROM tm.builder_player");
             $i = 0;
             while ($row = $stmt->fetch()) {
     
@@ -63,7 +63,7 @@ class PlayerFixtures extends Fixture implements ContainerAwareInterface, Depende
                 if(!empty($row["contract_until"])) $player->setContractUntil(new \DateTime("@" . $row["contract_until"]));
                 if(!empty($row["contract_ext"])) $player->setContractExt(new \DateTime("@" . $row["contract_ext"]));
                 
-                if(!empty($row["team_uid"]))    $player->setTeam($manager->getRepository(Team::class)->findOneBy(["tm_id" => $row["team_uid"]]) ?? null);
+                if(!empty($row["team_uid"]))    $player->setTeam($manager->getRepository(Team::class)->findOneBy(["tmId" => $row["team_uid"]]) ?? null);
                 if(!empty($row["in_team"]))     $player->setInTeam(new \DateTime("@" . $row["in_team"]));
                 if(!empty($row["twitter"]))     $player->setTwitter($row["twitter"]);
                 if(!empty($row["facebook"]))    $player->setFacebook($row["facebook"]);

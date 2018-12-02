@@ -24,7 +24,7 @@ class TeamFixtures extends Fixture implements ContainerAwareInterface
             $em = $this->container->get('doctrine.orm.entity_manager');
             $em->getConnection()->getConfiguration()->setSQLLogger(null);
 
-            $stmt = $em->getConnection()->executeQuery("SELECT * FROM player.builder_team");
+            $stmt = $em->getConnection()->executeQuery("SELECT * FROM tm.builder_team");
 
             $i = 0;
             while ($row = $stmt->fetch()) {

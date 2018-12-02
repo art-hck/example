@@ -23,11 +23,11 @@ class SubstitutionFixtures extends Fixture implements ContainerAwareInterface, D
 
     public function load(ObjectManager $manager)
     {
-        //return;
+        return;
         try {
-            $offset = 200000;
+            $offset = 0;
             $limit = 500;
-            $end = 10000000;
+            $end = 400000;
             $end += $offset;
             
             $microtime = microtime(true);

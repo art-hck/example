@@ -14,7 +14,7 @@ export class PlayerFilterRequest {
     leagueId?: number = null;
     leagueName?: string = null;
     playTime?: [number, number] = null;
-    role?: PlayerRoleEnum;
+    role?: PlayerRoleEnum = null;
     teamId?: number = null;
     teamName?: string = null;
     orderBy?: string = null;

@@ -70,6 +70,12 @@ class MainFixtures extends Fixture implements ContainerAwareInterface, Dependent
                     /** @var Team $guestTeam */
                     if($guestTeam) $guestTeam = $this->em->getReference(Team::class, $guestTeam["id"]);
 
+                    if(is_bool($league)) $league = null; // when uid == 0
+                    if(is_bool($stadium)) $stadium = null; // when uid == 0
+                    if(is_bool($referee)) $referee = null; // when uid == 0
+                    if(is_bool($homeTeam)) $homeTeam = null; // when uid == 0
+                    if(is_bool($guestTeam)) $guestTeam = null; // when uid == 0
+
                     $game = (new Game())
                         ->setTmId($row["gameUID"])
                         ->setScore($row["score"])
@@ -79,7 +85,7 @@ class MainFixtures extends Fixture implements ContainerAwareInterface, Dependent
                         ->setStatus($row["status"])
                         ->setUpdated(new \DateTime("@" . $row["updated"]))
                         ->setLeague($league)
-                        ->setStadium($stadium)
+                        ->setStadium($stadium ?? null)
                         ->setReferee($referee)
                     ;
     
