@@ -15,6 +15,7 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
         "goals", "cards", "playTime", "name"
     ];
 
+    private $playerName;
     private $datePeriod;
     private $leagueId;
     private $leagueName;
@@ -215,6 +216,18 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     {
         $this->isInternational = $isInternational;
 
+        return $this;
+    }
+
+    public function getPlayerName(): ?string
+    {
+        return $this->playerName;
+    }
+
+    public function setPlayerName(?string $playerName): self
+    {
+        $this->playerName = $playerName;
+        
         return $this;
     }
 }

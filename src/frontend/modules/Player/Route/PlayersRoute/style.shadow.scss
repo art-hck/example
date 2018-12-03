@@ -7,11 +7,6 @@
     width: 260px;
     box-shadow: 0 0 40px #ddd;
 
-    form {
-      position: sticky;
-      top: calc(100vh - 1034px);
-    }
-
     .form-field {
       padding: 12px 20px 15px;
       border-bottom: 1px solid #eaeaeac4;
@@ -110,10 +105,28 @@
   }
 
   mat-sidenav-content {
+    padding: 20px;
+    background-color: #f5f7fa;
+    .search-input {
+      width: 100%;
+      box-sizing: border-box;
+
+      font-size: 16px;
+      padding: 10px 20px 10px 40px;
+      background: #ffffff url(../../../../assets/images/icons/__search_b.png) 14px 50% no-repeat;
+      background-size: 14px;
+      color: #6760ff;
+      outline: none;
+      border-radius: 45px;
+      border: 1px solid #e8e8e8;
+    }
+    
     &.disabled:before {
       content: "";
       background: rgba(#fff, 0.5);
       position: absolute;
+      top:0;
+      left: 0;
       width: 100%;
       height: 100%;
       z-index: 1;

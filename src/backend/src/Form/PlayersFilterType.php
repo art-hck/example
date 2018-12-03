@@ -24,6 +24,7 @@ class PlayersFilterType extends AbstractType
             ->add('dateFrom', DateType::class, ["widget" => "single_text"])
             ->add('dateTo', DateType::class, ["widget" => "single_text"])
 
+            ->add('playerName', TextType::class)
             ->add('leagueId', IntegerType::class)
             
             ->add('teamId', IntegerType::class)

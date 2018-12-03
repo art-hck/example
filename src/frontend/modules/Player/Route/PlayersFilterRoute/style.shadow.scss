@@ -1,13 +1,12 @@
 :host {
   display: block;
-  background-color: #f5f7fa;
   
   .players {
     display: flex;
     flex-wrap: wrap;
-    padding: 20px;
     line-height: normal;
-    justify-content: space-evenly;
+    //justify-content: space-evenly;
+    justify-content: space-between;
 
     .player {
       width: 32%;

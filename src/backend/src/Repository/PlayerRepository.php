@@ -132,6 +132,20 @@ class PlayerRepository extends ServiceEntityRepository
             ;
         } // END TEAM FILTER
 
+        // PLAYER NAME FILTER
+        if ($seekCriteria->getPlayerName()) {
+            $qb
+                ->andWhere("
+                    CONCAT(p.firstName, p.lastName) LIKE :playerName 
+                    OR p.firstName LIKE :playerName
+                    OR p.lastName LIKE :playerName
+                    OR p.nativeName LIKE :playerName
+                ")
+                ->setParameter('playerName', preg_replace("/\s+/", "%", $seekCriteria->getPlayerName()) . "%")
+            ;
+        } // END PLAYER NAME FILTER        
+        
+
         // AGE FILTER
         if($seekCriteria->getAgeRange()) {
             if($seekCriteria->getAgeRange()->max) {

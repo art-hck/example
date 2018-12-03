@@ -30,6 +30,7 @@ export class PlayersRoute {
         international: new FormControl(),
         leagueName: new FormControl(null, Validators.minLength(3)),
         teamName: new FormControl(null, Validators.minLength(3)),
+        playerName: new FormControl(null, Validators.minLength(3)),
         playTime: new FormControl(),
         role: new FormControl(null, ((role: FormControl) => {
             if (role.value && !~this.playerRoles.indexOf(role.value)) {
@@ -74,9 +75,9 @@ export class PlayersRoute {
         });
     }
 
-    public resetIfChecked(controlName, value) {
-        if (this.form.get(controlName).value === value) {
-            this.form.get(controlName).reset();
+    public resetIfChecked(value) {
+        if (this.form.get('orderBy').value === value) {
+            this.form.get('orderBy').reset();
         }
     }
 

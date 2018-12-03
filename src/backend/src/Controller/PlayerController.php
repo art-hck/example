@@ -173,6 +173,7 @@ class PlayerController extends Controller
                 ->setTeamName($data["teamName"])
                 ->setOrderBy($data["orderBy"])
                 ->setOrderDirection($data["orderDirection"])
+                ->setPlayerName($data["playerName"])
                 ->setOffset($data["offset"])
                 ->setLimit($data["limit"])
             ;
