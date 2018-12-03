@@ -1,5 +1,6 @@
+doctype html
 br
-.players
+.players(#playersEl)
   .player(*ngFor="let player of players;")
     a.player-avatar([routerLink]="['/player', player.id]")
       img(src="https://tmssl.akamaized.net/{{player.avatar}}")

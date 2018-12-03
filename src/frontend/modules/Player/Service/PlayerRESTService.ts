@@ -5,11 +5,13 @@ import * as objectHash from "object-hash";
 
 import {PlayerFilterRequest} from "../Http/PlayerFilterRequest";
 import {Player} from "../Entity/Player";
+import {Params} from "@angular/router";
+import {ParamsService} from "../../Application/Service/ParamsService";
 
 @Injectable()
 export class PlayerRESTService {
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient, private paramsService: ParamsService) {}
 
     public get(id: number): Observable<Player>
     {
@@ -23,9 +25,10 @@ export class PlayerRESTService {
     public filter(playerFilterRequest: PlayerFilterRequest): Observable<Player[]>
     {
         let url = `/players/filter`;
+        let params: Params = this.paramsService.stringify(playerFilterRequest);
         
         return this.http
-            .get<Player[]>(url, { params: playerFilterRequest, headers: { stateKey: objectHash(playerFilterRequest)}})
+            .get<Player[]>(url, { params, headers: { stateKey: objectHash(playerFilterRequest)}})
         ;
     }
 }

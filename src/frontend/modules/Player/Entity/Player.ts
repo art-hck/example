@@ -2,6 +2,7 @@ import {PlayerRole} from "./PlayerRole";
 import {Team} from "../../Team/Entity/Team";
 
 export interface Player {
+    id: number
     first_name: string
     last_name: string
     native_name: string
@@ -30,7 +31,7 @@ export interface Player {
     instagram: string
     agents: string
     age: number
-    goals_count: number,
-    assists_count: number,
-    play_time: number,
+    goals_count: number
+    assists_count: number
+    play_time: number
 }

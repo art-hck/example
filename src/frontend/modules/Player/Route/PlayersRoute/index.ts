@@ -5,8 +5,8 @@ import {debounceTime, filter} from "rxjs/operators";
 
 import {DateISO} from "../../../Application/Entity/ISODate";
 import {Device} from "../../../Application/Service/Device";
-import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
 import {PlayerRoleEnum} from "../../Entity/PlayerRoleEnum";
+import {Params} from "@angular/router/src/shared";
 
 @Component({
     selector: "player-filter-form",
@@ -82,19 +82,21 @@ export class PlayersRoute {
     }
 
     public submit() {
-        let request: PlayerFilterRequest = {};
+        let queryParams: Params = {};
 
-        Object.keys(this.form.controls).forEach(
-            k => request[k] = Array.isArray(this.form.value[k]) ? JSON.stringify(this.form.value[k]) : this.form.value[k]
+        Object.keys(this.form.controls).filter((k)=> this.form.value[k]).forEach(k => {
+                try {
+                    queryParams[k] = JSON.stringify(this.form.value[k])
+                } catch (e) {
+                    queryParams[k] = this.form.value[k]
+                }
+            }
         );
 
         this.isLoading = true;
 
         this.router
-            .navigate(
-                ['players', 'filter'],
-                {queryParams: request}
-            )
+            .navigate(['players', 'filter'], {queryParams})
             .then(() => this.isLoading = false)
         ;
     }

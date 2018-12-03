@@ -1,12 +1,11 @@
 import {Injectable} from "@angular/core";
 import {Observable, of, throwError as observableThrow} from "rxjs";
 import {makeStateKey, StateKey, TransferState} from "@angular/platform-browser";
-import {PlayerRESTService} from "../../Player/Service/PlayerRESTService";
 
 @Injectable()
 export class CacheService {
 
-    constructor(private rest: PlayerRESTService, private transferState: TransferState){}
+    constructor(private transferState: TransferState){}
 
     public get<T>(key: string): Observable<T>
     {

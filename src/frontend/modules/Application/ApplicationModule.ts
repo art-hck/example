@@ -21,6 +21,7 @@ import {ForbiddenRoute} from "./Route/ForbiddenRoute";
 import {CacheService} from "./Service/CacheService";
 import {IconDirective} from "./Directive/IconDirective";
 import {CacheInterceptor} from "./Interceptor/CacheInterceptor";
+import {ParamsService} from "./Service/ParamsService";
 
 registerLocaleData(localeRu);
 
@@ -43,6 +44,7 @@ registerLocaleData(localeRu);
         RouteHelperService,
         PlatformService,
         CacheService,
+        ParamsService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: RESTInterceptor,
