@@ -1,13 +1,13 @@
 import {Component, ElementRef, HostListener, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {PlatformLocation} from "@angular/common";
-import {throttle} from 'throttle-debounce';
 
 import {Player} from "../../Entity/Player";
 import {PlayerRESTService} from "../../Service/PlayerRESTService";
 import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
 import {ParamsService} from "../../../Application/Service/ParamsService";
 import {PlatformService} from "../../../Application/Service/PlatformService";
+import {Throttle} from "../../../Application/Decorator/Throttle";
 
 @Component({
     templateUrl: "./template.pug",
@@ -72,11 +72,4 @@ export class PlayersFilterRoute {
             );
         }
     }
-}
-
-function Throttle(delay): MethodDecorator {
-    return (target: any, propertyKey: string, descriptor: TypedPropertyDescriptor<any>) => {
-        descriptor.value = throttle(delay, descriptor.value);
-        return descriptor;
-    };
 }
