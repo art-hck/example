@@ -75,9 +75,9 @@ export class PlayersRoute {
         });
     }
 
-    public resetIfChecked(value) {
-        if (this.form.get('orderBy').value === value) {
-            this.form.get('orderBy').reset();
+    public resetIfChecked(field, value) {
+        if (this.form.get(field).value === value) {
+            this.form.get(field).reset();
         }
     }
 

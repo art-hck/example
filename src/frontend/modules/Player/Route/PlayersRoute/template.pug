@@ -25,16 +25,16 @@ form([formGroup]="form", (ngSubmit)="submit()")
       .form-field
         label Sorting
         .sort
-          input(id="playerFilterSortName", type="radio", formControlName="orderBy", value="name", (click)="resetIfChecked($event.target.value)")
+          input(id="playerFilterSortName", type="radio", formControlName="orderBy", value="name", (click)="resetIfChecked('orderBy', $event.target.value)")
           label(for="playerFilterSortName") Name
   
-          input(id="playerFilterSortTeam", type="radio", formControlName="orderBy", value="team", (click)="resetIfChecked($event.target.value)")
+          input(id="playerFilterSortTeam", type="radio", formControlName="orderBy", value="team", (click)="resetIfChecked('orderBy', $event.target.value)")
           label(for="playerFilterSortTeam") Team
   
-          input(id="playerFilterSortPosition", type="radio", formControlName="orderBy", value="role", (click)="resetIfChecked($event.target.value)")
+          input(id="playerFilterSortPosition", type="radio", formControlName="orderBy", value="role", (click)="resetIfChecked('orderBy', $event.target.value)")
           label(for="playerFilterSortPosition") Position
   
-          input(id="playerFilterSortCountry", type="radio", formControlName="orderBy", value="country", (click)="resetIfChecked($event.target.value)")
+          input(id="playerFilterSortCountry", type="radio", formControlName="orderBy", value="country", (click)="resetIfChecked('orderBy', $event.target.value)")
           label(for="playerFilterSortCountry") Country
 
       .form-field
