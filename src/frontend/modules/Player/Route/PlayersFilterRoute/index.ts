@@ -1,5 +1,5 @@
 import {Component, ElementRef, HostListener, ViewChild} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
+import {ActivatedRoute, Params, Router} from "@angular/router";
 import {PlatformLocation} from "@angular/common";
 
 import {Player} from "../../Entity/Player";
@@ -16,9 +16,9 @@ import {Throttle} from "../../../Application/Decorator/Throttle";
 
 export class PlayersFilterRoute {
     public players: Player[];
-    private request = this.paramsService.parse<PlayerFilterRequest>(this.route.snapshot.queryParams);
+    private request: PlayerFilterRequest;
     private loading: boolean = false;
-    private offsetScrollMarkers: { offset: number, scroll: number }[] = [{offset: this.request.offset || 0, scroll: 0}];
+    private offsetScrollMarkers: { offset: number, scroll: number }[];
 
     @ViewChild("playersEl") playersEl: ElementRef;
 
@@ -29,7 +29,11 @@ export class PlayersFilterRoute {
         private router: Router,
         private paramsService: ParamsService, 
         private pl: PlatformService) 
-    {
+    {}
+    
+    ngOnInit() {
+        this.request = this.paramsService.parse<PlayerFilterRequest>(this.route.snapshot.queryParams);
+        this.offsetScrollMarkers = [{offset: this.request.offset || 0, scroll: 0}];
         this.route.data
             .subscribe(data => this.players = data.players)
         ;
@@ -67,9 +71,10 @@ export class PlayersFilterRoute {
         });
 
         if(offsetScrollMarkers.length) {
-            this.platformLocation.replaceState(null, "", 
-                this.router.createUrlTree(["."], {"queryParams": {...this.request, ...{offset: offsetScrollMarkers.slice(-1)[0].offset}}, "relativeTo": this.route}).toString()
-            );
+            let params: Params = {...this.route.snapshot.queryParams, ...{offset: offsetScrollMarkers.slice(-1)[0].offset}};
+            if(params.offset == 0) delete params.offset; 
+            let url = this.router.createUrlTree(["."], {"queryParams": params, "relativeTo": this.route}).toString();
+            this.platformLocation.replaceState(null, "", url);
         }
     }
 }

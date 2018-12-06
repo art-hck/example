@@ -39,6 +39,7 @@ export class PlayersRoute {
         })),
         nationalityId: new FormControl({value: "", disabled: true}),
         orderBy: new FormControl(),
+        offset: new FormControl(),
     });
 
     constructor(
