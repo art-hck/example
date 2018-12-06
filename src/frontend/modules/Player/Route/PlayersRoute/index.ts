@@ -17,6 +17,7 @@ import {Params} from "@angular/router/src/shared";
 export class PlayersRoute {
     public device = Device;
     public isLoading: boolean = false;
+    public isFiltersOpened: boolean = true;
     public playerRoles = Object.values(PlayerRoleEnum);
 
     public form = new FormGroup({

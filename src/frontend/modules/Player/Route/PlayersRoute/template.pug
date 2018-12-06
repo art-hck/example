@@ -2,7 +2,7 @@ doctype html
 
 form([formGroup]="form", (ngSubmit)="submit()")
   mat-sidenav-container
-    mat-sidenav(position="end", #filter, [mode]="'side'", [fixedInViewport]="device.isMobile()",  [opened]="true")
+    mat-sidenav(position="end", #filter, [mode]="'side'", [fixedInViewport]="device.isMobile()",  [opened]="isFiltersOpened")
       .form-field
         label Dates
         .dates
@@ -94,4 +94,6 @@ form([formGroup]="form", (ngSubmit)="submit()")
 
     mat-sidenav-content([class.disabled]="isLoading")
       input.search-input(type="text", formControlName="playerName")
+      .toogle-filter(*ngIf="device.isMobile()", (click)="isFiltersOpened = !isFiltersOpened") 
+        div Filters
       router-outlet
