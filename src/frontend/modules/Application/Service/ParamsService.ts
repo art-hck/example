@@ -8,10 +8,12 @@ export class ParamsService
     {
         let params: Params = {};
         Object.keys(object).forEach((k) => {
-            try {
-                params[k] = JSON.stringify(object[k]);
-            } catch (e) {
-                params[k] = object[k];
+            if(object[k] !== null && object[k] !== "undefined" && object[k] !== "") {
+                try {
+                    params[k] = typeof object[k] !== "string" ? JSON.stringify(object[k]) : object[k];
+                } catch (e) {
+                    params[k] = object[k];
+                }
             }
         });
         return params;

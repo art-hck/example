@@ -1,12 +1,13 @@
 import {Component, Inject, LOCALE_ID} from "@angular/core";
 import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {debounceTime, filter} from "rxjs/operators";
+import {debounceTime, filter, map} from "rxjs/operators";
 
 import {DateISO} from "../../../Application/Entity/ISODate";
 import {Device} from "../../../Application/Service/Device";
 import {PlayerRoleEnum} from "../../Entity/PlayerRoleEnum";
-import {Params} from "@angular/router/src/shared";
+import {ParamsService} from "../../../Application/Service/ParamsService";
+import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
 
 @Component({
     selector: "player-filter-form",
@@ -46,6 +47,7 @@ export class PlayersRoute {
     constructor(
         private router: Router,
         private route: ActivatedRoute,
+        private paramsService: ParamsService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.form.valueChanges
@@ -56,25 +58,24 @@ export class PlayersRoute {
             .subscribe(() => this.submit())
         ;
 
-        this.route.queryParams.subscribe(params => {
-            for (let param in this.form.value) {
-                if (this.form.value.hasOwnProperty(param)) {
-                    // Если в queryParams есть параметр и он не совпадает со значением формы - присваиваем                    
-                    if (params[param] && params[param] != this.form.get(param).value) {
-                        try {
-                            this.form.get(param).setValue(JSON.parse(params[param]));
-                        } catch (e) {
-                            this.form.get(param).setValue(params[param]);
+        this.route.queryParams
+            .pipe(map(params => this.paramsService.parse<PlayerFilterRequest>(params)))
+            .subscribe(request => {
+                for (let param in this.form.value) {
+                    if (this.form.value.hasOwnProperty(param)) {
+                        // Если в queryParams есть параметр и он не совпадает со значением формы - присваиваем                    
+                        if (request[param] && request[param] != this.form.get(param).value) {
+                            this.form.get(param).setValue(request[param]);
+                        }
+    
+                        // Если в queryParams пусто , но в форме значение есть - обнуляем параметр в форме
+                        if (!request[param] && this.form.get(param).value) {
+                            this.form.get(param).reset();
                         }
                     }
-
-                    // Если в queryParams пусто , но в форме значение есть - обнуляем параметр в форме
-                    if (!params[param] && this.form.get(param).value) {
-                        this.form.get(param).reset();
-                    }
                 }
-            }
-        });
+            })
+        ;
     }
 
     public resetIfChecked(field, value) {
@@ -84,21 +85,11 @@ export class PlayersRoute {
     }
 
     public submit() {
-        let queryParams: Params = {};
-
-        Object.keys(this.form.controls).filter((k)=> this.form.value[k]).forEach(k => {
-                try {
-                    queryParams[k] = JSON.stringify(this.form.value[k])
-                } catch (e) {
-                    queryParams[k] = this.form.value[k]
-                }
-            }
-        );
-
         this.isLoading = true;
-
-        this.router
-            .navigate(['players', 'filter'], {queryParams})
+        this.router.navigate(
+            ['players', 'filter'], 
+            {queryParams: this.paramsService.stringify(this.form.value)}
+        )
             .then(() => this.isLoading = false)
         ;
     }
