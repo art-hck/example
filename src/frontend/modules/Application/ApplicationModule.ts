@@ -22,6 +22,7 @@ import {CacheService} from "./Service/CacheService";
 import {IconDirective} from "./Directive/IconDirective";
 import {CacheInterceptor} from "./Interceptor/CacheInterceptor";
 import {ParamsService} from "./Service/ParamsService";
+import {TeamModule} from "../Team/TeamModule";
 
 registerLocaleData(localeRu);
 
@@ -31,6 +32,7 @@ registerLocaleData(localeRu);
         RouterModule.forRoot(appRoutes, {scrollPositionRestoration: 'enabled', onSameUrlNavigation: "reload"}),
         HttpClientModule,
         PlayerModule,
+        TeamModule,
         MaterialModule,
     ],
 

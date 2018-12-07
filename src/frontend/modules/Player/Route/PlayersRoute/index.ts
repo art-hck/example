@@ -1,13 +1,15 @@
 import {Component, Inject, LOCALE_ID} from "@angular/core";
 import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {debounceTime, filter, map} from "rxjs/operators";
+import {debounceTime, filter, flatMap, map} from "rxjs/operators";
 
 import {DateISO} from "../../../Application/Entity/ISODate";
 import {Device} from "../../../Application/Service/Device";
 import {PlayerRoleEnum} from "../../Entity/PlayerRoleEnum";
 import {ParamsService} from "../../../Application/Service/ParamsService";
 import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
+import {TeamRESTService} from "../../../Team/Service/TeamRESTService";
+import {of} from "rxjs/internal/observable/of";
 
 @Component({
     selector: "player-filter-form",
@@ -34,29 +36,38 @@ export class PlayersRoute {
         teamName: new FormControl(null, Validators.minLength(3)),
         playerName: new FormControl(null, Validators.minLength(3)),
         playTime: new FormControl(),
-        role: new FormControl(null, ((role: FormControl) => {
+        role: new FormControl(null, (role: FormControl) => {
             if (role.value && !~this.playerRoles.indexOf(role.value)) {
                 return <ValidationErrors>{invalid_role: true};
             }
-        })),
+        }),
         nationalityId: new FormControl({value: "", disabled: true}),
         orderBy: new FormControl(),
         offset: new FormControl(),
-    });
+    }, 
+    null, 
+    ()=> of(null).pipe(filter(() => !this.isPending))
+    );
+    
+    public isPending: boolean = false;
+    public teamNames = this.form.get("teamName").valueChanges.pipe(
+        filter(value => value),
+        debounceTime(500),
+        flatMap(value => this.teamService.findByname(value))
+    );
 
     constructor(
         private router: Router,
         private route: ActivatedRoute,
         private paramsService: ParamsService,
+        private teamService: TeamRESTService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        this.form.valueChanges
-            .pipe(
-                debounceTime(500),
-                filter(() => this.form.valid)
-            )
-            .subscribe(() => this.submit())
-        ;
+        this.form.valueChanges.pipe(
+            debounceTime(500),
+            filter(() => this.form.valid)
+        )
+        .subscribe(() => this.submit());
 
         this.route.queryParams
             .pipe(map(params => this.paramsService.parse<PlayerFilterRequest>(params)))
@@ -98,5 +109,10 @@ export class PlayersRoute {
         if (value) {
             return new DateISO(value).toString();
         }
+    }
+    
+    public setPending(isPending: boolean) {
+        this.isPending = isPending;
+        this.form.patchValue(this.form.value);
     }
 }

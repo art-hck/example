@@ -63,8 +63,10 @@ form([formGroup]="form", (ngSubmit)="submit()")
       .form-field
         label Team
         .input-box
-          input(type="text", formControlName="teamName")
+          input(type="text", formControlName="teamName", [matAutocomplete]="autocompleteTeam", (input)="setPending(form.get('teamName').value!='')")
           .clear(*ngIf="form.get('teamName').value", (click)="form.get('teamName').reset()") × 
+          mat-autocomplete(#autocompleteTeam="matAutocomplete", (optionSelected)="setPending(false)")
+            mat-option(*ngFor="let team of teamNames | async", [value]="team.name") {{ team.name }}
 
       .form-field
         label League
