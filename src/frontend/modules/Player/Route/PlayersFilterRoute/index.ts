@@ -8,6 +8,9 @@ import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
 import {ParamsService} from "../../../Application/Service/ParamsService";
 import {PlatformService} from "../../../Application/Service/PlatformService";
 import {Throttle} from "../../../Application/Decorator/Throttle";
+import {timer} from "rxjs/internal/observable/timer";
+import {finalize, map} from "rxjs/operators";
+import {forkJoin} from "rxjs/internal/observable/forkJoin";
 
 @Component({
     templateUrl: "./template.pug",
@@ -48,12 +51,17 @@ export class PlayersFilterRoute {
         const documentHeight = document.documentElement.scrollHeight;
         const screenHeight = document.documentElement.clientHeight;
         
-        if(scrollTop + (screenHeight*3) >= documentHeight - screenHeight && !this.loading) {
+        if(scrollTop + (screenHeight * 3) >= documentHeight - screenHeight && !this.loading) {
             this.loading = true;
 
             let request = {...this.request, ...{offset: ((this.request.offset || 0) + this.players.length)}};
 
-            this.playerService.filter(request)
+
+            forkJoin(this.playerService.filter(request), timer(1000)) // Минимальный показ прелоадера
+                .pipe(
+                    map((data) => data[0]),
+                    finalize(() => this.loading = false)
+                )
                 .subscribe(players => {
                     this.offsetScrollMarkers.push({
                         offset: request.offset, 
@@ -61,7 +69,6 @@ export class PlayersFilterRoute {
                     });
                     
                     this.players = [...this.players, ...players];
-                    this.loading = false;
                 })
             ;
         }

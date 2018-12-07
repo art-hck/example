@@ -91,6 +91,12 @@
     }
   }
 
+  .loader {
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+  
   .not-found {
     display: flex;
     overflow: hidden;

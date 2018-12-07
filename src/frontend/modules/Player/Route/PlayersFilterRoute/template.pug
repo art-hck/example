@@ -21,7 +21,9 @@ br
           b {{ player.play_time }}  
           span MIN
         
+.loader(*ngIf="loading")
+  mat-spinner
 
-div.not-found(*ngIf="players && players.length==0")
+.not-found(*ngIf="players && players.length==0")
   h1 No players found
   h5 Please try again
