@@ -19,8 +19,8 @@ import {forkJoin} from "rxjs/internal/observable/forkJoin";
 
 export class PlayersFilterRoute {
     public players: Player[];
+    public loading: boolean = false;
     private request: PlayerFilterRequest;
-    private loading: boolean = false;
     private offsetScrollMarkers: { offset: number, scroll: number }[];
 
     @ViewChild("playersEl") playersEl: ElementRef;
