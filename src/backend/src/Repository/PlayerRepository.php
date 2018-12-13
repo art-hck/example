@@ -64,6 +64,7 @@ class PlayerRepository extends ServiceEntityRepository
         if (
             $seekCriteria->getDatePeriod() || 
             $seekCriteria->getLeagueId() || 
+            $seekCriteria->getLeagueName() || 
             $seekCriteria->getGoalsRange() || 
             $seekCriteria->getAssistsRange() || 
             $seekCriteria->getCardsRange() || 

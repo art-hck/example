@@ -1,15 +1,19 @@
-import {Component, Inject, LOCALE_ID} from "@angular/core";
+import {Component, Inject, Input, LOCALE_ID} from "@angular/core";
 import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {debounceTime, filter, flatMap, map} from "rxjs/operators";
+import {Observable} from "rxjs/Observable";
+import {of} from "rxjs/internal/observable/of";
 
 import {DateISO} from "../../../Application/Entity/ISODate";
 import {Device} from "../../../Application/Service/Device";
-import {PlayerRoleEnum} from "../../Entity/PlayerRoleEnum";
 import {ParamsService} from "../../../Application/Service/ParamsService";
+import {PlayerRoleEnum} from "../../Entity/PlayerRoleEnum";
 import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
+import {LeagueRESTService} from "../../../League/Service/LeagueRESTService";
+import {GroupedLeague, LeagueSeason} from "../../../League/Entity/League";
 import {TeamRESTService} from "../../../Team/Service/TeamRESTService";
-import {of} from "rxjs/internal/observable/of";
+import {Team} from "../../../Team/Entity/Team";
 
 @Component({
     selector: "player-filter-form",
@@ -22,6 +26,7 @@ export class PlayersRoute {
     public isLoading: boolean = false;
     public isFiltersOpened: boolean = true;
     public playerRoles = Object.values(PlayerRoleEnum);
+    public isPending: boolean = false;
 
     public form = new FormGroup({
         age: new FormControl(),
@@ -32,7 +37,9 @@ export class PlayersRoute {
         goals: new FormControl(),
         height: new FormControl(),
         international: new FormControl(),
+        leagueId: new FormControl(),
         leagueName: new FormControl(null, Validators.minLength(3)),
+        teamId: new FormControl(),
         teamName: new FormControl(null, Validators.minLength(3)),
         playerName: new FormControl(null, Validators.minLength(3)),
         playTime: new FormControl(),
@@ -49,11 +56,36 @@ export class PlayersRoute {
     ()=> of(null).pipe(filter(() => !this.isPending))
     );
     
-    public isPending: boolean = false;
-    public teamNames = this.form.get("teamName").valueChanges.pipe(
-        filter(value => value),
+    public teamsAutocomplete: Observable<Team[]> = this.form.get("teamName").valueChanges.pipe(
         debounceTime(500),
+        filter(() => this.form.get("teamName").valid),
+        filter(value => value),
         flatMap(value => this.teamService.findByname(value))
+    );
+
+    @Input("leagueInputEl") leagueInputEl;
+    public leaguesAutocomplete: Observable<GroupedLeague<LeagueSeason>[]> = this.form.get('leagueName').valueChanges.pipe(
+        debounceTime(500),
+        filter(value => value),
+        filter(() => this.form.get('leagueName').valid),
+        flatMap(value => this.leagueService.findByname(value)),
+        map(leagues => {
+            let groupedLeagues: GroupedLeague<LeagueSeason>[] = [];
+            leagues.forEach(league => {
+                let groupedLeague: GroupedLeague<LeagueSeason> = groupedLeagues.find(groupLeague => groupLeague.groupBy == league.season);
+                if(groupedLeague) {
+                    groupedLeague.leagues.push(league)
+                } else {
+                    groupedLeagues.push({
+                        groupBy: league.season,
+                        leagues: [league]
+                    })
+                }
+            });
+
+            return groupedLeagues;
+        }),
+        map(groupedLeagues => groupedLeagues.sort((a, b) => b.groupBy - a.groupBy))
     );
 
     constructor(
@@ -61,6 +93,7 @@ export class PlayersRoute {
         private route: ActivatedRoute,
         private paramsService: ParamsService,
         private teamService: TeamRESTService,
+        private leagueService: LeagueRESTService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.form.valueChanges.pipe(

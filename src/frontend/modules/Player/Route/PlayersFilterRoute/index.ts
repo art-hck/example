@@ -9,7 +9,7 @@ import {ParamsService} from "../../../Application/Service/ParamsService";
 import {PlatformService} from "../../../Application/Service/PlatformService";
 import {Throttle} from "../../../Application/Decorator/Throttle";
 import {timer} from "rxjs/internal/observable/timer";
-import {finalize, map} from "rxjs/operators";
+import {finalize, map, tap} from "rxjs/operators";
 import {forkJoin} from "rxjs/internal/observable/forkJoin";
 
 @Component({
@@ -22,6 +22,7 @@ export class PlayersFilterRoute {
     public loading: boolean = false;
     private request: PlayerFilterRequest;
     private offsetScrollMarkers: { offset: number, scroll: number }[];
+    private isScrollEnd: boolean = false;
 
     @ViewChild("playersEl") playersEl: ElementRef;
 
@@ -38,6 +39,7 @@ export class PlayersFilterRoute {
         this.request = this.paramsService.parse<PlayerFilterRequest>(this.route.snapshot.queryParams);
         this.offsetScrollMarkers = [{offset: this.request.offset || 0, scroll: 0}];
         this.route.data
+            .pipe(tap(() => this.isScrollEnd = false))
             .subscribe(data => this.players = data.players)
         ;
     }
@@ -45,7 +47,7 @@ export class PlayersFilterRoute {
     @HostListener('window:scroll')
     @Throttle(300)
     onScroll() {
-        if(this.pl.isPlatformServer()) return;
+        if(this.pl.isPlatformServer() || this.isScrollEnd) return;
         
         const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         const documentHeight = document.documentElement.scrollHeight;
@@ -59,12 +61,16 @@ export class PlayersFilterRoute {
 
             forkJoin(this.playerService.filter(request), timer(1000)) // Минимальный показ прелоадера
                 .pipe(
-                    map((data) => data[0]),
+                    map(([data]) => data),
                     finalize(() => this.loading = false)
                 )
                 .subscribe(players => {
+                    if(players.length == 0) {
+                        this.isScrollEnd = true;
+                    }
+                    
                     this.offsetScrollMarkers.push({
-                        offset: request.offset, 
+                        offset: request.offset,
                         scroll: this.playersEl.nativeElement.offsetTop + this.playersEl.nativeElement.offsetHeight
                     });
                     

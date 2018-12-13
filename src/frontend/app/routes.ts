@@ -27,22 +27,25 @@ export const appRoutes: GenieRoutes = [
     },
     {
         path: "players",
-        component: PlayersRoute, 
+        component: PlayersRoute,
+        data: {
+            title: "Players",
+            description: "Genie description"
+        },
         children: [
             {
                 path: "filter",
                 component: PlayersFilterRoute,
                 runGuardsAndResolvers: 'paramsOrQueryParamsChange',
+                data: {
+                    title: "Players"
+                },
                 resolve: {
                     players: PlayersFilterResolver
                 },
                 canActivate: [CanActivatePlayerFilter]
             }
-        ],
-        data: {
-            title: "Genie  filter",
-            description: "Genie description"
-        }
+        ]
     },
     {
         path: 'not-found',

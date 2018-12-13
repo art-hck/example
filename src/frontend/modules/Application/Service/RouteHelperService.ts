@@ -1,11 +1,7 @@
-import {DOCUMENT, Location} from "@angular/common";
-import {Inject, Injectable, Injector} from "@angular/core";
+import {DOCUMENT} from "@angular/common";
+import {Inject, Injectable} from "@angular/core";
 import {Meta, Title} from "@angular/platform-browser";
-import {
-    ActivatedRoute,
-    NavigationEnd,
-    Router
-} from "@angular/router";
+import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 import {PlatformService} from "./PlatformService";
 import {filter, map, mergeMap} from "rxjs/internal/operators";
 
@@ -17,12 +13,9 @@ export class RouteHelperService {
         private metaService: Meta,
         private router: Router,
         private activatedRoute: ActivatedRoute,
-        private location: Location,
-        private injector: Injector,
         private pl: PlatformService,
         @Inject(DOCUMENT) private document
-    ) {
-    }
+    ) {}
 
     public metaTagsWatcher(): void {
         this.router.events.pipe(
@@ -34,18 +27,17 @@ export class RouteHelperService {
             }),
             filter(route => route.outlet === "primary"),
             mergeMap(route => route.data)
-        ).subscribe((data) => {
-                if(data["title"]) {
-                    if(this.pl.isPlatformServer()) {
-                        this.document.title = data["title"];
-                    }
-                    this.titleService.setTitle(data["title"]);
+        ).subscribe(data => {
+            if(data["title"]) {
+                if(this.pl.isPlatformServer()) {
+                    this.document.title = data["title"];
                 }
-                
-                if(data["description"]) {
-                    this.metaService.addTag({"name": "description", "content": data["description"]})
-                }
-            })
-        ;
+                this.titleService.setTitle(data["title"]);
+            }
+            
+            if(data["description"]) {
+                this.metaService.addTag({"name": "description", "content": data["description"]})
+            }
+        });
     }
 }
