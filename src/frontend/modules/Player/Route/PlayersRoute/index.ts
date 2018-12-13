@@ -24,7 +24,7 @@ import {Team} from "../../../Team/Entity/Team";
 export class PlayersRoute {
     public device = Device;
     public isLoading: boolean = false;
-    public isFiltersOpened: boolean = true;
+    public isFiltersOpened: boolean = !Device.isMobile();
     public playerRoles = Object.values(PlayerRoleEnum);
     public isPending: boolean = false;
 

@@ -109,9 +109,11 @@
     background-color: #f5f7fa;
 
     .toogle-filter {
-      position: absolute;
+      position: fixed;
       top: calc(50vh - 80px);
       right: 0;
+      transform: none;
+      transition:transform .4s cubic-bezier(0.25, 0.8, 0.25, 1);
       background: #514ae0;
       width: 30px;
       height: 100px;
@@ -120,6 +122,11 @@
       border-bottom: 1px solid #455094;
       border-top: 1px solid #b4b0ff;
       cursor: pointer;
+      z-index: 1;
+      
+      &.opened {
+        transform: translate(-260px);
+      }
       
       div {
         transform: rotate(270deg);
