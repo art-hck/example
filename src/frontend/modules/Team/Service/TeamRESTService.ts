@@ -9,7 +9,14 @@ export class TeamRESTService {
 
     constructor(private http: HttpClient) {}
 
-    public findByname(name: string): Observable<Team[]>
+    public get(id: number): Observable<Team> 
+    {
+        let url = `/team/${id}`;
+        
+        return this.http.get<Team>(url, {headers: { stateKey: `TeamById-${id}`}});
+    }
+    
+    public findByName(name: string): Observable<Team[]>
     {
         let url = `/team/name/${name}`;
 

@@ -2,12 +2,13 @@
 
 namespace App\Entity;
 
+use App\Serializable\CardSerializable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CardRepository")
  */
-class Card
+class Card extends CardSerializable
 {
     /**
      * @ORM\Id()

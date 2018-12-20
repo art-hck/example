@@ -20,26 +20,18 @@ class LeagueController extends Controller
      * @Route("/league/name/{name}", methods={"GET"})
      *
      * @param string $name
-     * @return ErrorJsonResponse|JsonResponse
+     * @return JsonResponse
      */
-    public function findTeamByName(string $name)
+    public function findByName(string $name)
     {
-        try {
-            $teams = $this->getDoctrine()->getRepository(League::class)
-                ->createQueryBuilder('l')
-                ->where('l.name LIKE :name')
-                ->setParameter('name', preg_replace("/\s+/", "%", $name) . "%")
-                ->setMaxResults(10)
-                ->getQuery()
-                ->getResult()
-            ;
-        } catch (BadRestRequestHttpException $e) {
-            return new ErrorJsonResponse($e->getMessage(), $e->getErrors(), $e->getStatusCode());
-        } catch (HttpException $e) {
-            return new ErrorJsonResponse($e->getMessage(), [], $e->getStatusCode());
-        } catch (\Exception $e) {
-            return new ErrorJsonResponse($e->getMessage(), [], 500);
-        }
+        $teams = $this->getDoctrine()->getRepository(League::class)
+            ->createQueryBuilder('l')
+            ->where('l.name LIKE :name')
+            ->setParameter('name', preg_replace("/\s+/", "%", $name) . "%")
+            ->setMaxResults(10)
+            ->getQuery()
+            ->getResult()
+        ;
 
         return new JsonResponse($teams);
     }

@@ -21,59 +21,38 @@ class PlayersFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('dateFrom', DateType::class, ["widget" => "single_text"])
-            ->add('dateTo', DateType::class, ["widget" => "single_text"])
-
-            ->add('playerName', TextType::class)
-            ->add('leagueId', IntegerType::class)
-            
-            ->add('teamId', IntegerType::class)
-            ->add('teamName', TextType::class)
-            ->add('leagueName', TextType::class)
-
-            ->add("role", ChoiceType::class, [
-                "choices" => array_map(
-                    function($roleName) {
-                        return PlayerRoleFactory::createFromString($roleName);
-                    }, PlayerRoleType::getChoices()
-                ),
-                "empty_data" => null,
-                // будет использоваться метод getStringCode
-                // (см. http://symfony.com/doc/current/reference/forms/types/choice.html#choice-label)
-                "choice_value" => "name",
-                "required" => false,
-            ])
-
-            ->add('international', CheckboxType::class)
-            ->add('assists', SeekCriteriaRangeType::class)
-            ->add('goals', SeekCriteriaRangeType::class)
             ->add('age', SeekCriteriaRangeType::class)
-            ->add('playTime', SeekCriteriaRangeType::class)
+            ->add('assists', SeekCriteriaRangeType::class)
             ->add('cards', SeekCriteriaRangeType::class)
             ->add('cardsType', IntegerType::class)
+            ->add('goals', SeekCriteriaRangeType::class)
             ->add('height', SeekCriteriaRangeType::class)
+            ->add('international', CheckboxType::class)
+            ->add('leagueId', IntegerType::class)
+            ->add('leagueName', TextType::class)
+            ->add('playerName', TextType::class)
+            ->add('playTime', SeekCriteriaRangeType::class)
+            ->add("role", ChoiceType::class, [
+                "choices" => array_map(function($roleName) {
+                    return PlayerRoleFactory::createFromString($roleName);
+                }, PlayerRoleType::getChoices()),
+                "empty_data" => null,
+                "choice_value" => "name", // будет использоваться геттер getName()
+                "required" => false,
+            ])
+            ->add('teamId', IntegerType::class)
+            ->add('teamName', TextType::class)
 
             ->add('orderBy', ChoiceType::class, [
-                    'choices' => SeekCriteriaPlayerFilter::getOrderByFields(),
-                    "invalid_message" => "Available values: `" . implode("`, `", SeekCriteriaPlayerFilter::getOrderByFields()) . "`",
-                    "empty_data" => SeekCriteriaPlayerFilter::getOrderByFields()[0],
-                ])
-            ->add('orderDirection', ChoiceType::class, [
-                "choices" => SeekCriteria::validOrderDirections,
-                "invalid_message" => "Available values: `" . implode("`, `", SeekCriteria::validOrderDirections) . "`",
-                "empty_data" => SeekCriteria::validOrderDirections[0]
+                'choices' => SeekCriteriaPlayerFilter::getOrderByFields(),
+                "invalid_message" => "Available values: `" . implode("`, `", SeekCriteriaPlayerFilter::getOrderByFields()) . "`",
+                "empty_data" => SeekCriteriaPlayerFilter::getOrderByFields()[0],
             ])
-            ->add('offset', IntegerType::class, ["empty_data" => "0"])
-            ->add(
-                'limit', 
-                IntegerType::class, 
-                [
-                    "empty_data" => "100",
-                    "constraints"=>[
-                        new Range(["max" => 300])
-                    ]
-                ]
-            )
         ;
     }
+
+    public function getParent()
+    {
+        return DefaultFilterType::class;
+    }    
 }

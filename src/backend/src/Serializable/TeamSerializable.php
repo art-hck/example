@@ -3,6 +3,9 @@
 namespace App\Serializable;
 
 
+use App\Entity\Country;
+use Doctrine\Common\Collections\Collection;
+
 abstract class TeamSerializable implements \JsonSerializable
 {
     public function jsonSerialize()
@@ -16,17 +19,17 @@ abstract class TeamSerializable implements \JsonSerializable
             "updated" => $this->getUpdated(),
             "tm_id" => $this->getTmId(),
             "country" => $this->getCountry(),
-            "players" => $this->getPlayers()
+            "players" => $this->getPlayers(),
         ];
     }
     
-    abstract public function getId();
-    abstract public function getName();
-    abstract public function getAlias();
-    abstract public function getPreview();
-    abstract public function getCreated();
-    abstract public function getUpdated();
-    abstract public function getTmId();
-    abstract public function getCountry();
-    abstract public function getPlayers();
+    abstract public function getId(): ?int;
+    abstract public function getName(): ?string;
+    abstract public function getAlias(): ?string ;
+    abstract public function getPreview(): ?string ;
+    abstract public function getCreated(): ?\DateTimeInterface;
+    abstract public function getUpdated(): ?\DateTimeInterface;
+    abstract public function getTmId(): ?int;
+    abstract public function getCountry(): ?Country;
+    abstract public function getPlayers(): Collection;
 }

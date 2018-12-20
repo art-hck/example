@@ -37,6 +37,7 @@ class PlayerRepository extends ServiceEntityRepository
     public function findByCriteria(SeekCriteriaPlayerFilter $seekCriteria)
     {
         switch ($seekCriteria->getOrderBy()) {
+            case "assists": $orderBy="COUNT(assist.id)"; break;
             case "goals": $orderBy="COUNT(goals.id)"; break;
             case "cards": $orderBy="COUNT(cards.id)"; break;
             case "playTime": $orderBy="SUM(s.playTime)"; break;
@@ -46,6 +47,7 @@ class PlayerRepository extends ServiceEntityRepository
         }
 
         $qb = $this->createQueryBuilder('p')
+            ->select("p player")
             ->join('p.team', 't')
             ->groupBy('p.id')
             ->orderBy($orderBy, $seekCriteria->getOrderDirection())
@@ -57,7 +59,7 @@ class PlayerRepository extends ServiceEntityRepository
             $qb
                 ->andWhere("p.firstName IS NOT NULL")
                 ->andWhere("p.lastName IS NOT NULL");
-        } else {
+        } elseif(!in_array($seekCriteria->getOrderBy(), ["assists", "goals", "cards", "playTime"])) {
             $qb->andWhere($orderBy . " IS NOT NULL");
         }
 
@@ -197,6 +199,7 @@ class PlayerRepository extends ServiceEntityRepository
 
         if($seekCriteria->getGoalsRange()) {
             $qb
+                ->addSelect('COUNT(goals.id) goals_count')
                 ->andHaving('COUNT(goals.id) >= :minGoals OR :minGoals IS NULL')
                 ->andHaving('COUNT(goals.id) <= :maxGoals OR :maxGoals IS NULL')
                 ->setParameter('minGoals', $seekCriteria->getGoalsRange()->min)
@@ -208,6 +211,7 @@ class PlayerRepository extends ServiceEntityRepository
         if($seekCriteria->getAssistsRange()) {
             $qb
                 ->join('goals.assist', 'assist')
+                ->addSelect('COUNT(assist.id) assists_count')
                 ->andHaving('COUNT(assist.id) >= :minAssist OR :minAssist IS NULL')
                 ->andHaving('COUNT(goals.id) <= :maxAssist OR :maxAssist IS NULL')
                 ->setParameter('minAssist', $seekCriteria->getAssistsRange()->min)
@@ -217,7 +221,10 @@ class PlayerRepository extends ServiceEntityRepository
 
         // CARDS FILTER
         if($seekCriteria->getCardsRange() || $seekCriteria->getCardsType()) {
-            $qb->join('p.cards', 'cards', 'WITH', 'cards.game = g.id');
+            $qb
+                ->join('p.cards', 'cards', 'WITH', 'cards.game = g.id')
+                ->addSelect('COUNT(cards.id) cards_count')
+            ;
         }
 
         if($seekCriteria->getCardsRange()) {
@@ -239,6 +246,7 @@ class PlayerRepository extends ServiceEntityRepository
         if($seekCriteria->getPlayTimeRange()) { 
             $qb
                 ->join('p.substitutions', 's', 'WITH', 's.game = g.id')
+                ->addSelect('SUM(s.playTime) play_time_sum')
                 ->andHaving('SUM(s.playTime) >= :minPlayTime OR :minPlayTime IS NULL')
                 ->andHaving('SUM(s.playTime) <= :maxPlayTime OR :maxPlayTime IS NULL')
                 ->setParameter('minPlayTime', $seekCriteria->getPlayTimeRange()->min)

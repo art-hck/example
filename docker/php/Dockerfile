@@ -39,10 +39,10 @@ RUN apt-get update && \
 	apt-get install -y -q --no-install-recommends ssmtp && \
 	apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-# Setup user & symfony console
+# Setup user
 RUN \
-    mkdir ${HOME_PATH} && \
+    mkdir ${HOME_PATH}  /opt/vendor && \
     useradd ${APP_USER} -g users -s /bin/bash && \
-    chown -R ${APP_USER}:www-data ${APP_PATH} ${HOME_PATH}
+    chown -R ${APP_USER}:www-data ${APP_PATH} ${HOME_PATH}  /opt/vendor
 
 USER ${APP_USER}

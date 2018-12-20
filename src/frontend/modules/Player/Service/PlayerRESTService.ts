@@ -7,6 +7,7 @@ import {PlayerFilterRequest} from "../Http/PlayerFilterRequest";
 import {Player} from "../Entity/Player";
 import {Params} from "@angular/router";
 import {ParamsService} from "../../Application/Service/ParamsService";
+import {PlayerFilterResponse} from "../Http/PlayerFilterResponse";
 
 @Injectable()
 export class PlayerRESTService {
@@ -22,13 +23,13 @@ export class PlayerRESTService {
         ;
     }
     
-    public filter(playerFilterRequest: PlayerFilterRequest): Observable<Player[]>
+    public filter(playerFilterRequest: PlayerFilterRequest): Observable<PlayerFilterResponse>
     {
         let url = `/players/filter`;
         let params: Params = this.paramsService.stringify(playerFilterRequest);
         
         return this.http
-            .get<Player[]>(url, { params, headers: { stateKey: objectHash(playerFilterRequest)}})
+            .get<PlayerFilterResponse>(url, { params, headers: { stateKey: objectHash(playerFilterRequest)}})
         ;
     }
 }

@@ -23,6 +23,8 @@ import {IconDirective} from "./Directive/IconDirective";
 import {CacheInterceptor} from "./Interceptor/CacheInterceptor";
 import {ParamsService} from "./Service/ParamsService";
 import {TeamModule} from "../Team/TeamModule";
+import {GameModule} from "../Game/GameModule";
+import {TransferModule} from "../Transfer/TransferModule";
 import {LeagueModule} from "../League/LeagueModule";
 
 registerLocaleData(localeRu);
@@ -34,6 +36,8 @@ registerLocaleData(localeRu);
         HttpClientModule,
         PlayerModule,
         TeamModule,
+        GameModule,
+        TransferModule,
         LeagueModule,
         MaterialModule,
     ],

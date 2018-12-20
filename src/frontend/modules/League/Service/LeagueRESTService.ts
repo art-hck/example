@@ -9,7 +9,7 @@ export class LeagueRESTService {
 
     constructor(private http: HttpClient) {}
 
-    public findByname(name: string): Observable<League[]>
+    public findByName(name: string): Observable<League[]>
     {
         let url = `/league/name/${name}`;
 

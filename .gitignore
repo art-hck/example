@@ -122,3 +122,4 @@ Vagrantfile
 docker/nginx/conf.d/*.conf
 package-lock.json
 webpack-cache
+src/yii

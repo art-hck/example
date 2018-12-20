@@ -60,7 +60,7 @@ export class PlayersRoute {
         debounceTime(500),
         filter(() => this.form.get("teamName").valid),
         filter(value => value),
-        flatMap(value => this.teamService.findByname(value))
+        flatMap(value => this.teamService.findByName(value))
     );
 
     @Input("leagueInputEl") leagueInputEl;
@@ -68,7 +68,7 @@ export class PlayersRoute {
         debounceTime(500),
         filter(value => value),
         filter(() => this.form.get('leagueName').valid),
-        flatMap(value => this.leagueService.findByname(value)),
+        flatMap(value => this.leagueService.findByName(value)),
         map(leagues => {
             let groupedLeagues: GroupedLeague<LeagueSeason>[] = [];
             leagues.forEach(league => {

@@ -18,8 +18,8 @@ export interface Player {
     height: number
     number: number
     avatar: string
-    created: number
-    updated: number
+    created: string
+    updated: string
     status: number
     link_to_tm: string
     contract_until: number

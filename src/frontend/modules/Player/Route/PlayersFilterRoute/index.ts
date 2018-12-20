@@ -2,7 +2,7 @@ import {Component, ElementRef, HostListener, ViewChild} from "@angular/core";
 import {ActivatedRoute, Params, Router} from "@angular/router";
 import {PlatformLocation} from "@angular/common";
 
-import {Player} from "../../Entity/Player";
+import {PlayerFilterResponse} from "../../Http/PlayerFilterResponse";
 import {PlayerRESTService} from "../../Service/PlayerRESTService";
 import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
 import {ParamsService} from "../../../Application/Service/ParamsService";
@@ -18,7 +18,7 @@ import {forkJoin} from "rxjs/internal/observable/forkJoin";
 })
 
 export class PlayersFilterRoute {
-    public players: Player[];
+    public playerFilterResponse: PlayerFilterResponse;
     public loading: boolean = false;
     private request: PlayerFilterRequest;
     private offsetScrollMarkers: { offset: number, scroll: number }[];
@@ -40,7 +40,7 @@ export class PlayersFilterRoute {
         this.offsetScrollMarkers = [{offset: this.request.offset || 0, scroll: 0}];
         this.route.data
             .pipe(tap(() => this.isScrollEnd = false))
-            .subscribe(data => this.players = data.players)
+            .subscribe(data => this.playerFilterResponse = data.playerFilterResponse)
         ;
     }
 
@@ -56,7 +56,7 @@ export class PlayersFilterRoute {
         if(scrollTop + (screenHeight * 3) >= documentHeight - screenHeight && !this.loading) {
             this.loading = true;
 
-            let request = {...this.request, ...{offset: ((this.request.offset || 0) + this.players.length)}};
+            let request = {...this.request, ...{offset: ((this.request.offset || 0) + this.playerFilterResponse.length)}};
 
 
             forkJoin(this.playerService.filter(request), timer(1000)) // Минимальный показ прелоадера
@@ -64,8 +64,8 @@ export class PlayersFilterRoute {
                     map(([data]) => data),
                     finalize(() => this.loading = false)
                 )
-                .subscribe(players => {
-                    if(players.length == 0) {
+                .subscribe(playerFilterResponse => {
+                    if(playerFilterResponse.length == 0) {
                         this.isScrollEnd = true;
                     }
                     
@@ -74,7 +74,7 @@ export class PlayersFilterRoute {
                         scroll: this.playersEl.nativeElement.offsetTop + this.playersEl.nativeElement.offsetHeight
                     });
                     
-                    this.players = [...this.players, ...players];
+                    this.playerFilterResponse = [...this.playerFilterResponse, ...playerFilterResponse];
                 })
             ;
         }

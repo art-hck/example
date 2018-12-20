@@ -2,12 +2,10 @@
 
 namespace App\Serializable;
 
-use App\Entity\Country;
 use App\Entity\League;
 use App\Entity\Referee;
 use App\Entity\Stadium;
-use App\Entity\Team;
-use App\Type\PlayerRole\PlayerRole;
+use App\Entity\TeamGame;
 use Doctrine\Common\Collections\Collection;
 
 abstract class GameSerializable implements \JsonSerializable
@@ -18,7 +16,7 @@ abstract class GameSerializable implements \JsonSerializable
             "id" => $this->getId(),
             "league" => $this->getLeague(),
             "day" => $this->getDay(),
-            "date" => $this->getDate(),
+            "date" => $this->getDate()->format(DATE_ISO8601),
             "duration" => $this->getDuration(),
             "score" => $this->getScore(),
             "stadium" => $this->getStadium(),
@@ -29,6 +27,10 @@ abstract class GameSerializable implements \JsonSerializable
             "updated" => $this->getUpdated(),
             "attendance" => $this->getAttendance(),
             "tm_id" => $this->getTmId(),
+            "teams" => $this->getTeamGames()->map(function ($teamGame) {
+                /** @var TeamGame $teamGame */
+                return $teamGame->getTeam();
+            })->toArray(),
         ];
     }
 
@@ -46,4 +48,5 @@ abstract class GameSerializable implements \JsonSerializable
     abstract public function getUpdated(): ?\DateTimeInterface;
     abstract public function getAttendance(): ?float;
     abstract public function getTmId(): ?int;
+    abstract public function getTeamGames(): ?Collection;
 }

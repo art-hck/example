@@ -6,6 +6,10 @@ import {PageNotFoundRoute} from "../modules/Application/Route/PageNotFoundRoute"
 import {PlayersFilterResolver} from "../modules/Player/Resolver/PlayersFilterResolver";
 import {PlayersRoute} from "../modules/Player/Route/PlayersRoute";
 import {CanActivatePlayerFilter} from "../modules/Player/CanActivate/CanActivatePlayerFilter";
+import {TeamRoute} from "../modules/Team/Routes/TeamRoute";
+import {TeamResolver} from "../modules/Team/Resolver/TeamResolver";
+import {TeamPlayersResolver} from "../modules/Team/Resolver/TeamPlayersResolver";
+import {TeamLastGamesResolver} from "../modules/Team/Resolver/TeamLastGamesResolver";
 
 export const appRoutes: GenieRoutes = [
     {
@@ -41,11 +45,24 @@ export const appRoutes: GenieRoutes = [
                     title: "Players"
                 },
                 resolve: {
-                    players: PlayersFilterResolver
+                    playerFilterResponse: PlayersFilterResolver
                 },
                 canActivate: [CanActivatePlayerFilter]
             }
         ]
+    },
+    {
+        path: "team/:id",
+        component: TeamRoute,
+        resolve: {
+            team: TeamResolver,
+            playerFilterResponse: TeamPlayersResolver,
+            lastGames: TeamLastGamesResolver
+        },
+        data: {
+            title: "Team page",
+            description: "Team description"
+        }
     },
     {
         path: 'not-found',

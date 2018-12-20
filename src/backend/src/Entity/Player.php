@@ -162,12 +162,18 @@ class Player extends PlayerSerializable
      */
     private $substitutions;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\Transfer", mappedBy="player")
+     */
+    private $transfers;
+
     public function __construct()
     {
         $this->cards = new ArrayCollection();
         $this->goals = new ArrayCollection();
         $this->assists = new ArrayCollection();
         $this->substitutions = new ArrayCollection();
+        $this->transfers = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -571,6 +577,37 @@ class Player extends PlayerSerializable
             // set the owning side to null (unless already changed)
             if ($substitution->getPlayer() === $this) {
                 $substitution->setPlayer(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Transfer[]
+     */
+    public function getTransfers(): Collection
+    {
+        return $this->transfers;
+    }
+
+    public function addTransfer(Transfer $transfer): self
+    {
+        if (!$this->transfers->contains($transfer)) {
+            $this->transfers[] = $transfer;
+            $transfer->setPlayer($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTransfer(Transfer $transfer): self
+    {
+        if ($this->transfers->contains($transfer)) {
+            $this->transfers->removeElement($transfer);
+            // set the owning side to null (unless already changed)
+            if ($transfer->getPlayer() === $this) {
+                $transfer->setPlayer(null);
             }
         }
 

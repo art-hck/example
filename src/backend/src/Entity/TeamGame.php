@@ -2,12 +2,17 @@
 
 namespace App\Entity;
 
+use App\Serializable\TeamGameSerializable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TeamGameRepository")
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="IDX_GT", columns={"game_id", "team_id"}),
+ *     @ORM\Index(name="IDX_TG", columns={"team_id", "game_id"})
+ * })
  */
-class TeamGame
+class TeamGame extends TeamGameSerializable
 {
     /**
      * @ORM\Id()

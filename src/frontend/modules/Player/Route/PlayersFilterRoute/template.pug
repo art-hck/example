@@ -1,24 +1,24 @@
 doctype html
 br
 .players(#playersEl)
-  .player(*ngFor="let player of players;")
-    a.player-avatar([routerLink]="['/player', player.id]")
-      img(src="https://tmssl.akamaized.net/{{player.avatar}}")
+  .player(*ngFor="let item of playerFilterResponse;")
+    a.player-avatar([routerLink]="['/player', item.player.id]")
+      img(src="https://tmssl.akamaized.net/{{item.player.avatar}}")
     .player-info
-      a.player-name([routerLink]="['/player', player.id]") {{ (player.first_name || "") + " " + player. last_name }} 
-      .player-role-age-height {{player.role?.name | titlecase }} {{player.age}} - {{ player.height }}
-      .player-team(*ngIf="player.team")
-        img(src="https://tmssl.akamaized.net/{{player.team.preview }}")
-        span {{ player.team.name }}
+      a.player-name([routerLink]="['/player', item.player.id]") {{ (item.player.first_name || "") + " " + item.player. last_name }} 
+      .player-role-age-height {{item.player.role?.name | titlecase }} {{item.player.age}} - {{ item.player.height }}
+      .player-team(*ngIf="item.player.team")
+        img(src="https://tmssl.akamaized.net/{{item.player.team.preview }}")
+        span {{ item.player.team.name }}
       .player-dash
         .player-goals 
-          b {{ player.goals_count }} 
+          b {{ item.goals_count || item.player.goals_count }} 
           span GOALS
         .player-assists 
-          b {{ player.assists_count }}  
+          b {{ item.assists_count || item.player.assists_count }}  
           span ASSIST
         .player-min 
-          b {{ player.play_time }}  
+          b {{ item.play_time_sum || item.player.play_time }}  
           span MIN
         
 .loader(*ngIf="loading")
