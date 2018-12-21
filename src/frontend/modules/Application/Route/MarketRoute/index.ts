@@ -26,7 +26,7 @@ export class MarketRoute {
     ) {
         this.form.valueChanges
             .pipe(filter(() => this.form.valid))
-            .subscribe(() => this.filterRequest = this.form.value)
+            .subscribe(() => this.submit())
         ;
     }
 
@@ -58,5 +58,9 @@ export class MarketRoute {
 
     public getLastestGames() {
         return this.gamesService.getLastGames();
+    }
+    
+    public submit() {
+        this.filterRequest = this.form.value
     }
 }
