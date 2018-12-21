@@ -29,6 +29,7 @@ import {LeagueModule} from "../League/LeagueModule";
 import {MarketRoute} from "./Route/MarketRoute";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NouisliderModule} from "ng2-nouislider";
+import {ShortNumberPipe} from "./Pipe/ShortNumberPipe";
 
 registerLocaleData(localeRu);
 
@@ -50,10 +51,14 @@ registerLocaleData(localeRu);
 
     declarations: [
         ApplicationComponent,
+
         MarketRoute,
         PageNotFoundRoute,
+        ForbiddenRoute,
+
         IconDirective,
-        ForbiddenRoute
+
+        ShortNumberPipe
     ],
     providers: [
         RouteHelperService,

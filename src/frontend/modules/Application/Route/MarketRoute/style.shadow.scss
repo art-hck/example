@@ -1,33 +1,155 @@
-.form-field {
-  padding: 12px 20px 15px;
-  border-bottom: 1px solid #eaeaeac4;
+:host {
+  padding: 0 20px;
+  display: block;
 
-  input[type=text] {
-    padding: 8px 14px;
-    font-size: 14px;
-    border: 2px solid #a2a2a233;
-    box-sizing: border-box;
-    border-radius: 4px;
-    outline: none;
-    color: #463cff;
-    background: #ffffff;
-    height: 38px;
+  h1, h2 {
+    font-weight: 500;
+  }
 
-    &.ng-invalid {
-      border-color: #ff000033;
+  form {
+    padding: 20px 0;
+  }
+
+  mat-spinner {
+    margin: 50px auto
+  }
+  
+  .form-field {
+    input[type=text] {
+      padding: 8px 14px;
+      font-size: 14px;
+      border: 2px solid #a2a2a233;
+      box-sizing: border-box;
+      border-radius: 4px;
+      outline: none;
+      color: #463cff;
+      background: #ffffff;
+      height: 38px;
+
+      &.ng-invalid {
+        border-color: #ff000033;
+      }
+    }
+
+    .dates {
+      display: flex;
+      align-items: baseline;
+
+      input {
+        width: 150px;
+      }
+
+      /deep/ .mat-form-field-infix {
+        width: auto;
+      }
+    }
+
+  }
+  
+  .grid {
+    .grid-row {
+      display: flex;
+      margin: 20px 0;
+      .grid-column {
+        min-height: 400px;
+        flex-grow: 1;
+        background: #fff;
+        margin-right: 20px;
+        border: 1px solid #eee;
+        border-radius: 4px;
+        padding: 20px;
+        
+        &:last-child {
+          margin-right: 0;
+        }
+      }
     }
   }
 
-  .dates {
+  hr {
+    border: none;
+    border-bottom: 1px solid #e4e4e426;
+    margin: 0 -20px;
+  }
+  .player {
     display: flex;
-    align-items: baseline;
-
-    input {
-      width: 100px;
+    align-items: center;
+    margin-top: 25px;
+    
+    & > * {
+      margin-right: 10px;
+      &:last-child {
+        margin-right: 0;
+      }
+    }
+    
+    .value {
+      width: 40px;
+      font-size: 22px;
+      font-weight: bold;
+      color: #5a52ff;
     }
 
-    /deep/ .mat-form-field-infix {
-      width: auto;
+    .avatar img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+    }
+    
+    .info {
+      a {
+        display: block
+      }
+      
+      .team img {
+        width: 10px;
+        margin-right: 4px;
+      }
+    }
+  }
+  
+  .game {
+    display: flex;
+    align-items: center;
+
+    .date {
+      text-transform: uppercase;
+      font-size: 10px;
+      opacity: .4;
+      font-weight: 700;
+      line-height: 1;
+      margin-bottom: 3px;
+      letter-spacing: .5px;
+      height: 10px;
+      overflow: hidden;
+    }
+
+    .team {
+      width: 6%;
+      text-align: center;
+    }
+    .info {
+      width: 73%;
+    }
+    
+    .score {
+      width: 6%;
+      font-size: 14px;
+      font-weight: 500;
+      text-align: center;
+    }
+    
+    .duration {
+      width: 9%;
+    }
+    
+    a {
+      display: block
+    }
+
+    img {
+      height: 35px;
     }
   }
 }

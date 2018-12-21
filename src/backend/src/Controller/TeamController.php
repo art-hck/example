@@ -26,7 +26,7 @@ class TeamController extends Controller
      *
      * @Route("/team/{id}", requirements={"id"="\d+"}, methods={"GET"})
      *
-     * @param int $playerId
+     * @param int $id
      * @return JsonResponse
      */
     public function getById(int $id)

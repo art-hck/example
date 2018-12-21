@@ -15,7 +15,7 @@ abstract class TransfersSerializable implements \JsonSerializable
             "player" => $this->getPlayer(),
             "left_team" => $this->getLeftTeam(),
             "join_team" => $this->getJoinTeam(),
-            "date" => $this->getDate(),
+            "date" => $this->getDate()->format(DATE_ISO8601),
             "fee" => $this->getFee(),
             "mv" => $this->getMv(),
         ];

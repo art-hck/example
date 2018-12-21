@@ -1,6 +1,7 @@
 doctype html
 
 form([formGroup]="form", (ngSubmit)="submit()")
+  h1 Market view
   .form-field
     .dates
       input(matInput, type="text",
@@ -19,5 +20,94 @@ form([formGroup]="form", (ngSubmit)="submit()")
       )
       mat-datepicker(#dateToEl, [disabled]="false")
 
-.dashboard
-  .column-2
+.grid
+  .grid-row
+    .grid-column
+      h2 Top scores
+      hr
+      .player(*ngFor="let item of getTopGoalsPlayers() | async")
+        .value {{ item.goals_count || item.player.goals_count }}
+        a.avatar([routerLink]="['/player', item.player.id]")
+          img(src="https://tmssl.akamaized.net/{{item.player.avatar}}")
+        .info
+          a.name([routerLink]="['/player', item.player.id]") {{ (item.player.first_name || "") + " " + item.player.last_name }}
+          a.team(*ngIf="item.player.team", [routerLink]="['/team', item.player.team.id]")
+            img(src="https://tmssl.akamaized.net/{{item.player.team.preview }}")
+            small {{ item.player.team.name }}
+
+      ng-template(*ngIf="getTopGoalsPlayers() | async; else topGoalsPlayersLoading")
+      ng-template(#topGoalsPlayersLoading)
+        mat-spinner
+
+    .grid-column
+      h2 Top assists
+      hr
+      .player(*ngFor="let item of getTopAssistsPlayers() | async")
+        .value {{ item.goals_count || item.player.goals_count }}
+        a.avatar([routerLink]="['/player', item.player.id]")
+          img(src="https://tmssl.akamaized.net/{{item.player.avatar}}")
+        .info
+          a.name([routerLink]="['/player', item.player.id]") {{ (item.player.first_name || "") + " " + item.player.last_name }}
+          a.team(*ngIf="item.player.team", [routerLink]="['/team', item.player.team.id]")
+            img(src="https://tmssl.akamaized.net/{{item.player.team.preview }}")
+            small {{ item.player.team.name }}
+      ng-template(*ngIf="getTopAssistsPlayers() | async; else topAssistsPlayersLoading")
+      ng-template(#topAssistsPlayersLoading)
+        mat-spinner
+
+    .grid-column
+      h2 Top views
+      hr
+      .player(*ngFor="let item of getTopViewsPlayers() | async")
+        .value {{ item.goals_count || item.player.goals_count }}
+        a.avatar([routerLink]="['/player', item.player.id]")
+          img(src="https://tmssl.akamaized.net/{{item.player.avatar}}")
+        .info
+          a.name([routerLink]="['/player', item.player.id]") {{ (item.player.first_name || "") + " " + item.player.last_name }}
+          a.team(*ngIf="item.player.team", [routerLink]="['/team', item.player.team.id]")
+            img(src="https://tmssl.akamaized.net/{{item.player.team.preview }}")
+            small {{ item.player.team.name }}
+      ng-template(*ngIf="getTopViewsPlayers() | async; else topViewsPlayersLoading")
+      ng-template(#topViewsPlayersLoading)
+        mat-spinner
+  
+  .grid-row
+    .grid-column
+      h2 Largest transfers
+      .player(*ngFor="let transfer of getLargestTransfers() | async")
+        a.avatar([routerLink]="['/player', transfer.player.id]")
+          img(src="https://tmssl.akamaized.net/{{ transfer.player.avatar }}")
+        a.name([routerLink]="['/player', transfer.player.id]") {{ (transfer.player.first_name || "") + " " + transfer.player.last_name }}
+        .transfer
+          small.date {{ formatDateISO(transfer.date) | date | uppercase }}
+          .name {{ transfer.left_team.name }} >>> {{ transfer.join_team.name }}
+        .mv(title="transfer.mv") mv: £{{ transfer.mv | short_number}}
+        .fee fee: {{ transfer.fee | short_number }}
+
+      ng-template(*ngIf="getLargestTransfers() | async; else largestTransfersLoading")
+      ng-template(#largestTransfersLoading)
+        mat-spinner 
+
+  .grid-row
+    .grid-column
+      h2 Lastest games
+      .game(*ngFor="let game of getLastestGames() | async")
+        a.team([routerLink]='["/team", game.teams[0].id]')
+          img(src="https://tmssl.akamaized.net/{{game.teams[0].preview }}")
+        .score {{ game.score }}
+        .team([routerLink]='["/team", game.teams[1].id]')
+          img(src="https://tmssl.akamaized.net/{{game.teams[1].preview }}")
+        .info
+          small.date {{ formatDateISO(game.date) | date | uppercase }} - {{ game.league.name }}
+          a([routerLink]='["/team", game.teams[0].id]') {{ game.teams[0].name }}
+        .duration {{ game.duration }}'
+      ng-template(*ngIf="getLastestGames() | async; else lastestGamesLoading")
+      ng-template(#lastestGamesLoading)
+        mat-spinner
+
+  .grid-row
+    .grid-column
+      h2 Lastest transfers
+      ng-template(*ngIf="getLastestTransfers() | async; else lastestTransfersLoading")
+      ng-template(#lastestTransfersLoading)
+        mat-spinner

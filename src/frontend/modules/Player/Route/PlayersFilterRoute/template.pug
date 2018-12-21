@@ -24,6 +24,6 @@ br
 .loader(*ngIf="loading")
   mat-spinner
 
-.not-found(*ngIf="players && players.length==0")
+.not-found(*ngIf="playerFilterResponse && playerFilterResponse.length==0")
   h1 No players found
   h5 Please try again

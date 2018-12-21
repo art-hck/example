@@ -32,7 +32,7 @@ class PlayerController extends Controller
      *
      * @SWG\Tag(name="Player")
      *
-     * @Route("/player/{playerId}", requirements={"playerId"="\d+"}, methods={"GET"})
+     * @Route("/player/{id}", requirements={"playerId"="\d+"}, methods={"GET"})
      *
      * @param int $id
      * @return JsonResponse

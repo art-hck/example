@@ -23,9 +23,12 @@ export const appRoutes: GenieRoutes = [
     {
         path: 'market',
         component: MarketRoute,
+        data: {
+            tile: "Market view"
+        },
         resolve: {
-            lastestGames: LastestGamesResolver,
-            lastestTransfer: LastestTransferResolver,
+            // lastestGames: LastestGamesResolver,
+            // lastestTransfer: LastestTransferResolver,
         }
     },
     {
