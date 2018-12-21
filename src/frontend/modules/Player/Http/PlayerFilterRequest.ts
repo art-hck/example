@@ -19,7 +19,7 @@ export class PlayerFilterRequest {
     teamId?: number = null;
     teamName?: string = null;
     orderBy?: string = null;
-    orderDirection?: "ASC | DESC" = null;
+    orderDirection?: "ASC" | "DESC" = null;
     offset?: number = null;
     limit?: number = null;
     [name: string]: any;

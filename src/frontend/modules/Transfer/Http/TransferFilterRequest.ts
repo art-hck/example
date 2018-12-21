@@ -6,7 +6,7 @@ export class TransferFilterRequest {
     fee?: [number, number] = null;
     mv?: [number, number] = null;
     orderBy?: string = null;
-    orderDirection?: "ASC | DESC" = null;
+    orderDirection?: "ASC" | "DESC" = null;
     offset?: number = null;
     limit?: number = null;
     [name: string]: any;

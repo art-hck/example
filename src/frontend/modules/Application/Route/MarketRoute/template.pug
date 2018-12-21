@@ -1,0 +1,23 @@
+doctype html
+
+form([formGroup]="form", (ngSubmit)="submit()")
+  .form-field
+    .dates
+      input(matInput, type="text",
+      (dateChange)="form.get('dateFrom').setValue(formatDateISO($event.value))",
+      [matDatepicker]="dateFromEl",
+      [value]="form.get('dateFrom').value",
+      (click)="dateFromEl.open()"
+      )
+      mat-datepicker(#dateFromEl)
+      span  — 
+      input(matInput, type="text",
+      (dateChange)="form.get('dateTo').setValue(formatDateISO($event.value))",
+      [matDatepicker]="dateToEl",
+      [value]="form.get('dateTo').value",
+      (click)="dateToEl.open()"
+      )
+      mat-datepicker(#dateToEl, [disabled]="false")
+
+.dashboard
+  .column-2

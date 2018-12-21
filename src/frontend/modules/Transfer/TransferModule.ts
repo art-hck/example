@@ -1,9 +1,11 @@
 import {NgModule} from "@angular/core";
-import {TransferService} from "./Service/TransferService";
+import {TransferRESTService} from "./Service/TransferRESTService";
+import {LastestTransferResolver} from "./Resolver/LastestTransferResolver";
 
 @NgModule({
     providers: [
-        TransferService
+        LastestTransferResolver,
+        TransferRESTService
     ],
 })
 export class TransferModule {

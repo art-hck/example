@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {RouterModule} from "@angular/router";
-import {registerLocaleData} from "@angular/common";
+import {CommonModule, registerLocaleData} from "@angular/common";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import localeRu from '@angular/common/locales/ru';
 
@@ -26,11 +26,17 @@ import {TeamModule} from "../Team/TeamModule";
 import {GameModule} from "../Game/GameModule";
 import {TransferModule} from "../Transfer/TransferModule";
 import {LeagueModule} from "../League/LeagueModule";
+import {MarketRoute} from "./Route/MarketRoute";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {NouisliderModule} from "ng2-nouislider";
 
 registerLocaleData(localeRu);
 
 @NgModule({
     imports: [
+        CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
         BrowserModule,
         RouterModule.forRoot(appRoutes, {scrollPositionRestoration: 'enabled', onSameUrlNavigation: "reload"}),
         HttpClientModule,
@@ -44,6 +50,7 @@ registerLocaleData(localeRu);
 
     declarations: [
         ApplicationComponent,
+        MarketRoute,
         PageNotFoundRoute,
         IconDirective,
         ForbiddenRoute

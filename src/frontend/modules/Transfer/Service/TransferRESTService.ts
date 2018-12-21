@@ -9,7 +9,7 @@ import {Params} from "@angular/router";
 import {ParamsService} from "../../Application/Service/ParamsService";
 
 @Injectable()
-export class TransferService {
+export class TransferRESTService {
 
     constructor(private http: HttpClient, private paramsService: ParamsService) {
     }

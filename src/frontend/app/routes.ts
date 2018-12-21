@@ -10,12 +10,23 @@ import {TeamRoute} from "../modules/Team/Routes/TeamRoute";
 import {TeamResolver} from "../modules/Team/Resolver/TeamResolver";
 import {TeamPlayersResolver} from "../modules/Team/Resolver/TeamPlayersResolver";
 import {TeamLastGamesResolver} from "../modules/Team/Resolver/TeamLastGamesResolver";
+import {MarketRoute} from "../modules/Application/Route/MarketRoute";
+import {LastestGamesResolver} from "../modules/Game/Resolver/LastestGamesResolver";
+import {LastestTransferResolver} from "../modules/Transfer/Resolver/LastestTransferResolver";
 
 export const appRoutes: GenieRoutes = [
     {
         path: '',
-        redirectTo: '/players/filter',
+        redirectTo: '/market',
         pathMatch: "full"
+    },
+    {
+        path: 'market',
+        component: MarketRoute,
+        resolve: {
+            lastestGames: LastestGamesResolver,
+            lastestTransfer: LastestTransferResolver,
+        }
     },
     {
         path: "player/:id",

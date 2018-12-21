@@ -1,0 +1,33 @@
+.form-field {
+  padding: 12px 20px 15px;
+  border-bottom: 1px solid #eaeaeac4;
+
+  input[type=text] {
+    padding: 8px 14px;
+    font-size: 14px;
+    border: 2px solid #a2a2a233;
+    box-sizing: border-box;
+    border-radius: 4px;
+    outline: none;
+    color: #463cff;
+    background: #ffffff;
+    height: 38px;
+
+    &.ng-invalid {
+      border-color: #ff000033;
+    }
+  }
+
+  .dates {
+    display: flex;
+    align-items: baseline;
+
+    input {
+      width: 100px;
+    }
+
+    /deep/ .mat-form-field-infix {
+      width: auto;
+    }
+  }
+}
