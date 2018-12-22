@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Game;
+use App\Entity\Substitution;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -20,14 +21,16 @@ class GameRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param array $ids
+     * @param int $playerId
      * @return Game[]
      */
-    public function findByIds(array $ids)
+    public function getByPlayer(int $playerId)
     {
-        return $this->createQueryBuilder('game')
-            ->andWhere('game.tmId IN (:ids)')
-            ->setParameter('ids', $ids)
+        return $this->createQueryBuilder('g')
+            ->join('g.substitutions', 's')
+            ->where("s.player = :playerId")
+            ->setParameter("playerId", $playerId)
+            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;

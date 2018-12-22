@@ -24,7 +24,7 @@ export class RESTInterceptor implements HttpInterceptor
 
         return next.handle(req).pipe(
             catchError((httpErrorResponse: HttpErrorResponse) => {
-                let error: ResponseFailure = httpErrorResponse.error;
+                const error: ResponseFailure = httpErrorResponse.error;
 
                 switch (error.code) {
                     default: return observableThrow(error);

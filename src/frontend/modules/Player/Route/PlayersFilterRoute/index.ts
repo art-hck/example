@@ -56,7 +56,7 @@ export class PlayersFilterRoute {
         if(scrollTop + (screenHeight * 3) >= documentHeight - screenHeight && !this.loading) {
             this.loading = true;
 
-            let request = {...this.request, ...{offset: ((this.request.offset || 0) + this.playerFilterResponse.length)}};
+            const request = {...this.request, ...{offset: ((this.request.offset || 0) + this.playerFilterResponse.length)}};
 
 
             forkJoin(this.playerService.filter(request), timer(1000)) // Минимальный показ прелоадера
@@ -84,9 +84,9 @@ export class PlayersFilterRoute {
         });
 
         if(offsetScrollMarkers.length) {
-            let params: Params = {...this.route.snapshot.queryParams, ...{offset: offsetScrollMarkers.slice(-1)[0].offset}};
+            const params: Params = {...this.route.snapshot.queryParams, ...{offset: offsetScrollMarkers.slice(-1)[0].offset}};
             if(params.offset == 0) delete params.offset; 
-            let url = this.router.createUrlTree(["."], {"queryParams": params, "relativeTo": this.route}).toString();
+            const url = this.router.createUrlTree(["."], {"queryParams": params, "relativeTo": this.route}).toString();
             this.platformLocation.replaceState(null, "", url);
         }
     }

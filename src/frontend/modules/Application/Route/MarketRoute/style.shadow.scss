@@ -10,8 +10,20 @@
     padding: 20px 0;
   }
 
-  mat-spinner {
-    margin: 50px auto
+  mat-spinner{
+    margin: 50px auto;
+  }
+  
+  .not-found {
+    color: #ccc;
+    text-align: center;
+    margin: 115px 0;
+
+    mat-icon {
+      font-size: 4em;
+      width: 1em;
+      height: 1em;
+    }
   }
   
   .form-field {

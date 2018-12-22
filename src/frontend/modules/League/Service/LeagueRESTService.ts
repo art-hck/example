@@ -11,7 +11,7 @@ export class LeagueRESTService {
 
     public findByName(name: string): Observable<League[]>
     {
-        let url = `/league/name/${name}`;
+        const url = `/league/name/${name}`;
 
         return this.http
             .get<League[]>(url, {headers: { stateKey: `LeagueByName-${name}`}});

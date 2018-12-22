@@ -2,8 +2,8 @@ import {Injectable} from "@angular/core";
 import {HttpClient} from "@angular/common/http";
 import {Observable} from 'rxjs';
 
-import {ParamsService} from "../../Application/Service/ParamsService";
 import {Game} from "../Entity/Game";
+import {GameByPlayerResponse} from "../Http/GameByPlayerResponse";
 
 @Injectable()
 export class GameRESTService {
@@ -12,8 +12,15 @@ export class GameRESTService {
 
     public getLastGames(): Observable<Game[]>
     {
-        let url = `/games/last`;
+        const url = `/games/last`;
 
         return this.http.get<Game[]>(url, { headers: {stateKey: `LastGames`}});
+    }
+    
+    public getByPlayer(playerId: number): Observable<GameByPlayerResponse>
+    {
+        const url = `/games/player/${playerId}`;
+
+        return this.http.get<GameByPlayerResponse>(url, { headers: {stateKey: `GameByPlayer-${playerId}`}});
     }
 }

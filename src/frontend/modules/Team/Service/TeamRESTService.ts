@@ -11,14 +11,14 @@ export class TeamRESTService {
 
     public get(id: number): Observable<Team> 
     {
-        let url = `/team/${id}`;
+        const url = `/team/${id}`;
         
         return this.http.get<Team>(url, {headers: { stateKey: `TeamById-${id}`}});
     }
     
     public findByName(name: string): Observable<Team[]>
     {
-        let url = `/team/name/${name}`;
+        const url = `/team/name/${name}`;
 
         return this.http
             .get<Team[]>(url, {headers: { stateKey: `TeamByName-${name}`}});

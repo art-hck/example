@@ -9,7 +9,7 @@ export class CanActivatePlayerFilter implements CanActivate {
     
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): true
     {
-        let request = new PlayerFilterRequest();
+        const request = new PlayerFilterRequest();
         
         Object.keys(route.queryParams).forEach(key => {
            if(!request.hasOwnProperty(key)) {

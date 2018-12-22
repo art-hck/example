@@ -2,15 +2,17 @@ import {Component, Inject, LOCALE_ID} from "@angular/core";
 import {ActivatedRoute} from "@angular/router";
 import {Player} from "../../Entity/Player";
 import {formatDate} from "@angular/common";
+import {GameByPlayerResponse} from "../../../Game/Http/GameByPlayerResponse";
 
 @Component({
-    templateUrl: "./template.html",
+    templateUrl: "./template.pug",
     styleUrls: ["./style.shadow.scss"]
 })
 
 export class PlayerRoute {
 
     public player: Player;
+    public playerGames: GameByPlayerResponse;
     public playerArray;
     constructor(
         private route: ActivatedRoute,
@@ -18,6 +20,7 @@ export class PlayerRoute {
     ) {
         this.route.data.subscribe(data => {
             this.player = data.player;
+            this.playerGames = data.playerGames;
 
             this.playerArray = [
                 {"field" : "First name", "value" : this.player.first_name},

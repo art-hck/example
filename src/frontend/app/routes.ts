@@ -11,8 +11,8 @@ import {TeamResolver} from "../modules/Team/Resolver/TeamResolver";
 import {TeamPlayersResolver} from "../modules/Team/Resolver/TeamPlayersResolver";
 import {TeamLastGamesResolver} from "../modules/Team/Resolver/TeamLastGamesResolver";
 import {MarketRoute} from "../modules/Application/Route/MarketRoute";
-import {LastestGamesResolver} from "../modules/Game/Resolver/LastestGamesResolver";
-import {LastestTransferResolver} from "../modules/Transfer/Resolver/LastestTransferResolver";
+import {GameByPlayerResponse} from "../modules/Game/Http/GameByPlayerResponse";
+import {PlayerGamesResolver} from "../modules/Player/Resolver/PlayerGamesResolver";
 
 export const appRoutes: GenieRoutes = [
     {
@@ -24,18 +24,15 @@ export const appRoutes: GenieRoutes = [
         path: 'market',
         component: MarketRoute,
         data: {
-            tile: "Market view"
-        },
-        resolve: {
-            // lastestGames: LastestGamesResolver,
-            // lastestTransfer: LastestTransferResolver,
+            title: "Market view"
         }
     },
     {
         path: "player/:id",
         component: PlayerRoute,
         resolve: {
-            player: PlayerResolver
+            player: PlayerResolver,
+            playerGames: PlayerGamesResolver
         },
         data: {
             title: "Player page",

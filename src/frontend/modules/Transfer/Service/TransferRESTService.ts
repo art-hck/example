@@ -11,13 +11,12 @@ import {ParamsService} from "../../Application/Service/ParamsService";
 @Injectable()
 export class TransferRESTService {
 
-    constructor(private http: HttpClient, private paramsService: ParamsService) {
-    }
+    constructor(private http: HttpClient, private paramsService: ParamsService) {}
 
-    public filter(transferFilterRequest: TransferFilterRequest): Observable<Transfer[]> {
-        let url = `/transfers/filter`;
-        
-        let params: Params = this.paramsService.stringify(transferFilterRequest);
+    public filter(transferFilterRequest: TransferFilterRequest): Observable<Transfer[]> 
+    {
+        const url = `/transfers/filter`;
+        const params: Params = this.paramsService.stringify(transferFilterRequest);
 
         return this.http
             .get<Transfer[]>(url, { params, headers: { stateKey: objectHash(transferFilterRequest)}})

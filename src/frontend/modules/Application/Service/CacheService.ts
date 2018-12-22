@@ -9,7 +9,7 @@ export class CacheService {
 
     public get<T>(key: string): Observable<T>
     {
-        let stateKey: StateKey<T> = makeStateKey<T>(key);
+        const stateKey: StateKey<T> = makeStateKey<T>(key);
 
         if(this.transferState.hasKey(stateKey)) {
             return of(this.transferState.get(stateKey, null as T));
@@ -20,7 +20,7 @@ export class CacheService {
 
     public set<T>(data: T, key: string): void
     {
-        let stateKey: StateKey<T> = makeStateKey<T>(key);
+        const stateKey: StateKey<T> = makeStateKey<T>(key);
         this.transferState.set(stateKey, data as T);
     }    
 }

@@ -13,7 +13,7 @@ export class PlayersFilterResolver implements Resolve<any>
 
     resolve(route: ActivatedRouteSnapshot): Observable<PlayerFilterResponse>
     {
-        let request = this.paramsService.parse<PlayerFilterRequest>({...route.data["playerFilterRequest"], ...route.queryParams});
+        const request = this.paramsService.parse<PlayerFilterRequest>({...route.data["playerFilterRequest"], ...route.queryParams});
        
         return this.playerService.filter(request);
     }

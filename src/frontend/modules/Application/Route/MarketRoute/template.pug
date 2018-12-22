@@ -25,7 +25,8 @@ form([formGroup]="form", (ngSubmit)="submit()")
     .grid-column
       h2 Top scores
       hr
-      .player(*ngFor="let item of getTopGoalsPlayers() | async")
+      
+      .player(*ngFor="let item of playerService.filter(mergeRequest({orderBy: 'goals', orderDirection: 'DESC', limit: 5, goals: [0, null]})) | async")
         .value {{ item.goals_count || item.player.goals_count }}
         a.avatar([routerLink]="['/player', item.player.id]")
           img(src="https://tmssl.akamaized.net/{{item.player.avatar}}")
@@ -34,7 +35,9 @@ form([formGroup]="form", (ngSubmit)="submit()")
           a.team(*ngIf="item.player.team", [routerLink]="['/team', item.player.team.id]")
             img(src="https://tmssl.akamaized.net/{{item.player.team.preview }}")
             small {{ item.player.team.name }}
-
+      .not-found(*ngIf="(getTopGoalsPlayers() | async)?.length == 0")
+        mat-icon error_outline
+        div No players found
       ng-template(*ngIf="getTopGoalsPlayers() | async; else topGoalsPlayersLoading")
       ng-template(#topGoalsPlayersLoading)
         mat-spinner
@@ -42,7 +45,7 @@ form([formGroup]="form", (ngSubmit)="submit()")
     .grid-column
       h2 Top assists
       hr
-      .player(*ngFor="let item of getTopAssistsPlayers() | async")
+      .player(*ngFor="let item of playerService.filter(mergeRequest({orderBy: 'assists', orderDirection: 'DESC', limit: 5, assists: [0, null]})) | async")
         .value {{ item.goals_count || item.player.goals_count }}
         a.avatar([routerLink]="['/player', item.player.id]")
           img(src="https://tmssl.akamaized.net/{{item.player.avatar}}")
@@ -58,7 +61,7 @@ form([formGroup]="form", (ngSubmit)="submit()")
     .grid-column
       h2 Top views
       hr
-      .player(*ngFor="let item of getTopViewsPlayers() | async")
+      .player(*ngFor="let item of playerService.filter(mergeRequest({orderBy: 'playTime', orderDirection: 'DESC', limit: 5, playTime: [0, null]})) | async")
         .value {{ item.goals_count || item.player.goals_count }}
         a.avatar([routerLink]="['/player', item.player.id]")
           img(src="https://tmssl.akamaized.net/{{item.player.avatar}}")
@@ -74,7 +77,7 @@ form([formGroup]="form", (ngSubmit)="submit()")
   .grid-row
     .grid-column
       h2 Largest transfers
-      .player(*ngFor="let transfer of getLargestTransfers() | async")
+      .player(*ngFor="let transfer of transfersService.filter(mergeRequest({orderBy: 'fee', orderDirection: 'DESC', limit: 5})) | async")
         a.avatar([routerLink]="['/player', transfer.player.id]")
           img(src="https://tmssl.akamaized.net/{{ transfer.player.avatar }}")
         a.name([routerLink]="['/player', transfer.player.id]") {{ (transfer.player.first_name || "") + " " + transfer.player.last_name }}
@@ -91,7 +94,7 @@ form([formGroup]="form", (ngSubmit)="submit()")
   .grid-row
     .grid-column
       h2 Lastest games
-      .game(*ngFor="let game of getLastestGames() | async")
+      .game(*ngFor="let game of gamesService.getLastGames() | async")
         a.team([routerLink]='["/team", game.teams[0].id]')
           img(src="https://tmssl.akamaized.net/{{game.teams[0].preview }}")
         .score {{ game.score }}
@@ -108,6 +111,16 @@ form([formGroup]="form", (ngSubmit)="submit()")
   .grid-row
     .grid-column
       h2 Lastest transfers
+      .player(*ngFor="let transfer of transfersService.filter(mergeRequest({orderBy: 'date', orderDirection: 'DESC', limit: 5})) | async")
+        a.avatar([routerLink]="['/player', transfer.player.id]")
+          img(src="https://tmssl.akamaized.net/{{ transfer.player.avatar }}")
+        a.name([routerLink]="['/player', transfer.player.id]") {{ (transfer.player.first_name || "") + " " + transfer.player.last_name }}
+        .transfer
+          small.date {{ formatDateISO(transfer.date) | date | uppercase }}
+          .name {{ transfer.left_team.name }} >>> {{ transfer.join_team.name }}
+        .mv(title="transfer.mv") mv: £{{ transfer.mv | short_number}}
+        .fee fee: {{ transfer.fee | short_number }}
+
       ng-template(*ngIf="getLastestTransfers() | async; else lastestTransfersLoading")
       ng-template(#lastestTransfersLoading)
         mat-spinner

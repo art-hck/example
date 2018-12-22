@@ -16,7 +16,7 @@ export class PlayerRESTService {
 
     public get(id: number): Observable<Player>
     {
-        let url = `/player/${id}`;
+        const url = `/player/${id}`;
 
         return this.http
             .get<Player>(url, { headers: {stateKey: `Player-${id}`}})
@@ -25,8 +25,8 @@ export class PlayerRESTService {
     
     public filter(playerFilterRequest: PlayerFilterRequest): Observable<PlayerFilterResponse>
     {
-        let url = `/players/filter`;
-        let params: Params = this.paramsService.stringify(playerFilterRequest);
+        const url = `/players/filter`;
+        const params: Params = this.paramsService.stringify(playerFilterRequest);
         
         return this.http
             .get<PlayerFilterResponse>(url, { params, headers: { stateKey: objectHash(playerFilterRequest)}})

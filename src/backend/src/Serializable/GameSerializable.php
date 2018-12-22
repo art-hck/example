@@ -5,6 +5,7 @@ namespace App\Serializable;
 use App\Entity\League;
 use App\Entity\Referee;
 use App\Entity\Stadium;
+use App\Entity\Substitution;
 use App\Entity\TeamGame;
 use Doctrine\Common\Collections\Collection;
 
@@ -27,6 +28,7 @@ abstract class GameSerializable implements \JsonSerializable
             "updated" => $this->getUpdated(),
             "attendance" => $this->getAttendance(),
             "tm_id" => $this->getTmId(),
+            "substitutions" => $this->getSubstitutions(),
             "teams" => $this->getTeamGames()->map(function ($teamGame) {
                 /** @var TeamGame $teamGame */
                 return $teamGame->getTeam();
@@ -48,5 +50,6 @@ abstract class GameSerializable implements \JsonSerializable
     abstract public function getUpdated(): ?\DateTimeInterface;
     abstract public function getAttendance(): ?float;
     abstract public function getTmId(): ?int;
+    abstract public function getSubstitutions(): Collection;
     abstract public function getTeamGames(): ?Collection;
 }

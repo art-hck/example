@@ -13,6 +13,7 @@ import {PlayersRoute} from "./Route/PlayersRoute";
 import {NouisliderModule} from "ng2-nouislider";
 import {RangeSliderFormControl} from "./FormControl/RangeSliderFormControl";
 import {CanActivatePlayerFilter} from "./CanActivate/CanActivatePlayerFilter";
+import {PlayerGamesResolver} from "./Resolver/PlayerGamesResolver";
 
 @NgModule({
     imports: [
@@ -35,6 +36,7 @@ import {CanActivatePlayerFilter} from "./CanActivate/CanActivatePlayerFilter";
         PlayerRESTService,
         PlayerResolver,
         PlayersFilterResolver,
+        PlayerGamesResolver,
         CanActivatePlayerFilter
     ]
 })

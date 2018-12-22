@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Serializable\SubstitutionSerializable;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  *     @ORM\Index(name="IDX_GTP", columns={"game_id", "play_time", "player_id"})
  * })
  */
-class Substitution
+class Substitution extends SubstitutionSerializable
 {
     /**
      * @ORM\Id()
