@@ -167,6 +167,11 @@ class Player extends PlayerSerializable
      */
     private $transfers;
 
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Country", inversedBy="players")
+     */
+    private $birthCountry;
+
     public function __construct()
     {
         $this->cards = new ArrayCollection();
@@ -610,6 +615,18 @@ class Player extends PlayerSerializable
                 $transfer->setPlayer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getBirthCountry(): ?Country
+    {
+        return $this->birthCountry;
+    }
+
+    public function setBirthCountry(?Country $birthCountry): self
+    {
+        $this->birthCountry = $birthCountry;
 
         return $this;
     }

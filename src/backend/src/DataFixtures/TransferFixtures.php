@@ -24,6 +24,7 @@ class TransferFixtures extends Fixture implements ContainerAwareInterface, Depen
 
     public function load(ObjectManager $manager)
     {
+        return;
         try {
             $offset = 0;
             $limit = 1000;
