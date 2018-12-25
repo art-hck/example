@@ -1,36 +1,33 @@
 import {PlayerRole} from "./PlayerRole";
 import {Team} from "../../Team/Entity/Team";
-
+import {Country} from "../../Country/Entity/Country";
+        
 export interface Player {
     id: number
+    tm_id: number
     first_name: string
     last_name: string
     native_name: string
     alias: string
-    birthday: number
+    birthday: string
+    age: number
     birthPlace: string
-    country_id: number
-    nationality: number
-    nationality_f: number
-    nationality_m: number
-    foot: string
+    foot: number
     role: PlayerRole
     height: number
     number: number
     avatar: string
-    created: string
-    updated: string
-    status: number
-    link_to_tm: string
-    contract_until: number
-    contract_ext: number
-    team: Team
-    in_team: number
     twitter: string
     facebook: string
     instagram: string
-    agents: string
-    age: number
+    country: Country
+    birth_country: Country
+    team: Team
+    cards: {}
+    joined: string
+    until: string
+    transfers: {}
+    views: number
     goals_count: number
     assists_count: number
     play_time: number
