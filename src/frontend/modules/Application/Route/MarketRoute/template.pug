@@ -65,7 +65,7 @@ form([formGroup]="form", (ngSubmit)="submit()")
       h2 Top views
       hr
       .player(*ngFor="let item of topPlayerViews$ | async")
-        .value {{ item.play_time_sum || item.player.play_time }}
+        .value {{ item.player.views || 0 }}
         a.avatar([routerLink]="['/player', item.player.id]")
           img(src="https://tmssl.akamaized.net/{{item.player.avatar}}")
         .info
