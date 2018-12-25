@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\Player;
+use App\Event\GetPlayerEvent;
+use App\EventSubscriber\PlayerViewsSubscriber;
 use App\Form\PlayersFilterType;
 use App\Http\ErrorJsonResponse;
 
@@ -10,6 +12,7 @@ use App\Type\SeekCriteria\Types\SeekCriteriaPlayerFilter;
 use App\Service\RESTRequestService;
 use App\Service\ValidateService;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\EventDispatcher\EventDispatcher;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -43,7 +46,11 @@ class PlayerController extends Controller
         or (function ($id) {
             throw new NotFoundHttpException("Player with id `${id}` not found");
         })($id);
-        
+
+        $player->incViews();
+        $this->getDoctrine()->getManager()->persist($player);
+        $this->getDoctrine()->getManager()->flush();
+
         return new JsonResponse($player);
     }
 

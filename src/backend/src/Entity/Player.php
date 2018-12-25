@@ -152,6 +152,11 @@ class Player extends PlayerSerializable
      */
     private $until;
 
+    /**
+     * @ORM\Column(type="integer", options={"default" : 0})
+     */
+    private $views;
+
     public function __construct()
     {
         $this->cards = new ArrayCollection();
@@ -559,6 +564,25 @@ class Player extends PlayerSerializable
     public function setUntil(?\DateTimeInterface $until): self
     {
         $this->until = $until;
+
+        return $this;
+    }
+
+    public function getViews(): ?int
+    {
+        return $this->views;
+    }
+    
+    public function incViews(): self
+    {
+        $this->views++;
+        
+        return $this;
+    }
+
+    public function setViews(int $views): self
+    {
+        $this->views = $views;
 
         return $this;
     }

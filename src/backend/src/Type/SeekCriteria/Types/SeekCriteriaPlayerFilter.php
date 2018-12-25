@@ -12,7 +12,7 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
         "id", "birthday", "birthPlace",
         "foot", "role", "height",
         "number", "country", "team",
-        "goals", "assists", "cards", "playTime", "name"
+        "goals", "assists", "cards", "playTime", "name", "views"
     ];
 
     private $playerName;

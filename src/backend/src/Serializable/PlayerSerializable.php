@@ -35,6 +35,7 @@ abstract class PlayerSerializable implements \JsonSerializable
             "joined" => $this->getJoined(),
             "until" => $this->getUntil(),
             "transfers" => $this->getTransfers(),
+            "views" => $this->getViews(),
             "goals_count" => count($this->getGoals()),
             "assists_count" => count($this->getAssists()),
             "play_time" => array_sum(array_map(
@@ -71,5 +72,6 @@ abstract class PlayerSerializable implements \JsonSerializable
     abstract function getAssists(): Collection;
     abstract function getSubstitutions(): Collection;
     abstract function getTransfers(): Collection;
+    abstract function getViews(): ?int;
     
 }

@@ -23,7 +23,7 @@ export class MarketRoute {
 
     get topPlayerGoals$() { return this.playerService.filter(this.mergeRequest({orderBy: 'goals', orderDirection: 'DESC', limit: 5, goals: [0, null]})); }
     get topPlayerAssists$() { return this.playerService.filter(this.mergeRequest({orderBy: 'assists', orderDirection: 'DESC', limit: 5, assists: [0, null]})); }
-    get topPlayerViews$() { return this.playerService.filter(this.mergeRequest({orderBy: 'playTime', orderDirection: 'DESC', limit: 5, playTime: [0, null]})); }
+    get topPlayerViews$() { return this.playerService.filter(this.mergeRequest({orderBy: 'views', orderDirection: 'DESC', limit: 5})); }
     get largestTransfers$() { return this.transfersService.filter(this.mergeRequest({orderBy: 'fee', orderDirection: 'DESC', limit: 5})); }
     get lastestTransfers$() { return this.transfersService.filter(this.mergeRequest({orderBy: 'date', orderDirection: 'DESC', limit: 5})); }
     get lastestGames$() { return this.gamesService.filter(this.mergeRequest({duration: [1, null], orderBy: 'date', orderDirection: 'DESC', limit: 5})); }

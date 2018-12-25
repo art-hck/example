@@ -46,7 +46,7 @@ form([formGroup]="form", (ngSubmit)="submit()")
       h2 Top assists
       hr
       .player(*ngFor="let item of topPlayerAssists$ | async")
-        .value {{ item.goals_count || item.player.goals_count }}
+        .value {{ item.assists_count || item.player.assists_count }}
         a.avatar([routerLink]="['/player', item.player.id]")
           img(src="https://tmssl.akamaized.net/{{item.player.avatar}}")
         .info
@@ -65,7 +65,7 @@ form([formGroup]="form", (ngSubmit)="submit()")
       h2 Top views
       hr
       .player(*ngFor="let item of topPlayerViews$ | async")
-        .value {{ item.goals_count || item.player.goals_count }}
+        .value {{ item.play_time_sum || item.player.play_time }}
         a.avatar([routerLink]="['/player', item.player.id]")
           img(src="https://tmssl.akamaized.net/{{item.player.avatar}}")
         .info
