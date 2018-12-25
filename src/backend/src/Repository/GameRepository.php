@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Game;
-use App\Entity\Substitution;
+use App\Type\SeekCriteria\Types\SeekCriteriaGameFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
@@ -31,6 +31,54 @@ class GameRepository extends ServiceEntityRepository
             ->where("s.player = :playerId")
             ->setParameter("playerId", $playerId)
             ->setMaxResults(10)
+            ->getQuery()
+            ->getResult();
+    }
+
+
+    public function findByCriteria(SeekCriteriaGameFilter $seekCriteria)
+    {
+        $qb = $this->createQueryBuilder('g')
+            ->orderBy("g." . $seekCriteria->getOrderBy(), $seekCriteria->getOrderDirection())
+            ->setFirstResult($seekCriteria->getOffset())
+            ->setMaxResults($seekCriteria->getLimit())
+        ;
+
+        // DATE FILTER
+        if ($seekCriteria->getDatePeriod()) {
+            /** @var \DateTime $dateFrom */
+            $dateFrom = $seekCriteria->getDatePeriod()->min;
+            /** @var \DateTime $dateTo */
+            $dateTo = $seekCriteria->getDatePeriod()->max;
+
+            $qb
+                ->andWhere('g.date >= :dateFrom OR :dateFrom IS NULL')
+                ->andWhere('g.date <= :dateTo OR :dateTo IS NULL')
+                ->setParameter('dateFrom', $dateFrom ? $dateFrom->format(DATE_ISO8601) : null)
+                ->setParameter('dateTo', $dateTo ? $dateTo->format(DATE_ISO8601): null)
+            ;
+        } // END DATE FILTER
+
+        // TEAM FILTER
+        if($seekCriteria->getTeamId()) {
+            $qb
+                ->join('g.teamGames', 'tg')
+                ->andWhere('tg.team = :teamId')
+                ->setParameter('teamId', $seekCriteria->getTeamId())
+            ;
+        } // END TEAM FILTER
+        
+        // DURATION FILTER
+        if($seekCriteria->getDuration()) {
+            $qb
+                ->andWhere("g.duration >= :minDuration OR :minDuration IS NULL")
+                ->andWhere("g.duration <= :maxDuration OR :maxDuration IS NULL")
+                ->setParameter('minDuration', $seekCriteria->getDuration()->min)
+                ->setParameter('maxDuration', $seekCriteria->getDuration()->max)
+            ;
+        } // END TEAM FILTER
+
+        return $qb
             ->getQuery()
             ->getResult()
         ;

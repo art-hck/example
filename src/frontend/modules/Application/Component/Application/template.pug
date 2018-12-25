@@ -4,7 +4,8 @@ mat-progress-bar(mode="indeterminate", *ngIf="isLoading")
 mat-sidenav-container
   mat-sidenav(#snav, [mode]="device.isMobile() ? 'over' : 'side'", [fixedInViewport]="device.isMobile()",  [opened]="!device.isMobile()")
     mat-toolbar
-      a(href="/user/market")
+      //a(href="/user/market")
+      a(routerLink="/market", routerLinkActive="active")
         img(src="../../../../assets/images/logo.png")
       //mat-icon.logo extension
       //span 
@@ -15,7 +16,8 @@ mat-sidenav-container
     mat-nav-list
       ul
         li 
-          a(href="/user/market")
+          //a(href="/user/market")
+          a(routerLink="/market", routerLinkActive="active")
             //mat-icon pie_chart
             i(icon="../../../../assets/images/icons/__market.png")
             span MARKET VIEW

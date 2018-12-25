@@ -88,26 +88,6 @@ class Player extends PlayerSerializable
     private $avatar;
 
     /**
-     * @ORM\Column(type="datetime")
-     */
-    private $created;
-
-    /**
-     * @ORM\Column(type="datetime")
-     */
-    private $updated;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $contractUntil;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $contractExt;
-
-    /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $twitter;
@@ -121,16 +101,6 @@ class Player extends PlayerSerializable
      * @ORM\Column(type="string", length=255, nullable=true)
      */
     private $instagram;
-
-    /**
-     * @ORM\Column(type="string", length=255, nullable=true)
-     */
-    private $agents;
-
-    /**
-     * @ORM\Column(type="datetime", nullable=true)
-     */
-    private $inTeam;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Country")
@@ -171,6 +141,16 @@ class Player extends PlayerSerializable
      * @ORM\ManyToOne(targetEntity="App\Entity\Country", inversedBy="players")
      */
     private $birthCountry;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $joined;
+
+    /**
+     * @ORM\Column(type="date", nullable=true)
+     */
+    private $until;
 
     public function __construct()
     {
@@ -320,54 +300,6 @@ class Player extends PlayerSerializable
         return $this;
     }
 
-    public function getCreated(): ?\DateTimeInterface
-    {
-        return $this->created;
-    }
-
-    public function setCreated(\DateTimeInterface $created): self
-    {
-        $this->created = $created;
-
-        return $this;
-    }
-
-    public function getUpdated(): ?\DateTimeInterface
-    {
-        return $this->updated;
-    }
-
-    public function setUpdated(\DateTimeInterface $updated): self
-    {
-        $this->updated = $updated;
-
-        return $this;
-    }
-
-    public function getContractUntil(): ?\DateTimeInterface
-    {
-        return $this->contractUntil;
-    }
-
-    public function setContractUntil(?\DateTimeInterface $contractUntil): self
-    {
-        $this->contractUntil = $contractUntil;
-
-        return $this;
-    }
-
-    public function getContractExt(): ?\DateTimeInterface
-    {
-        return $this->contractExt;
-    }
-
-    public function setContractExt(?\DateTimeInterface $contractExt): self
-    {
-        $this->contractExt = $contractExt;
-
-        return $this;
-    }
-
     public function getTwitter(): ?string
     {
         return $this->twitter;
@@ -404,18 +336,6 @@ class Player extends PlayerSerializable
         return $this;
     }
 
-    public function getAgents(): ?string
-    {
-        return $this->agents;
-    }
-
-    public function setAgents(?string $agents): self
-    {
-        $this->agents = $agents;
-
-        return $this;
-    }
-
     public function getTmId(): int
     {
         return $this->tmId;
@@ -424,18 +344,6 @@ class Player extends PlayerSerializable
     public function setTmId(int $tmId): self
     {
         $this->tmId = $tmId;
-
-        return $this;
-    }
-
-    public function getInTeam(): ?\DateTimeInterface
-    {
-        return $this->inTeam;
-    }
-
-    public function setInTeam(?\DateTimeInterface $inTeam): self
-    {
-        $this->inTeam = $inTeam;
 
         return $this;
     }
@@ -627,6 +535,30 @@ class Player extends PlayerSerializable
     public function setBirthCountry(?Country $birthCountry): self
     {
         $this->birthCountry = $birthCountry;
+
+        return $this;
+    }
+
+    public function getJoined(): ?\DateTimeInterface
+    {
+        return $this->joined;
+    }
+
+    public function setJoined(?\DateTimeInterface $joined): self
+    {
+        $this->joined = $joined;
+
+        return $this;
+    }
+
+    public function getUntil(): ?\DateTimeInterface
+    {
+        return $this->until;
+    }
+
+    public function setUntil(?\DateTimeInterface $until): self
+    {
+        $this->until = $until;
 
         return $this;
     }

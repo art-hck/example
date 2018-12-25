@@ -4,10 +4,14 @@ namespace App\Controller;
 
 use App\Entity\Card;
 use App\Entity\Game;
-use App\Entity\Player;
 use App\Entity\Substitution;
+use App\Form\GameFilterType;
+use App\Service\RESTRequestService;
+use App\Service\ValidateService;
+use App\Type\SeekCriteria\Types\SeekCriteriaGameFilter;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use Swagger\Annotations as SWG;
 
@@ -16,15 +20,40 @@ class GamesController extends Controller
     /**
      * @SWG\Response(response=200, description="Returns last games")
      * @SWG\Tag(name="Game")
-     * @Route("/games/last", methods={"GET"})
+     * @SWG\Parameter(name="dateFrom", in="query", type="string", description="")
+     * @SWG\Parameter(name="dateTo", in="query", type="string", description="")
+     * @SWG\Parameter(name="orderBy", in="query", type="string", description="")
+     * @SWG\Parameter(name="orderDirection", in="query", type="string", description="")
+     * @SWG\Parameter(name="offset", in="query", type="integer", description="")
+     * @SWG\Parameter(name="limit", in="query", type="integer", description="")
+     * @Route("/games/filter", methods={"GET"})
      *
+     * @param Request $request
+     * @param ValidateService $validateService
+     * @param RESTRequestService $restService
      * @return JsonResponse
      */
-    public function getLastGames()
-    {
+    public function getGames(Request $request, ValidateService $validateService, RESTRequestService $restService) {
+        $data = $validateService
+            ->validate($request, GameFilterType::class, $restService->getAllParams($request))
+            ->getData()
+        ;
+        
+        $criteria = new SeekCriteriaGameFilter();
+
+        $criteria
+            ->setDatePeriod($data["dateFrom"], $data["dateTo"])
+            ->setTeamId($data["teamId"])
+            ->setDuration($data["duration"])
+            ->setOrderBy($data["orderBy"])
+            ->setOrderDirection($data["orderDirection"])
+            ->setOffset($data["offset"])
+            ->setLimit($data["limit"])
+        ;
+        
         $games = $this->getDoctrine()
             ->getRepository(Game::class)
-            ->findBy([], ["date" => "DESC"], 10)
+            ->findByCriteria($criteria)
         ;
 
         return new JsonResponse($games);

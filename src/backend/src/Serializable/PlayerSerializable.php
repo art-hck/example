@@ -25,18 +25,16 @@ abstract class PlayerSerializable implements \JsonSerializable
             "height" => $this->getHeight(),
             "number" => $this->getNumber(),
             "avatar" => $this->getAvatar(),
-            "created" => $this->getCreated()->format(DATE_ISO8601),
-            "updated" => $this->getUpdated()->format(DATE_ISO8601),
-            "contract_until" => $this->getContractUntil() ? $this->getContractUntil()->format(DATE_ISO8601) : null,
-            "contract_ext" => $this->getContractExt() ? $this->getContractExt()->format(DATE_ISO8601) : null,
             "twitter" => $this->getTwitter(),
             "facebook" => $this->getFacebook(),
             "instagram" => $this->getInstagram(),
-            "agents" => $this->getAgents(),
-            "in_team" => $this->getInTeam(),
             "country" => $this->getCountry(),
-            "team" => $this->getTeam(),
+            "birth_country" => $this->getBirthCountry(),
+            "team" => $this->getTeam() ?? null,
             "cards" => $this->getCards(),
+            "joined" => $this->getJoined(),
+            "until" => $this->getUntil(),
+            "transfers" => $this->getTransfers(),
             "goals_count" => count($this->getGoals()),
             "assists_count" => count($this->getAssists()),
             "play_time" => array_sum(array_map(
@@ -48,31 +46,30 @@ abstract class PlayerSerializable implements \JsonSerializable
     }
 
     abstract function getId(): ?int;
-    abstract function getTmId(): int;
     abstract function getFirstName(): ?string;
     abstract function getLastName(): string;
     abstract function getNativeName(): ?string;
     abstract function getAlias(): string;
     abstract function getBirthday(): ?\DateTimeInterface;
     abstract function getBirthPlace(): ?string;
-    abstract function getFoot(): ?int;
+    abstract function getFoot(): ?int; 
     abstract function getRole(): ?PlayerRole;
     abstract function getHeight(): ?int;
     abstract function getNumber(): ?int;
     abstract function getAvatar(): ?string;
-    abstract function getCreated(): ?\DateTimeInterface;
-    abstract function getUpdated(): ?\DateTimeInterface;
-    abstract function getContractUntil(): ?\DateTimeInterface;
-    abstract function getContractExt(): ?\DateTimeInterface;
     abstract function getTwitter(): ?string;
     abstract function getFacebook(): ?string;
     abstract function getInstagram(): ?string;
-    abstract function getAgents(): ?string;
-    abstract function getInTeam(): ?\DateTimeInterface;
+    abstract function getTmId(): int;
     abstract function getCountry(): ?Country;
     abstract function getTeam(): ?Team;
+    abstract function getBirthCountry(): ?Country;
+    abstract function getJoined(): ?\DateTimeInterface;
+    abstract function getUntil(): ?\DateTimeInterface;
     abstract function getCards(): Collection;
     abstract function getGoals(): Collection;
     abstract function getAssists(): Collection;
     abstract function getSubstitutions(): Collection;
+    abstract function getTransfers(): Collection;
+    
 }

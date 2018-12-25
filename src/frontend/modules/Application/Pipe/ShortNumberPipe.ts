@@ -12,6 +12,6 @@ export class ShortNumberPipe implements PipeTransform {
             dm = decimals <= 0 ? 0 : decimals || 2,
             i = Math.floor(Math.log(value) / Math.log(k));
         
-        return parseFloat((value / Math.pow(k, i)).toFixed(dm)).toFixed(2) + ' ' + suffixes[i];
+        return parseFloat((value / Math.pow(k, i)).toFixed(dm)).toFixed(2) + suffixes[i];
     }
 }

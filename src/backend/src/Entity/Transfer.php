@@ -47,6 +47,16 @@ class Transfer extends TransfersSerializable
      */
     private $mv;
 
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $feeDescription;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $mvDescription;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -120,6 +130,30 @@ class Transfer extends TransfersSerializable
     public function setMv(?int $mv): self
     {
         $this->mv = $mv;
+
+        return $this;
+    }
+
+    public function getFeeDescription(): ?string
+    {
+        return $this->feeDescription;
+    }
+
+    public function setFeeDescription(?string $feeDescription): self
+    {
+        $this->feeDescription = $feeDescription;
+
+        return $this;
+    }
+
+    public function getMvDescription(): ?string
+    {
+        return $this->mvDescription;
+    }
+
+    public function setMvDescription(?string $mvDescription): self
+    {
+        $this->mvDescription = $mvDescription;
 
         return $this;
     }

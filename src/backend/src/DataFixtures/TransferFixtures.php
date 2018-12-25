@@ -24,7 +24,7 @@ class TransferFixtures extends Fixture implements ContainerAwareInterface, Depen
 
     public function load(ObjectManager $manager)
     {
-        return;
+//        return;
         try {
             $offset = 0;
             $limit = 1000;
@@ -81,6 +81,14 @@ class TransferFixtures extends Fixture implements ContainerAwareInterface, Depen
                     if($row["mv_sum"] > 0) {
                         $transfer->setMv($row["mv_sum"]);
                     }
+
+                    if($row["mv"]) {
+                        $transfer->setMvDescription($row["mv"]);
+                    }
+
+                    if($row["fee"]) {
+                        $transfer->setFeeDescription($row["fee"]);
+                    }
                     
                     $manager->persist($transfer);
                 }
@@ -122,7 +130,7 @@ class TransferFixtures extends Fixture implements ContainerAwareInterface, Depen
         gc_enable();
         $this->em = $this->container->get('doctrine')->getManager();
         $this->em->getConnection()->getConfiguration()->setSQLLogger(null);
-        $sql = "SELECT `id`, `date`, `left_uid`, `join_uid`, `mv_sum`, `fee_sum`, `player_uid` FROM tm.transfer";
+        $sql = "SELECT `id`, `date`, `left_uid`, `join_uid`, `mv_sum`, `fee_sum`, `player_uid`, `mv`, `fee` FROM tm.transfer";
         
         if ($limit > 0 || $offset > 0)
             $sql .= " LIMIT ${offset}, ${limit}";

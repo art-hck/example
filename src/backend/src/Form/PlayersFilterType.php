@@ -5,16 +5,14 @@ namespace App\Form;
 use App\DBAL\Types\PlayerRoleType;
 use App\Form\Extension\Core\Type\SeekCriteriaRangeType;
 use App\Type\PlayerRole\PlayerRoleFactory;
-use App\Type\SeekCriteria\SeekCriteria;
 use App\Type\SeekCriteria\Types\SeekCriteriaPlayerFilter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Validator\Constraints\Range;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class PlayersFilterType extends AbstractType
 {
@@ -42,17 +40,20 @@ class PlayersFilterType extends AbstractType
             ])
             ->add('teamId', IntegerType::class)
             ->add('teamName', TextType::class)
-
-            ->add('orderBy', ChoiceType::class, [
-                'choices' => SeekCriteriaPlayerFilter::getOrderByFields(),
-                "invalid_message" => "Available values: `" . implode("`, `", SeekCriteriaPlayerFilter::getOrderByFields()) . "`",
-                "empty_data" => SeekCriteriaPlayerFilter::getOrderByFields()[0],
-            ])
         ;
     }
 
     public function getParent()
     {
         return DefaultFilterType::class;
+    }
+    
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'dateFrom' => (new \DateTime())->setTimestamp(strtotime("previous year 1 August"))->format(DATE_ISO8601),
+            'dateTo' => (new \DateTime())->setTimestamp(strtotime("this year 31 May"))->format(DATE_ISO8601),
+            'orderByFields' => SeekCriteriaPlayerFilter::getOrderByFields(),
+        ]);
     }    
 }

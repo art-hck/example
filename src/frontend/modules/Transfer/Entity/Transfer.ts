@@ -8,5 +8,7 @@ export interface Transfer {
     join_team?: Team
     date?: string
     fee?: number
+    fee_description?: string
     mv?: number
+    mv_description?: string
 }

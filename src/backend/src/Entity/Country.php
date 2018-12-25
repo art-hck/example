@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Serializable\CountrySerializable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CountryRepository")
  */
-class Country
+class Country extends CountrySerializable
 {
     /**
      * @ORM\Id()

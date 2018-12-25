@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Range;
 
 class DefaultFilterType extends AbstractType
@@ -18,16 +19,16 @@ class DefaultFilterType extends AbstractType
         $builder
             ->add('dateFrom', DateType::class, [
                 "widget" => "single_text",
-                'empty_data' => (new \DateTime())->setTimestamp(strtotime("previous year 1 August"))->format(DATE_ISO8601),
+                "empty_data" => $options["dateFrom"],
             ])
             ->add('dateTo', DateType::class, [
                 "widget" => "single_text",
-                'empty_data' => (new \DateTime())->setTimestamp(strtotime("this year 1 May"))->format(DATE_ISO8601),
+                "empty_data" => $options["dateTo"]
             ])
             ->add('orderBy', ChoiceType::class, [
-                'choices' => SeekCriteriaPlayerFilter::getOrderByFields(),
-                "invalid_message" => "Available values: `" . implode("`, `", SeekCriteriaPlayerFilter::getOrderByFields()) . "`",
-                "empty_data" => SeekCriteriaPlayerFilter::getOrderByFields()[0],
+                'choices' => $options["orderByFields"],
+                "invalid_message" => "Available values: `" . implode("`, `", $options["orderByFields"]) . "`",
+                "empty_data" => $options["orderByFields"][0],
             ])
             ->add('orderDirection', ChoiceType::class, [
                 "choices" => SeekCriteria::validOrderDirections,
@@ -37,10 +38,19 @@ class DefaultFilterType extends AbstractType
             ->add('offset', IntegerType::class, ["empty_data" => "0"])
             ->add('limit', IntegerType::class, [
                 "empty_data" => "100",
-                "constraints"=>[
+                "constraints" => [
                     new Range(["max" => 300])
                 ]
             ])
         ;
     }
+
+    public function configureOptions(OptionsResolver $resolver)
+    {
+        $resolver->setDefaults([
+            'dateFrom' => "",
+            'dateTo' => "",
+            'orderByFields' => ["id"],
+        ]);
+    }    
 }

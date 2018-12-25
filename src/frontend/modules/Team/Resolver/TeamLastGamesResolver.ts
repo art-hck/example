@@ -11,6 +11,6 @@ export class TeamLastGamesResolver {
 
     resolve(route: ActivatedRouteSnapshot): Observable<Game[]>
     {
-        return this.gameService.getLastGames();
+        return this.gameService.filter({orderBy: "date", teamId: route.params["id"]});
     }
 }

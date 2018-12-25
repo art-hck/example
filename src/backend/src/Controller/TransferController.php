@@ -63,6 +63,9 @@ class TransferController extends Controller
      * @SWG\Tag(name="Transfer")
      * @Route("/transfers/filter", methods={"GET"})
      *
+     * @param Request $request
+     * @param ValidateService $validateService
+     * @param RESTRequestService $restService
      * @return JsonResponse
      */
     public function getTransfers(Request $request, ValidateService $validateService, RESTRequestService $restService) {
@@ -71,7 +74,8 @@ class TransferController extends Controller
             ->getData()
         ;
 
-        $criteria = (new SeekCriteriaTransferFilter())
+        $criteria = new SeekCriteriaTransferFilter();
+        $criteria
             ->setDatePeriod($data["dateFrom"], $data["dateTo"])
             ->setFeeRange($data["fee"])
             ->setMvRange($data["mv"])

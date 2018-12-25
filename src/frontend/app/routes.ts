@@ -11,7 +11,6 @@ import {TeamResolver} from "../modules/Team/Resolver/TeamResolver";
 import {TeamPlayersResolver} from "../modules/Team/Resolver/TeamPlayersResolver";
 import {TeamLastGamesResolver} from "../modules/Team/Resolver/TeamLastGamesResolver";
 import {MarketRoute} from "../modules/Application/Route/MarketRoute";
-import {GameByPlayerResponse} from "../modules/Game/Http/GameByPlayerResponse";
 import {PlayerGamesResolver} from "../modules/Player/Resolver/PlayerGamesResolver";
 
 export const appRoutes: GenieRoutes = [

@@ -17,7 +17,9 @@ abstract class TransfersSerializable implements \JsonSerializable
             "join_team" => $this->getJoinTeam(),
             "date" => $this->getDate()->format(DATE_ISO8601),
             "fee" => $this->getFee(),
+            "fee_description" => $this->getFeeDescription(),
             "mv" => $this->getMv(),
+            "mv_descrition" => $this->getMvDescription(),
         ];
     }
     
@@ -27,5 +29,7 @@ abstract class TransfersSerializable implements \JsonSerializable
     abstract public function getJoinTeam(): ?Team;
     abstract public function getDate(): ?\DateTimeInterface;
     abstract public function getFee(): ?int;
+    abstract public function getFeeDescription(): ?string;
     abstract public function getMv(): ?int;
+    abstract public function getMvDescription(): ?string;
 }
