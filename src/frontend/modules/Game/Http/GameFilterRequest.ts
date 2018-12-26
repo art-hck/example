@@ -4,6 +4,7 @@ export class GameFilterRequest {
     dateFrom?: DateISO = null;
     dateTo?: DateISO = null;
     teamId?: number = null;
+    leagueId?: number = null;
     duration?: [number, number] = null;
     orderBy?: string = null;
     orderDirection?: "ASC" | "DESC" = null;

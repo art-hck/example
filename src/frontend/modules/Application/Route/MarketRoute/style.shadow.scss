@@ -26,7 +26,18 @@
     }
   }
   
+  .flex {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
   .form-field {
+
+    margin: 0 10px 10px;
+    .input-box {
+      position: relative;
+    }
+    
     input[type=text] {
       padding: 8px 14px;
       font-size: 14px;
@@ -41,6 +52,21 @@
       &.ng-invalid {
         border-color: #ff000033;
       }
+
+      & + .clear {
+        cursor: pointer;
+        position: absolute;
+        top: 8px;
+        right: 10px;
+        text-decoration: none;
+        width: 22px;
+        height: 22px;
+        color: #fff;
+        background: #3f33fff5;
+        text-align: center;
+        line-height: 22px;
+        border-radius: 200px;
+      }      
     }
 
     .dates {
@@ -48,7 +74,7 @@
       align-items: baseline;
 
       input {
-        width: 150px;
+        //width: 150px;
       }
 
       /deep/ .mat-form-field-infix {

@@ -2,23 +2,54 @@ doctype html
 
 form([formGroup]="form", (ngSubmit)="submit()")
   h1 Market view
-  .form-field
-    .dates
+  .flex
+    .form-field
+      label Dates
       input(matInput, type="text",
-      (dateChange)="form.get('dateFrom').setValue(formatDateISO($event.value))",
-      [matDatepicker]="dateFromEl",
-      [value]="form.get('dateFrom').value",
-      (click)="dateFromEl.open()"
+        (dateChange)="form.get('dateFrom').setValue(formatDateISO($event.value))",
+        [matDatepicker]="dateFromEl",
+        [value]="form.get('dateFrom').value",
+        (click)="dateFromEl.open()"
       )
       mat-datepicker(#dateFromEl)
-      span  — 
+
+    .form-field
+      label &nbsp;
       input(matInput, type="text",
-      (dateChange)="form.get('dateTo').setValue(formatDateISO($event.value))",
-      [matDatepicker]="dateToEl",
-      [value]="form.get('dateTo').value",
-      (click)="dateToEl.open()"
+        (dateChange)="form.get('dateTo').setValue(formatDateISO($event.value))",
+        [matDatepicker]="dateToEl",
+        [value]="form.get('dateTo').value",
+        (click)="dateToEl.open()"
       )
       mat-datepicker(#dateToEl, [disabled]="false")
+  
+    .form-field
+      label Team
+      .input-box
+        input(type="text", formControlName="teamName", [matAutocomplete]="autocompleteTeam", (input)="setPending(form.get('teamName').value!='')")
+        .clear(*ngIf="form.get('teamName').value", (click)="form.get('teamName').reset(); form.get('teamId').reset();") × 
+        mat-autocomplete(#autocompleteTeam="matAutocomplete", (optionSelected)="setPending(false)")
+          mat-option(
+          *ngFor="let team of teamsAutocomplete | async",
+          [value]="team.name",
+          [title]="team.name",
+          (onSelectionChange)="form.get('teamId').setValue(team.id)"
+          ) {{ team.name }}
+    
+    .form-field
+      label League
+      .input-box
+        input(type="text", formControlName="leagueName", [matAutocomplete]="autocompleteLeague", (input)="setPending(form.get('leagueName').value!='')")
+        .clear(*ngIf="form.get('leagueName').value", (click)="form.get('leagueName').reset(); form.get('leagueId').reset()") × 
+        mat-autocomplete(#autocompleteLeague="matAutocomplete", (optionSelected)="setPending(false)")
+          mat-optgroup(*ngFor="let groupedLeague of leaguesAutocomplete | async", [label]="groupedLeague.groupBy")
+            mat-option(
+            *ngFor="let league of groupedLeague.leagues",
+            [value]="league.name",
+            [title]="league.name",
+            (onSelectionChange)="form.get('leagueId').setValue(league.id)"
+            ) {{ league.name }}
+
 
 .grid
   .grid-row

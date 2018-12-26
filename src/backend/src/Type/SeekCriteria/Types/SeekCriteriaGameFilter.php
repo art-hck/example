@@ -2,8 +2,6 @@
 
 namespace App\Type\SeekCriteria\Types;
 
-use App\Form\Extension\Core\Type\SeekCriteriaRangeType;
-use App\Type\PlayerRole\PlayerRole;
 use App\Type\SeekCriteria\SeekCriteria;
 use App\Type\SeekCriteria\SeekCriteriaRange;
 
@@ -13,6 +11,7 @@ class SeekCriteriaGameFilter extends SeekCriteria
 
     private $datePeriod;
     private $teamId;
+    private $leagueId;
     private $duration;
 
     public function getDatePeriod(): ?SeekCriteriaRange
@@ -41,9 +40,16 @@ class SeekCriteriaGameFilter extends SeekCriteria
         return $this;
     }
 
-    static function getOrderByFields(): array
+    public function getLeagueId(): ?int
     {
-        return self::orderByFields;
+        return $this->leagueId;
+    }
+
+    public function setLeagueId(?int $leagueId): self
+    {
+        $this->leagueId = $leagueId;
+
+        return $this;
     }
 
     public function getDuration(): ?SeekCriteriaRange
@@ -56,5 +62,10 @@ class SeekCriteriaGameFilter extends SeekCriteria
         $this->duration = $duration;
 
         return $this;
+    }
+
+    static function getOrderByFields(): array
+    {
+        return self::orderByFields;
     }
 }

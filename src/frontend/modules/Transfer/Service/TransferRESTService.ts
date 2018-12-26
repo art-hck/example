@@ -19,7 +19,7 @@ export class TransferRESTService {
         const params: Params = this.paramsService.stringify(transferFilterRequest);
 
         return this.http
-            .get<Transfer[]>(url, { params, headers: { stateKey: objectHash(transferFilterRequest)}})
+            .get<Transfer[]>(url, { params, headers: { stateKey: url + objectHash(transferFilterRequest)}})
         ;
     }
 }

@@ -16,6 +16,7 @@ class GameFilterType extends AbstractType
     {
         $builder
             ->add('teamId', IntegerType::class)
+            ->add('leagueId', IntegerType::class)
             ->add('duration', SeekCriteriaRangeType::class)
         ;
     }

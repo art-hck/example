@@ -3,11 +3,8 @@
 namespace App\Controller;
 
 use App\Entity\League;
-use App\Exception\BadRestRequestHttpException;
-use App\Http\ErrorJsonResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Swagger\Annotations as SWG;
 
@@ -28,7 +25,7 @@ class LeagueController extends Controller
             ->createQueryBuilder('l')
             ->where('l.name LIKE :name')
             ->setParameter('name', preg_replace("/\s+/", "%", $name) . "%")
-            ->setMaxResults(10)
+            ->setMaxResults(30)
             ->getQuery()
             ->getResult()
         ;

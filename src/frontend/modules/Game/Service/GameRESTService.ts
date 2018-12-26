@@ -7,6 +7,7 @@ import {GameByPlayerResponse} from "../Http/GameByPlayerResponse";
 import {GameFilterRequest} from "../Http/GameFilterRequest";
 import {Params} from "@angular/router";
 import {ParamsService} from "../../Application/Service/ParamsService";
+import * as objectHash from "object-hash";
 
 @Injectable()
 export class GameRESTService {
@@ -25,6 +26,6 @@ export class GameRESTService {
         const url = `/games/filter`;
         const params: Params = this.paramsService.stringify(gameFilterRequest);
 
-        return this.http.get<Game[]>(url, {params, headers: {stateKey: `LastGames`}});
+        return this.http.get<Game[]>(url, {params, headers: {stateKey: url + objectHash(gameFilterRequest)}});
     }
 }

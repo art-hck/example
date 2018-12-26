@@ -64,7 +64,7 @@ form([formGroup]="form", (ngSubmit)="submit()")
         label Team
         .input-box
           input(type="text", formControlName="teamName", [matAutocomplete]="autocompleteTeam", (input)="setPending(form.get('teamName').value!='')")
-          .clear(*ngIf="form.get('teamName').value", (click)="form.get('teamName').reset()") × 
+          .clear(*ngIf="form.get('teamName').value", (click)="form.get('teamName').reset(); form.get('teamId').reset();") × 
           mat-autocomplete(#autocompleteTeam="matAutocomplete", (optionSelected)="setPending(false)")
             mat-option(
               *ngFor="let team of teamsAutocomplete | async", 

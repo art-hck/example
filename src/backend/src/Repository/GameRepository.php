@@ -67,6 +67,14 @@ class GameRepository extends ServiceEntityRepository
                 ->setParameter('teamId', $seekCriteria->getTeamId())
             ;
         } // END TEAM FILTER
+
+        // LEAGUE FILTER
+        if($seekCriteria->getLeagueId()) {
+            $qb
+                ->andWhere('g.league = :leagueId')
+                ->setParameter('leagueId', $seekCriteria->getLeagueId())
+            ;
+        } // END LEAGUE FILTER        
         
         // DURATION FILTER
         if($seekCriteria->getDuration()) {
