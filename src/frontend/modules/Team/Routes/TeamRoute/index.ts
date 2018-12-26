@@ -3,6 +3,7 @@ import {ActivatedRoute} from "@angular/router";
 import {Team} from "../../Entity/Team";
 import {PlayerFilterResponse} from "../../../Player/Http/PlayerFilterResponse";
 import {Game} from "../../../Game/Entity/Game";
+import {DateISO} from "../../../Application/Entity/ISODate";
 
 @Component({
     templateUrl: "./template.pug",
@@ -22,5 +23,11 @@ export class TeamRoute {
             this.playerFilterResponse = data.playerFilterResponse;
             this.lastGames = data.lastGames;
         });
-    }    
+    }
+
+    public formatDateISO(value) {
+        if (value) {
+            return new DateISO(value).toString();
+        }
+    }
 }

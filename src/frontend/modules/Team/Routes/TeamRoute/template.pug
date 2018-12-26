@@ -1,6 +1,19 @@
-h1 Team
-.debug {{ team | json }}
-h1 Team players
-.debug {{ playerFilterResponse | json }}
+//h1 Team
+//.debug {{ team | json }}
+//h1 Team players
+//.debug {{ playerFilterResponse | json }}
 h1 Last games
-.debug {{ lastGames | json }}
+//.debug {{ lastGames | json }}
+.games
+  .game(*ngFor="let game of lastGames")
+    a.team([routerLink]='["/team", game.teams[0].id]')
+      img(src="https://tmssl.akamaized.net/{{game.teams[0].preview }}")
+    .score {{ game.score }}
+    .team([routerLink]='["/team", game.teams[1].id]')
+      img(src="https://tmssl.akamaized.net/{{game.teams[1].preview }}")
+    .info
+      small.date {{ formatDateISO(game.date) | date | uppercase }} - {{ game.league.name }}
+      a([routerLink]='["/team", game.teams[0].id]') {{ game.teams[0].name }}
+    .duration {{ game.duration }}'
+  
+  
