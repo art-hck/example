@@ -1,5 +1,155 @@
-h1 Player
-.debug {{ player | json }}
 
-h1 Games info
-.debug {{ playerGames | json }}
+.view.player-view
+  .wrap
+    .view-main
+      .view-part.player-view-header
+        .view-part-inner
+
+          .player-view-header-social
+
+              a.social-lnk.social-lnk-fb(*ngIf="player.facebook", href="{{player.facebook}}")
+
+              a.social-lnk.social-lnk-tw(*ngIf="player.twitter", href="{{player.twitter}}")
+
+              a.social-lnk.social-lnk-inst(*ngIf="player.instagram", href="{{player.instagram}}")
+
+          .player-view-header-profile
+
+            .player-view-header-img
+               img(src="https://tmssl.akamaized.net/{{player.avatar}}")
+
+            .player-view-header-number
+               span #
+               | {{player.number}}
+
+
+          .player-view-header-info
+            .player-view-header-nationality(*ngIf="player.country.name")
+               img.flag(src="/images/flags/brazil.jpg")
+               | {{player.country.name}}
+
+            h1.player-view-header-name {{ player.first_name || "" }} {{ player.last_name || "" }}
+
+
+            .player-view-header-teams
+
+               .player-view-header-current
+                 .player-view-header-subtitle Current team
+                 .current-team
+                     .current-team-img(style="{'background-image': 'url( require( ) )' }")
+                     .current-team-info
+                       .current-team-name
+                         a([routerLink]="['/team', player.team.id]") {{player.team.name }}
+                       .current-team-since
+                          span Since {{player.joined | date }}
+
+               .player-view-header-inter(*ngIf="player.country")
+                 .player-view-header-subtitle International
+                 .current-team
+                     .current-team-img(style="background-image: url(https://foot-genie.com/images/flags/brazil.jpg)")
+                     .current-team-info
+                       .current-team-name
+                         a(href="#") Brazil
+                       .current-team-since
+                           span 11 cups
+
+
+          .clear
+
+          .bio-stat
+              .player-view-header-details
+                .player-view-header-detail.detail-age
+                  .player-view-header-detail-info {{player.age }}
+                  .player-view-header-detail-title Age
+
+                .player-view-header-detail.detail-height
+                  .player-view-header-detail-info {{player.height}}
+                  .player-view-header-detail-title Height
+
+                .player-view-header-detail.detail-foot
+                  .player-view-header-detail-info(*ngIf="player.foot == 1") Right
+                  .player-view-header-detail-info(*ngIf="player.foot == 2") Left
+                  .player-view-header-detail-title Foot
+
+                .player-view-header-detail.detail-position
+                  .player-view-header-detail-info {{player.role.name}}
+                  .player-view-header-detail-title Position
+
+              .contact-btns
+                a.contact-btn(href="#")
+                  img(src="http://art-z.me/genie/images/message.png")
+                  .
+                    Message
+
+          .player-view-bio {{ player.first_name || "" }} {{ player.last_name || "" }} 
+            span(*ngIf="player.native_name")  ({{player.native_name}}) 
+            .
+              was born on {{player.birthday | date }} in {{player.birthPlace}}.
+              In the team since {{player.joined | date }}. Contract until {{player.joined | date }}.
+
+
+
+      .view-part.player-view-career
+        .view-part-header
+            h3.view-part-header-title
+              | Career
+              br
+              | stats
+
+            .view-part-header-right
+              a.video-btn(href="#")
+                img(src="http://art-z.me/genie/images/play.png")
+                | Assist
+
+              a.video-btn(href="#")
+                img(src="http://art-z.me/genie/images/play.png")
+                | Goals
+
+        .player-view-full-stats
+
+              .full-stat.full-stat-time
+                .full-statnum {{player.play_time}}'
+                .full-statdesc Played
+
+              .full-stat.full-stat-goal
+                .full-statnum {{player.goals_count}}
+                .full-statdesc Goals
+
+
+              .full-stat.full-stat-goal
+                .full-statnum {{player.assists_count}}
+                .full-statdesc Assist
+
+              .full-stat.full-stat-chart
+                .full-statnum ?
+                .full-statdesc Goals per game
+
+
+              .full-stat.full-stat-pergame
+                .full-statnum ?
+                .full-statdesc Minutes to goal
+
+              .full-stat.full-stat-target
+                .full-statnum ?
+                .full-statdesc shots On target
+
+        .games
+          .game(*ngFor="let item of playerGames")
+            a.team([routerLink]='["/team", item.game.teams[0].id]')
+              img(src="https://tmssl.akamaized.net/{{item.game.teams[0].preview }}")
+            .score {{ item.game.score }}
+            .team([routerLink]='["/team", item.game.teams[1].id]')
+              img(src="https://tmssl.akamaized.net/{{item.game.teams[1].preview }}")
+            .info
+              small.date {{ formatDateISO(item.game.date) | date | uppercase }} - {{ item.game.league.name }}
+              a([routerLink]='["/team", item.game.teams[0].id]') {{ item.game.teams[0].name }}
+            .duration {{ item.game.duration }}'
+
+
+
+//h1 Player
+//.debug {{ player | json }}
+//
+//h1 Games info
+//.debug {{ playerGames | json }}
+
