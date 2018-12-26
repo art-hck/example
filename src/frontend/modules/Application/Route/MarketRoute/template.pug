@@ -133,7 +133,7 @@ form([formGroup]="form", (ngSubmit)="submit()")
 
   .grid-row
     .grid-column
-      h2 Lastest games
+      h2 Latest games
       .game(*ngFor="let game of lastestGames$ | async")
         a.team([routerLink]='["/team", game.teams[0].id]')
           img(src="https://tmssl.akamaized.net/{{game.teams[0].preview }}")
@@ -154,7 +154,7 @@ form([formGroup]="form", (ngSubmit)="submit()")
 
   .grid-row
     .grid-column
-      h2 Lastest transfers
+      h2 Latest transfers
       .player.transfers(*ngFor="let transfer of lastestTransfers$ | async")
         a.avatar([routerLink]="['/player', transfer.player.id]")
           img(src="https://tmssl.akamaized.net/{{ transfer.player.avatar }}")
