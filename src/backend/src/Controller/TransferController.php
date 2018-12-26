@@ -79,6 +79,8 @@ class TransferController extends Controller
             ->setDatePeriod($data["dateFrom"], $data["dateTo"])
             ->setFeeRange($data["fee"])
             ->setMvRange($data["mv"])
+            ->setTeamId($data["teamId"])
+            ->setLeagueId($data["leagueId"])
             ->setOrderBy($data["orderBy"])
             ->setOrderDirection($data["orderDirection"])
             ->setOffset($data["offset"])

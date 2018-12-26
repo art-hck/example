@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Team;
 use App\Entity\Transfer;
 use App\Type\SeekCriteria\Types\SeekCriteriaTransferFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -63,6 +64,26 @@ class TransferRepository extends ServiceEntityRepository
             ;
         } // END MV FILTER
 
+
+        // TEAM ID FILTER
+        if ($seekCriteria->getTeamId()) {
+            $qb
+                ->andWhere("t.joinTeam = :teamId OR t.leftTeam = :teamId")
+                ->setParameter('teamId', $seekCriteria->getTeamId())
+            ;
+        } // END TEAM ID FILTER
+        
+        // LEAGUE ID FILTER
+        if ($seekCriteria->getLeagueId()) {
+            $qb
+                ->join(Team::class, 'team', 'WITH', "team.id = t.joinTeam OR team.id = t.leftTeam")
+                ->join("team.teamGames", "tg")
+                ->join("tg.game", "g")
+                ->andWhere("g.league = :leagueId")
+                ->setParameter('leagueId', $seekCriteria->getLeagueId())
+            ;
+        } // END LEAGUE ID FILTER
+        
         return $qb
             ->getQuery()
             ->getResult()

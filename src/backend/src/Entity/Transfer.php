@@ -7,6 +7,9 @@ use Doctrine\ORM\Mapping as ORM;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\TransferRepository")
+ * @ORM\Table(indexes={
+ *     @ORM\Index(name="IDX_TEAMS", columns={"join_team_id", "left_team_id"})
+ * })
  */ 
 class Transfer extends TransfersSerializable
 {

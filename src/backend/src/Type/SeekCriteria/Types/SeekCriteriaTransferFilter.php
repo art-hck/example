@@ -2,7 +2,6 @@
 
 namespace App\Type\SeekCriteria\Types;
 
-use App\Type\PlayerRole\PlayerRole;
 use App\Type\SeekCriteria\SeekCriteria;
 use App\Type\SeekCriteria\SeekCriteriaRange;
 
@@ -13,6 +12,8 @@ class SeekCriteriaTransferFilter extends SeekCriteria
     private $datePeriod;
     private $feeRange;
     private $mvRange;
+    private $teamId;
+    private $leagueId;
 
     public function getDatePeriod(): ?SeekCriteriaRange
     {
@@ -52,6 +53,29 @@ class SeekCriteriaTransferFilter extends SeekCriteria
         return $this;
     }
 
+    public function getTeamId(): ?int
+    {
+        return $this->teamId;
+    }
+
+    public function setTeamId(?int $teamId): self
+    {
+        $this->teamId = $teamId;
+
+        return $this;
+    }
+
+    public function getLeagueId(): ?int
+    {
+        return $this->leagueId;
+    }
+
+    public function setLeagueId(?int $leagueId): self
+    {
+        $this->leagueId = $leagueId;
+
+        return $this;
+    }
 
     static function getOrderByFields(): array
     {
