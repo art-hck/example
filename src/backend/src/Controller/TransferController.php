@@ -81,6 +81,7 @@ class TransferController extends Controller
             ->setMvRange($data["mv"])
             ->setTeamId($data["teamId"])
             ->setLeagueId($data["leagueId"])
+            ->setLeagueName($data["leagueName"])
             ->setOrderBy($data["orderBy"])
             ->setOrderDirection($data["orderDirection"])
             ->setOffset($data["offset"])

@@ -25,7 +25,7 @@ class GoalFixtures extends Fixture implements ContainerAwareInterface, Dependent
     public function load(ObjectManager $manager)
     {
         return;
-        echo 123;
+
         try {
 //            $offset = 324000;
             $offset = 0;
@@ -106,7 +106,7 @@ class GoalFixtures extends Fixture implements ContainerAwareInterface, Dependent
                 echo "Peak:" . TeamFixtures::convert(memory_get_usage()) . "\t";
                 echo "Time: " . time() . "\t";
 
-                echo "Time left: " . number_format((microtime(true) - $microtime) / $offset * 780795 / 60, 1) . "min";
+                echo "Time left: " . number_format((microtime(true) - $microtime) / $offset * 850306 / 60, 1) . "min";
                 echo PHP_EOL;
                 if (count($rows) < $limit) break;
             }
@@ -158,6 +158,6 @@ class GoalFixtures extends Fixture implements ContainerAwareInterface, Dependent
 
     public function getDependencies(): array
     {
-        return [MainFixtures::class];
+        return [MainFixtures::class, PlayerNewFixtures::class];
     }
 }

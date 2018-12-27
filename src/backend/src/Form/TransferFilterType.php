@@ -6,6 +6,7 @@ use App\Form\Extension\Core\Type\SeekCriteriaRangeType;
 use App\Type\SeekCriteria\Types\SeekCriteriaTransferFilter;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\IntegerType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,6 +17,7 @@ class TransferFilterType extends AbstractType
         $builder
             ->add('teamId', IntegerType::class)
             ->add('leagueId', IntegerType::class)
+            ->add('leagueName', TextType::class)
             ->add('fee', SeekCriteriaRangeType::class)
             ->add('mv', SeekCriteriaRangeType::class)
         ;

@@ -90,7 +90,7 @@ class SubstitutionFixtures extends Fixture implements ContainerAwareInterface, D
                 echo "Memory: " . TeamFixtures::convert(memory_get_usage()) . "\t";
 //                echo "Peak:" . TeamFixtures::convert(memory_get_peak_usage()) . "\t";
                 echo "Time: " . $time . "\t";
-                echo "Time left: " . number_format((microtime(true) - $microtime) / $offset * 780795 / 60, 1) . "min\t";
+                echo "Time left: " . number_format((microtime(true) - $microtime) / $offset * 850306 / 60, 1) . "min\t";
                 echo "Cycle time: " . number_format((microtime(true) - $cycleMicrotime), 3) . "sec\t";
                 echo PHP_EOL;
 
@@ -153,6 +153,6 @@ class SubstitutionFixtures extends Fixture implements ContainerAwareInterface, D
 
     public function getDependencies(): array
     {
-        return [MainFixtures::class];
+        return [MainFixtures::class, PlayerNewFixtures::class];
     }
 }

@@ -14,6 +14,7 @@ class SeekCriteriaTransferFilter extends SeekCriteria
     private $mvRange;
     private $teamId;
     private $leagueId;
+    private $leagueName;
 
     public function getDatePeriod(): ?SeekCriteriaRange
     {
@@ -73,6 +74,18 @@ class SeekCriteriaTransferFilter extends SeekCriteria
     public function setLeagueId(?int $leagueId): self
     {
         $this->leagueId = $leagueId;
+
+        return $this;
+    }
+
+    public function getLeagueName(): ?string
+    {
+        return $this->leagueName;
+    }
+
+    public function setLeagueName($leagueName): self
+    {
+        $this->leagueName = $leagueName;
 
         return $this;
     }

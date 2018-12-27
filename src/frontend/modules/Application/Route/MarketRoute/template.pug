@@ -42,13 +42,11 @@ form([formGroup]="form", (ngSubmit)="submit()")
         input(type="text", formControlName="leagueName", [matAutocomplete]="autocompleteLeague", (input)="setPending(form.get('leagueName').value!='')")
         .clear(*ngIf="form.get('leagueName').value", (click)="form.get('leagueName').reset(); form.get('leagueId').reset()") × 
         mat-autocomplete(#autocompleteLeague="matAutocomplete", (optionSelected)="setPending(false)")
-          mat-optgroup(*ngFor="let groupedLeague of leaguesAutocomplete | async", [label]="groupedLeague.groupBy")
-            mat-option(
-            *ngFor="let league of groupedLeague.leagues",
+          mat-option(
+            *ngFor="let league of leaguesAutocomplete | async",
             [value]="league.name",
             [title]="league.name",
-            (onSelectionChange)="form.get('leagueId').setValue(league.id)"
-            ) {{ league.name }}
+          ) {{ league.name }}
 
 
 .grid
@@ -135,14 +133,28 @@ form([formGroup]="form", (ngSubmit)="submit()")
     .grid-column
       h2 Latest games
       .game(*ngFor="let game of lastestGames$ | async")
-        a.team([routerLink]='["/team", game.teams[0].id]')
-          img(src="https://tmssl.akamaized.net/{{game.teams[0].preview }}")
+        ng-container(*ngIf="game.teams[0]")
+          a.team([routerLink]='["/team", game.teams[0].id]')
+            img(src="https://tmssl.akamaized.net/{{game.teams[0].preview }}")
+        ng-container(*ngIf="!game.teams[0]")
+          .team
+            img(src="https://foot-genie.com/images/empty.jpg")
+          
         .score {{ game.score }}
-        .team([routerLink]='["/team", game.teams[1].id]')
-          img(src="https://tmssl.akamaized.net/{{game.teams[1].preview }}")
+
+        ng-container(*ngIf="game.teams[1]")
+          a.team([routerLink]='["/team", game.teams[1].id]')
+            img(src="https://tmssl.akamaized.net/{{game.teams[1].preview }}")
+        ng-container(*ngIf="!game.teams[1]")
+          .team
+            img(src="https://foot-genie.com/images/empty.jpg")
+        
         .info
           small.date {{ formatDateISO(game.date) | date | uppercase }} - {{ game.league.name }}
-          a([routerLink]='["/team", game.teams[0].id]') {{ game.teams[0].name }}
+          div
+            a(*ngIf="game.teams[0]", [routerLink]='["/team", game.teams[0].id]') {{ game.teams[0].name }}
+            |  — 
+            a(*ngIf="game.teams[1]", [routerLink]='["/team", game.teams[1].id]') {{ game.teams[1].name }}
         .duration {{ game.duration }}'
       
       .not-found(*ngIf="(lastestGames$ | async)?.length == 0")
@@ -161,7 +173,11 @@ form([formGroup]="form", (ngSubmit)="submit()")
         a.name([routerLink]="['/player', transfer.player.id]") {{ (transfer.player.first_name || "") + " " + transfer.player.last_name }}
         .transfer
           small.date {{ formatDateISO(transfer.date) | date | uppercase }}
-          .name {{ transfer.left_team?.name }} >>> {{ transfer.join_team?.name }}
+          .name
+            a(*ngIf="transfer.left_team", [routerLink]='["/team", transfer.left_team.id]') {{ transfer.left_team.name }}
+            | >>>
+            a(*ngIf="transfer.join_team", [routerLink]='["/team", transfer.join_team.id]') {{ transfer.join_team.name }}
+            //{{ transfer.left_team?.name }} >>> {{ transfer.join_team?.name }}
         .mv(title="transfer.mv") 
           ng-container(*ngIf="transfer.mv > 0") mv: £{{ transfer.mv  | short_number}}
           ng-container(*ngIf="!transfer.mv") -

@@ -46,7 +46,9 @@ class PlayerNewFixtures extends Fixture implements ContainerAwareInterface, Depe
                     $player = (new Player())
                         ->setLastName($row["lastName"])
                         ->setTmId($row["playerUID"])
-                        ->setAlias($row["alias"]);
+                        ->setAlias($row["alias"])
+                        ->setViews(0)
+                    ;
 
                     if (!empty($row["firstName"])) $player->setFirstName($row["firstName"]);
                     if (!empty($row["nativeName"])) $player->setNativeName($row["nativeName"]);

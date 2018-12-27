@@ -90,7 +90,7 @@ class CardFixtures extends Fixture implements ContainerAwareInterface, Dependent
                 echo "Memory: " . TeamFixtures::convert(memory_get_usage()) . "\t";
                 echo "Peak:" . TeamFixtures::convert(memory_get_usage()) . "\t";
                 echo "Time: " . time() . "\t";
-                echo "Time left: " . number_format((microtime(true) - $microtime) / $limit * (780795 - $offset) / 60, 1). "min";
+                echo "Time left: " . number_format((microtime(true) - $microtime) / $limit * (850306 - $offset) / 60, 1). "min";
                 echo PHP_EOL;
 
                 if (count($rows) < $limit) break;
@@ -143,6 +143,6 @@ class CardFixtures extends Fixture implements ContainerAwareInterface, Dependent
 
     public function getDependencies(): array
     {
-        return [MainFixtures::class];
+        return [MainFixtures::class, PlayerNewFixtures::class];
     }
 }

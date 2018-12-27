@@ -1,7 +1,7 @@
 import {Component, Inject, Input, LOCALE_ID} from "@angular/core";
 import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {debounceTime, filter, flatMap, map} from "rxjs/operators";
+import {debounceTime, filter, flatMap, map, tap} from "rxjs/operators";
 import {Observable} from "rxjs/Observable";
 import {of} from "rxjs/internal/observable/of";
 
@@ -11,7 +11,7 @@ import {ParamsService} from "../../../Application/Service/ParamsService";
 import {PlayerRoleEnum} from "../../Entity/PlayerRoleEnum";
 import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
 import {LeagueRESTService} from "../../../League/Service/LeagueRESTService";
-import {GroupedLeague, LeagueSeason} from "../../../League/Entity/League";
+import {GroupedLeague, League, LeagueSeason} from "../../../League/Entity/League";
 import {TeamRESTService} from "../../../Team/Service/TeamRESTService";
 import {Team} from "../../../Team/Entity/Team";
 
@@ -31,7 +31,9 @@ export class PlayersRoute {
     public form = new FormGroup({
         age: new FormControl(),
         assists: new FormControl(),
-        cards: new FormControl(),
+        cards: new FormControl(), 
+        countryId: new FormControl(),
+        countryName: new FormControl(),
         dateFrom: new FormControl(), // formatDate(new Date(), 'yyyy-MM-dd', this.locale)
         dateTo: new FormControl(),
         goals: new FormControl(),
@@ -63,29 +65,11 @@ export class PlayersRoute {
         flatMap(value => this.teamService.findByName(value))
     );
 
-    @Input("leagueInputEl") leagueInputEl;
-    public leaguesAutocomplete: Observable<GroupedLeague<LeagueSeason>[]> = this.form.get('leagueName').valueChanges.pipe(
+    public leaguesAutocomplete: Observable<League[]> = this.form.get('leagueName').valueChanges.pipe(
         debounceTime(500),
         filter(value => value),
         filter(() => this.form.get('leagueName').valid),
         flatMap(value => this.leagueService.findByName(value)),
-        map(leagues => {
-            let groupedLeagues: GroupedLeague<LeagueSeason>[] = [];
-            leagues.forEach(league => {
-                let groupedLeague: GroupedLeague<LeagueSeason> = groupedLeagues.find(groupLeague => groupLeague.groupBy == league.season);
-                if(groupedLeague) {
-                    groupedLeague.leagues.push(league)
-                } else {
-                    groupedLeagues.push({
-                        groupBy: league.season,
-                        leagues: [league]
-                    })
-                }
-            });
-
-            return groupedLeagues;
-        }),
-        map(groupedLeagues => groupedLeagues.sort((a, b) => b.groupBy - a.groupBy))
     );
 
     constructor(

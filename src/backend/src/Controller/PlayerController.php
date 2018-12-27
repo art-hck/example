@@ -97,6 +97,7 @@ class PlayerController extends Controller
             ->setAssistsRange($data["assists"])
             ->setCardsRange($data["cards"])
             ->setCardsType($data["cardsType"])
+//            ->setCountryId($data["countryId"])
             ->setDatePeriod($data["dateFrom"], $data["dateTo"])
             ->setGoalsRange($data["goals"])
             ->setHeightRange($data["height"])

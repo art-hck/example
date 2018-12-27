@@ -12,6 +12,7 @@ class SeekCriteriaGameFilter extends SeekCriteria
     private $datePeriod;
     private $teamId;
     private $leagueId;
+    private $leagueName;
     private $duration;
 
     public function getDatePeriod(): ?SeekCriteriaRange
@@ -61,6 +62,18 @@ class SeekCriteriaGameFilter extends SeekCriteria
     {
         $this->duration = $duration;
 
+        return $this;
+    }
+
+    public function getLeagueName(): ?string
+    {
+        return $this->leagueName;
+    }
+
+    public function setLeagueName($leagueName): self
+    {
+        $this->leagueName = $leagueName;
+        
         return $this;
     }
 

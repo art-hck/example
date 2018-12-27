@@ -109,8 +109,8 @@ class PlayerRepository extends ServiceEntityRepository
 
         if ($seekCriteria->getLeagueName()) {
             $qb
-                ->andWhere('l.name LIKE :leagueName')
-                ->setParameter('leagueName', $seekCriteria->getLeagueName() . "%")
+                ->andWhere('l.name = :leagueName')
+                ->setParameter('leagueName', $seekCriteria->getLeagueName())
             ;
         } // END LEAGUE FILTER
         

@@ -134,16 +134,17 @@
                 .full-statdesc shots On target
 
         .games
-          .game(*ngFor="let item of playerGames")
-            a.team([routerLink]='["/team", item.game.teams[0].id]')
-              img(src="https://tmssl.akamaized.net/{{item.game.teams[0].preview }}")
-            .score {{ item.game.score }}
-            .team([routerLink]='["/team", item.game.teams[1].id]')
-              img(src="https://tmssl.akamaized.net/{{item.game.teams[1].preview }}")
-            .info
-              small.date {{ formatDateISO(item.game.date) | date | uppercase }} - {{ item.game.league.name }}
-              a([routerLink]='["/team", item.game.teams[0].id]') {{ item.game.teams[0].name }}
-            .duration {{ item.game.duration }}'
+          ng-container(*ngFor="let item of playerGames")
+            .game(*ngIf="item.game.teams[0] && item.game.teams[1]")
+              a.team([routerLink]='["/team", item.game.teams[0].id]')
+                img(src="https://tmssl.akamaized.net/{{item.game.teams[0].preview }}")
+              .score {{ item.game.score }}
+              .team([routerLink]='["/team", item.game.teams[1].id]')
+                img(src="https://tmssl.akamaized.net/{{item.game.teams[1].preview }}")
+              .info
+                small.date {{ formatDateISO(item.game.date) | date | uppercase }} - {{ item.game.league.name }}
+                a([routerLink]='["/team", item.game.teams[0].id]') {{ item.game.teams[0].name }}
+              .duration {{ item.game.duration }}'
 
 
 

@@ -10,7 +10,7 @@ import {ParamsService} from "../../Service/ParamsService";
 import {Observable, of} from "rxjs";
 import {Team} from "../../../Team/Entity/Team";
 import {TeamRESTService} from "../../../Team/Service/TeamRESTService";
-import {GroupedLeague, LeagueSeason} from "../../../League/Entity/League";
+import {League} from "../../../League/Entity/League";
 import {LeagueRESTService} from "../../../League/Service/LeagueRESTService";
 
 @Component({
@@ -38,7 +38,7 @@ export class MarketRoute {
     get topPlayerViews$() { return this.playerService.filter(this.mergeRequest({orderBy: 'views', orderDirection: 'DESC', limit: 5})); }
     get largestTransfers$() { return this.transfersService.filter(this.mergeRequest({orderBy: 'fee', orderDirection: 'DESC', limit: 5})); }
     get lastestTransfers$() { return this.transfersService.filter(this.mergeRequest({orderBy: 'date', orderDirection: 'DESC', limit: 5})); }
-    get lastestGames$() { return this.gamesService.filter(this.mergeRequest({duration: [1, null], orderBy: 'date', orderDirection: 'DESC', limit: 5}));}
+    get lastestGames$() { return this.gamesService.filter(this.mergeRequest({duration: [1, null], orderBy: 'date', orderDirection: 'DESC', limit: 10}));}
     
     public teamsAutocomplete: Observable<Team[]> = this.form.get("teamName").valueChanges.pipe(
         debounceTime(500),
@@ -47,28 +47,11 @@ export class MarketRoute {
         flatMap(value => this.teamService.findByName(value))
     );
 
-    public leaguesAutocomplete: Observable<GroupedLeague<LeagueSeason>[]> = this.form.get('leagueName').valueChanges.pipe(
+    public leaguesAutocomplete: Observable<League[]> = this.form.get('leagueName').valueChanges.pipe(
         debounceTime(500),
         filter(value => value),
         filter(() => this.form.get('leagueName').valid),
-        flatMap(value => this.leagueService.findByName(value)),
-        map(leagues => {
-            let groupedLeagues: GroupedLeague<LeagueSeason>[] = [];
-            leagues.forEach(league => {
-                let groupedLeague: GroupedLeague<LeagueSeason> = groupedLeagues.find(groupLeague => groupLeague.groupBy == league.season);
-                if(groupedLeague) {
-                    groupedLeague.leagues.push(league)
-                } else {
-                    groupedLeagues.push({
-                        groupBy: league.season,
-                        leagues: [league]
-                    })
-                }
-            });
-
-            return groupedLeagues;
-        }),
-        map(groupedLeagues => groupedLeagues.sort((a, b) => b.groupBy - a.groupBy))
+        flatMap(value => this.leagueService.findByName(value))
     );
     
     private filterRequest;
@@ -129,7 +112,7 @@ export class MarketRoute {
         let filterRequest = this.form.value;
         
         delete filterRequest.teamName;
-        delete filterRequest.leagueName;
+        // delete filterRequest.leagueName;
 
         if(!filterRequest.dateFrom || !filterRequest.dateTo) {
             delete filterRequest.dateFrom;

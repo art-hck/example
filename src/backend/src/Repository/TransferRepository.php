@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Entity\Team;
+use App\Entity\League;
 use App\Entity\Transfer;
 use App\Type\SeekCriteria\Types\SeekCriteriaTransferFilter;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -27,6 +27,7 @@ class TransferRepository extends ServiceEntityRepository
             ->orderBy("t." . $seekCriteria->getOrderBy(), $seekCriteria->getOrderDirection())
             ->setFirstResult($seekCriteria->getOffset())
             ->setMaxResults($seekCriteria->getLimit())
+            ->groupBy('t.id')
         ;
 
         // DATE FILTER
@@ -73,16 +74,34 @@ class TransferRepository extends ServiceEntityRepository
             ;
         } // END TEAM ID FILTER
         
-        // LEAGUE ID FILTER
+        // LEAGUE FILTER
+        if ($seekCriteria->getLeagueId() || $seekCriteria->getLeagueName()) {
+            $qb->join('t.player', 'p')
+                ->join('p.team', 'team')
+                ->join('team.teamGames', 'tg')
+                ->join('tg.game', 'g')
+            ;
+//            $qb
+//                ->join(Team::class, 'team', 'WITH', "team.id = t.joinTeam OR team.id = t.leftTeam")
+//                ->join("team.teamGames", "tg")
+//                ->join("tg.game", "g")
+//            ;
+        }
+
         if ($seekCriteria->getLeagueId()) {
             $qb
-                ->join(Team::class, 'team', 'WITH', "team.id = t.joinTeam OR team.id = t.leftTeam")
-                ->join("team.teamGames", "tg")
-                ->join("tg.game", "g")
                 ->andWhere("g.league = :leagueId")
                 ->setParameter('leagueId', $seekCriteria->getLeagueId())
             ;
-        } // END LEAGUE ID FILTER
+        }
+
+        if($seekCriteria->getLeagueName()) {
+            $qb
+                ->join('g.league', 'l')
+                ->andWhere('l.name = :leagueName')
+                ->setParameter('leagueName', $seekCriteria->getLeagueName())
+            ;
+        } // END LEAGUE FILTER
         
         return $qb
             ->getQuery()

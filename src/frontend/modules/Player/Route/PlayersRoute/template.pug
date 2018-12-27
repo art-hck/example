@@ -79,13 +79,30 @@ form([formGroup]="form", (ngSubmit)="submit()")
           input(type="text", formControlName="leagueName", [matAutocomplete]="autocompleteLeague", (input)="setPending(form.get('leagueName').value!='')")
           .clear(*ngIf="form.get('leagueName').value", (click)="form.get('leagueName').reset(); form.get('leagueId').reset()") × 
           mat-autocomplete(#autocompleteLeague="matAutocomplete", (optionSelected)="setPending(false)")
-            mat-optgroup(*ngFor="let groupedLeague of leaguesAutocomplete | async", [label]="groupedLeague.groupBy")
-              mat-option(
-                *ngFor="let league of groupedLeague.leagues", 
-                [value]="league.name",
-                [title]="league.name",
-                (onSelectionChange)="form.get('leagueId').setValue(league.id)"
-              ) {{ league.name }}
+            //mat-optgroup(*ngFor="let groupedLeague of leaguesAutocomplete | async", [label]="groupedLeague.groupBy")
+            //  mat-option(
+            //    *ngFor="let league of groupedLeague.leagues", 
+            //    [value]="league.name",
+            //    [title]="league.name"
+            //  ) {{ league.name }}
+            mat-option(
+              *ngFor="let league of leaguesAutocomplete | async", 
+              [value]="league.name",
+              [title]="league.name"
+            ) {{ league.name }}
+              
+      //.form-field
+      //  label Country
+      //  .input-box
+      //    input(type="text", formControlName="countryName", [matAutocomplete]="autocompleteLeague", (input)="setPending(form.get('countryName').value!='')")
+      //    .clear(*ngIf="form.get('countryName').value", (click)="form.get('countryName').reset(); form.get('countryId').reset()") × 
+      //    mat-autocomplete(#autocompleteLeague="matAutocomplete", (optionSelected)="setPending(false)")
+      //      mat-option(
+      //        *ngFor="let country of countriesAutocomplete | async", 
+      //        [value]="country.name",
+      //        [title]="country.name",
+      //        (onSelectionChange)="form.get('leagueId').setValue(country.id)"
+      //      ) {{ country.name }}
 
       .form-field
         label Position

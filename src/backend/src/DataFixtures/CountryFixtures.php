@@ -48,7 +48,7 @@ class CountryFixtures extends Fixture implements ContainerAwareInterface, Depend
                 echo "Memory: " . TeamFixtures::convert(memory_get_usage()) . "\t";
                 echo "Peak:" . TeamFixtures::convert(memory_get_usage()) . "\t";
                 echo "Time: " . time() . "\t";
-                echo "Time left: " . number_format((microtime(true) - $microtime) / $limit * (780795 - $offset) / 60, 1). "min";
+                echo "Time left: " . number_format((microtime(true) - $microtime) / $limit * (192 - $offset) / 60, 1). "min";
                 echo PHP_EOL;
 
                 if (count($rows) < $limit) break;

@@ -20,7 +20,7 @@ class TeamFixtures extends Fixture implements ContainerAwareInterface
 
     public function load(ObjectManager $manager)
     {
-//        return;
+        return;
         $limit = 1000;
         $offset = 0;
         try {
