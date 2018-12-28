@@ -115,7 +115,11 @@ form([formGroup]="form", (ngSubmit)="submit()")
       .player.transfers(*ngFor="let transfer of largestTransfers$ | async")
         a.avatar([routerLink]="['/player', transfer.player.id]")
           img(src="https://tmssl.akamaized.net/{{ transfer.player.avatar }}")
-        a.name([routerLink]="['/player', transfer.player.id]") {{ (transfer.player.first_name || "") + " " + transfer.player.last_name }}
+        .name
+          a(*ngIf="transfer.left_team", [routerLink]='["/team", transfer.left_team.id]') {{ transfer.left_team.name }}
+          | >>>
+          a(*ngIf="transfer.join_team", [routerLink]='["/team", transfer.join_team.id]') {{ transfer.join_team.name }}
+
         .transfer
           small.date {{ formatDateISO(transfer.date) | date | uppercase }}
           .name {{ transfer.left_team?.name }} >>> {{ transfer.join_team?.name }}
