@@ -80,6 +80,7 @@ class TransferController extends Controller
             ->setFeeRange($data["fee"])
             ->setMvRange($data["mv"])
             ->setTeamId($data["teamId"])
+            ->setCountryId($data["countryId"])
             ->setLeagueId($data["leagueId"])
             ->setLeagueName($data["leagueName"])
             ->setOrderBy($data["orderBy"])

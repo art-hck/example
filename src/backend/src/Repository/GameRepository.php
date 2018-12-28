@@ -42,6 +42,7 @@ class GameRepository extends ServiceEntityRepository
             ->orderBy("g." . $seekCriteria->getOrderBy(), $seekCriteria->getOrderDirection())
             ->setFirstResult($seekCriteria->getOffset())
             ->setMaxResults($seekCriteria->getLimit())
+            ->groupBy("g.id")
         ;
 
         // DATE FILTER
@@ -93,6 +94,17 @@ class GameRepository extends ServiceEntityRepository
                 ->setParameter('maxDuration', $seekCriteria->getDuration()->max)
             ;
         } // END TEAM FILTER
+
+//        // COUNTRY FILTER
+//        if($seekCriteria->getCountryId()) {
+//            $qb
+//               ->join("g.teamGames", 'tg')
+//               ->join("tg.team", "t")
+//               ->join("t.players", "p")
+//                ->andWhere("p.country <= :countryId")
+//                ->setParameter('countryId', $seekCriteria->getCountryId())
+//            ;
+//        } // END COUNTRY FILTER
 
         return $qb
             ->getQuery()

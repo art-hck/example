@@ -9,6 +9,7 @@ class SeekCriteriaGameFilter extends SeekCriteria
 {
     public const orderByFields = ["id", "date"];
 
+    private $countryId;
     private $datePeriod;
     private $teamId;
     private $leagueId;
@@ -49,6 +50,18 @@ class SeekCriteriaGameFilter extends SeekCriteria
     public function setLeagueId(?int $leagueId): self
     {
         $this->leagueId = $leagueId;
+
+        return $this;
+    }
+
+    public function getCountryId(): ?int
+    {
+        return $this->countryId;
+    }
+
+    public function setCountryId($countryId): self
+    {
+        $this->countryId = $countryId;
 
         return $this;
     }

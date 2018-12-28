@@ -15,6 +15,7 @@ class TransferFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('countryId', IntegerType::class)
             ->add('teamId', IntegerType::class)
             ->add('leagueId', IntegerType::class)
             ->add('leagueName', TextType::class)

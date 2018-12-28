@@ -31,6 +31,7 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     private $cardsRange;
     private $cardsType;
     private $heightRange;
+    private $countryId;
 
     public function getDatePeriod(): ?SeekCriteriaRange
     {
@@ -228,6 +229,18 @@ class SeekCriteriaPlayerFilter extends SeekCriteria
     {
         $this->playerName = $playerName;
         
+        return $this;
+    }
+
+    public function getCountryId(): ?int
+    {
+        return $this->countryId;
+    }
+
+    public function setCountryId($countryId): self
+    {
+        $this->countryId = $countryId;
+
         return $this;
     }
 }

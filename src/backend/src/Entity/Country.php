@@ -34,9 +34,15 @@ class Country extends CountrySerializable
      */
     private $players;
 
+    /**
+     * @ORM\OneToMany(targetEntity="App\Entity\League", mappedBy="country")
+     */
+    private $leagues;
+
     public function __construct()
     {
         $this->players = new ArrayCollection();
+        $this->leagues = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -93,6 +99,37 @@ class Country extends CountrySerializable
             // set the owning side to null (unless already changed)
             if ($player->getBirthCountry() === $this) {
                 $player->setBirthCountry(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|League[]
+     */
+    public function getLeagues(): Collection
+    {
+        return $this->leagues;
+    }
+
+    public function addLeague(League $league): self
+    {
+        if (!$this->leagues->contains($league)) {
+            $this->leagues[] = $league;
+            $league->setCountry($this);
+        }
+
+        return $this;
+    }
+
+    public function removeLeague(League $league): self
+    {
+        if ($this->leagues->contains($league)) {
+            $this->leagues->removeElement($league);
+            // set the owning side to null (unless already changed)
+            if ($league->getCountry() === $this) {
+                $league->setCountry(null);
             }
         }
 

@@ -29,6 +29,10 @@ class TransferRepository extends ServiceEntityRepository
             ->setMaxResults($seekCriteria->getLimit())
             ->groupBy('t.id')
         ;
+        
+        if($seekCriteria->getCountryId() || $seekCriteria->getLeagueId() || $seekCriteria->getLeagueName()) {
+            $qb->join("t.player", "p");
+        }
 
         // DATE FILTER
         if ($seekCriteria->getDatePeriod()) {
@@ -65,6 +69,14 @@ class TransferRepository extends ServiceEntityRepository
             ;
         } // END MV FILTER
 
+        
+        // COUNTRY ID FILTER
+        if ($seekCriteria->getCountryId()) {
+            $qb
+                ->andWhere("p.country = :countryId")
+                ->setParameter('countryId', $seekCriteria->getCountryId())
+            ;
+        } // END COUNTRY ID FILTER
 
         // TEAM ID FILTER
         if ($seekCriteria->getTeamId()) {
@@ -76,16 +88,11 @@ class TransferRepository extends ServiceEntityRepository
         
         // LEAGUE FILTER
         if ($seekCriteria->getLeagueId() || $seekCriteria->getLeagueName()) {
-            $qb->join('t.player', 'p')
+            $qb
                 ->join('p.team', 'team')
                 ->join('team.teamGames', 'tg')
                 ->join('tg.game', 'g')
             ;
-//            $qb
-//                ->join(Team::class, 'team', 'WITH', "team.id = t.joinTeam OR team.id = t.leftTeam")
-//                ->join("team.teamGames", "tg")
-//                ->join("tg.game", "g")
-//            ;
         }
 
         if ($seekCriteria->getLeagueId()) {

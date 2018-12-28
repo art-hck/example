@@ -28,11 +28,6 @@ class League extends LeagueSerializable
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
-     */
-    private $season;
-
-    /**
      * @ORM\OneToMany(targetEntity="App\Entity\Game", mappedBy="league", orphanRemoval=true)
      */
     private $games;
@@ -41,6 +36,21 @@ class League extends LeagueSerializable
      * @ORM\Column(type="boolean")
      */
     private $isInternational;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Country", inversedBy="leagues")
+     */
+    private $country;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $tmId;
+
+    /**
+     * @ORM\Column(type="string", length=255, nullable=true)
+     */
+    private $зк�preview;
 
     public function __construct()
     {
@@ -60,18 +70,6 @@ class League extends LeagueSerializable
     public function setName(string $name): self
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getSeason(): ?int
-    {
-        return $this->season;
-    }
-
-    public function setSeason(int $season): self
-    {
-        $this->season = $season;
 
         return $this;
     }
@@ -115,6 +113,42 @@ class League extends LeagueSerializable
     public function setIsInternational(bool $isInternational): self
     {
         $this->isInternational = $isInternational;
+
+        return $this;
+    }
+
+    public function getCountry(): ?Country
+    {
+        return $this->country;
+    }
+
+    public function setCountry(?Country $country): self
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    public function getTmId(): ?int
+    {
+        return $this->tmId;
+    }
+
+    public function setTmId(int $tmId): self
+    {
+        $this->tmId = $tmId;
+
+        return $this;
+    }
+
+    public function getзк�preview(): ?string
+    {
+        return $this->зк�preview;
+    }
+
+    public function setзк�preview(?string $зк�preview): self
+    {
+        $this->зк�preview = $зк�preview;
 
         return $this;
     }

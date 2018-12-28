@@ -43,6 +43,7 @@ class GamesController extends Controller
 
         $criteria
             ->setDatePeriod($data["dateFrom"], $data["dateTo"])
+            ->setCountryId($data["countryId"])
             ->setTeamId($data["teamId"])
             ->setLeagueId($data["leagueId"])
             ->setLeagueName($data["leagueName"])

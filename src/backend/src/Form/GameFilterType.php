@@ -16,10 +16,11 @@ class GameFilterType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
+            ->add('countryId', IntegerType::class)
+            ->add('duration', SeekCriteriaRangeType::class)
             ->add('teamId', IntegerType::class)
             ->add('leagueId', IntegerType::class)
             ->add('leagueName', TextType::class)
-            ->add('duration', SeekCriteriaRangeType::class)
         ;
     }
     

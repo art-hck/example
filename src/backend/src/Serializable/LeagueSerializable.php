@@ -3,6 +3,8 @@
 namespace App\Serializable;
 
 
+use App\Entity\Country;
+
 abstract class LeagueSerializable implements \JsonSerializable
 {
     public function jsonSerialize()
@@ -10,11 +12,11 @@ abstract class LeagueSerializable implements \JsonSerializable
         return [
             "id" => $this->getId(),
             "name" => $this->getName(),
-            "season" => $this->getSeason()
+            "country" => $this->getCountry(),
         ];
     }
 
     abstract public function getId(): ?int;
     abstract public function getName(): ?string;
-    abstract public function getSeason(): ?int;
+    abstract public function getCountry(): ?Country;
 }

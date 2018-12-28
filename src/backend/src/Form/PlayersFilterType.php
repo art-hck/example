@@ -23,6 +23,7 @@ class PlayersFilterType extends AbstractType
             ->add('assists', SeekCriteriaRangeType::class)
             ->add('cards', SeekCriteriaRangeType::class)
             ->add('cardsType', IntegerType::class)
+            ->add('countryId', IntegerType::class)
             ->add('goals', SeekCriteriaRangeType::class)
             ->add('height', SeekCriteriaRangeType::class)
             ->add('international', CheckboxType::class)

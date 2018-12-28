@@ -63,6 +63,10 @@ class PlayerRepository extends ServiceEntityRepository
             $qb->andWhere($orderBy . " IS NOT NULL");
         }
 
+        if($seekCriteria->getOrderBy() == "country") {
+            $qb->join("p.country", "c")->orderBy("c.name", $seekCriteria->getOrderDirection());
+        }
+
         if (
             $seekCriteria->getDatePeriod() || 
             $seekCriteria->getLeagueId() || 
@@ -121,6 +125,13 @@ class PlayerRepository extends ServiceEntityRepository
                 ->setParameter('isInternational', $seekCriteria->getIsInternational())
             ;
         } // END INTERNATIONAL FILTER
+
+        // COUNTRY FILTER
+        if($seekCriteria->getCountryId()) {
+            $qb->andWhere('p.country=:countryId')
+                ->setParameter('countryId', $seekCriteria->getCountryId())
+            ;
+        } // END COUNTRY FILTER
 
         // TEAM FILTER
         if($seekCriteria->getTeamId()) {
