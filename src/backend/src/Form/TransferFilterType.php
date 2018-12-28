@@ -16,6 +16,7 @@ class TransferFilterType extends AbstractType
     {
         $builder
             ->add('countryId', IntegerType::class)
+            ->add('countryName', TextType::class)
             ->add('teamId', IntegerType::class)
             ->add('leagueId', IntegerType::class)
             ->add('leagueName', TextType::class)

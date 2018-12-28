@@ -30,6 +30,7 @@ import {MarketRoute} from "./Route/MarketRoute";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {NouisliderModule} from "ng2-nouislider";
 import {ShortNumberPipe} from "./Pipe/ShortNumberPipe";
+import {CountryModule} from "../Country/CountryModule";
 
 registerLocaleData(localeRu);
 
@@ -41,6 +42,7 @@ registerLocaleData(localeRu);
         BrowserModule,
         RouterModule.forRoot(appRoutes, {scrollPositionRestoration: 'enabled', onSameUrlNavigation: "reload"}),
         HttpClientModule,
+        CountryModule,
         PlayerModule,
         TeamModule,
         GameModule,

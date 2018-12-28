@@ -48,6 +48,19 @@ form([formGroup]="form", (ngSubmit)="submit()")
             [title]="league.name",
           ) {{ league.name }}
 
+    .form-field
+      label Country
+      .input-box
+        input(type="text", formControlName="countryName", [matAutocomplete]="autocompleteCountry", (input)="setPending(form.get('countryName').value!='')")
+        .clear(*ngIf="form.get('countryName').value", (click)="form.get('countryName').reset(); form.get('countryId').reset();") × 
+        mat-autocomplete(#autocompleteCountry="matAutocomplete", (optionSelected)="setPending(false)")
+          mat-option(
+          *ngFor="let country of countryAutocomplete | async",
+          [value]="country.name",
+          [title]="country.name",
+          (onSelectionChange)="form.get('countryId').setValue(country.id)"
+          ) {{ country.name }}
+
 
 .grid
   .grid-row

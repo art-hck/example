@@ -91,18 +91,18 @@ form([formGroup]="form", (ngSubmit)="submit()")
               [title]="league.name"
             ) {{ league.name }}
               
-      //.form-field
-      //  label Country
-      //  .input-box
-      //    input(type="text", formControlName="countryName", [matAutocomplete]="autocompleteLeague", (input)="setPending(form.get('countryName').value!='')")
-      //    .clear(*ngIf="form.get('countryName').value", (click)="form.get('countryName').reset(); form.get('countryId').reset()") × 
-      //    mat-autocomplete(#autocompleteLeague="matAutocomplete", (optionSelected)="setPending(false)")
-      //      mat-option(
-      //        *ngFor="let country of countriesAutocomplete | async", 
-      //        [value]="country.name",
-      //        [title]="country.name",
-      //        (onSelectionChange)="form.get('leagueId').setValue(country.id)"
-      //      ) {{ country.name }}
+      .form-field
+        label Nationality
+        .input-box
+          input(type="text", formControlName="countryName", [matAutocomplete]="autocompleteCountry", (input)="setPending(form.get('countryName').value!='')")
+          .clear(*ngIf="form.get('countryName').value", (click)="form.get('countryName').reset(); form.get('countryId').reset();") × 
+          mat-autocomplete(#autocompleteCountry="matAutocomplete", (optionSelected)="setPending(false)")
+            mat-option(
+              *ngFor="let country of countriesAutocomplete | async",
+              [value]="country.name",
+              [title]="country.name",
+              (onSelectionChange)="form.get('countryId').setValue(country.id)"
+            ) {{ country.name }}
 
       .form-field
         label Position
@@ -111,13 +111,6 @@ form([formGroup]="form", (ngSubmit)="submit()")
           .clear(*ngIf="form.get('role').value", (click)="form.get('role').reset()") ×
           mat-autocomplete(#autocompletePos="matAutocomplete")
             mat-option(*ngFor="let role of playerRoles", [value]="role") {{ role | titlecase }}
-
-      .form-field.disabled
-        label Nationality
-        .input-box
-          input(type="text", formControlName="nationalityId", placeholder="Not implemented yet")
-          .clear(*ngIf="form.get('nationalityId').value", (click)="form.get('nationalityId').reset()") ×
-
 
       .form-field
         button(type="submit", [disabled]="isLoading || form.invalid", mat-stroked-button, color="primary") Show players

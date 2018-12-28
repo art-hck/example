@@ -1,7 +1,7 @@
-import {Component, Inject, Input, LOCALE_ID} from "@angular/core";
+import {Component, Inject, LOCALE_ID} from "@angular/core";
 import {FormControl, FormGroup, ValidationErrors, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {debounceTime, filter, flatMap, map, tap} from "rxjs/operators";
+import {debounceTime, filter, flatMap, map} from "rxjs/operators";
 import {Observable} from "rxjs/Observable";
 import {of} from "rxjs/internal/observable/of";
 
@@ -11,9 +11,11 @@ import {ParamsService} from "../../../Application/Service/ParamsService";
 import {PlayerRoleEnum} from "../../Entity/PlayerRoleEnum";
 import {PlayerFilterRequest} from "../../Http/PlayerFilterRequest";
 import {LeagueRESTService} from "../../../League/Service/LeagueRESTService";
-import {GroupedLeague, League, LeagueSeason} from "../../../League/Entity/League";
+import {League} from "../../../League/Entity/League";
 import {TeamRESTService} from "../../../Team/Service/TeamRESTService";
 import {Team} from "../../../Team/Entity/Team";
+import {Country} from "../../../Country/Entity/Country";
+import {CountryRESTService} from "../../../Country/Service/CountryRESTService";
 
 @Component({
     selector: "player-filter-form",
@@ -65,6 +67,13 @@ export class PlayersRoute {
         flatMap(value => this.teamService.findByName(value))
     );
 
+    public countriesAutocomplete: Observable<Country[]> = this.form.get("countryName").valueChanges.pipe(
+        debounceTime(500),
+        filter(() => this.form.get("countryName").valid),
+        filter(value => value),
+        flatMap(value => this.countryService.findByName(value))
+    );
+    
     public leaguesAutocomplete: Observable<League[]> = this.form.get('leagueName').valueChanges.pipe(
         debounceTime(500),
         filter(value => value),
@@ -77,6 +86,7 @@ export class PlayersRoute {
         private route: ActivatedRoute,
         private paramsService: ParamsService,
         private teamService: TeamRESTService,
+        public countryService: CountryRESTService,
         private leagueService: LeagueRESTService,
         @Inject(LOCALE_ID) private locale: string,
     ) {

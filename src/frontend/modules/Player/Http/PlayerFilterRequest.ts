@@ -6,6 +6,8 @@ export class PlayerFilterRequest {
     assists?: [number, number] = null;
     cards?: [number, number] = null;
     cardsType?: number = null;
+    countryId?: string = null;
+    countryName?: string = null;
     dateFrom?: DateISO = null;
     dateTo?: DateISO = null;
     goals?: [number, number] = null;

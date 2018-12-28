@@ -12,6 +12,8 @@ import {Team} from "../../../Team/Entity/Team";
 import {TeamRESTService} from "../../../Team/Service/TeamRESTService";
 import {League} from "../../../League/Entity/League";
 import {LeagueRESTService} from "../../../League/Service/LeagueRESTService";
+import {Country} from "../../../Country/Entity/Country";
+import {CountryRESTService} from "../../../Country/Service/CountryRESTService";
 
 @Component({
     templateUrl: "./template.pug",
@@ -28,6 +30,8 @@ export class MarketRoute {
         teamName: new FormControl(),
         leagueId: new FormControl(),
         leagueName: new FormControl(),
+        countryName: new FormControl(),
+        countryId: new FormControl(),
     },
         null,
         ()=> of(null).pipe(filter(() => !this.isPending))
@@ -45,6 +49,13 @@ export class MarketRoute {
         filter(() => this.form.get("teamName").valid),
         filter(value => value),
         flatMap(value => this.teamService.findByName(value))
+    );
+    
+    public countryAutocomplete: Observable<Country[]> = this.form.get("countryName").valueChanges.pipe(
+        debounceTime(500),
+        filter(() => this.form.get("countryName").valid),
+        filter(value => value),
+        flatMap(value => this.countryService.findByName(value))
     );
 
     public leaguesAutocomplete: Observable<League[]> = this.form.get('leagueName').valueChanges.pipe(
@@ -64,6 +75,7 @@ export class MarketRoute {
         public transfersService: TransferRESTService,
         public gamesService: GameRESTService,
         public teamService: TeamRESTService,
+        public countryService: CountryRESTService,
         public leagueService: LeagueRESTService,
     ) {
         this.form.valueChanges

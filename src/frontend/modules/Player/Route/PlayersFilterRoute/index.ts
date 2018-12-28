@@ -36,7 +36,13 @@ export class PlayersFilterRoute {
     {}
     
     ngOnInit() {
-        this.request = this.paramsService.parse<PlayerFilterRequest>(this.route.snapshot.queryParams);
+        // this.request = this.paramsService.parse<PlayerFilterRequest>(this.route.snapshot.queryParams); 
+        // изменяем фильтры, потом скроллим, а роутинг происходит со старыми фильтрами, по этому subscribe:
+        this.route.queryParams
+            .pipe(map((queryParams) => this.paramsService.parse<PlayerFilterRequest>(queryParams)))
+            .subscribe(request => this.request = request)
+        ;
+        
         this.offsetScrollMarkers = [{offset: this.request.offset || 0, scroll: 0}];
         this.route.data
             .pipe(tap(() => this.isScrollEnd = false))
@@ -59,7 +65,7 @@ export class PlayersFilterRoute {
             const request = {...this.request, ...{offset: ((this.request.offset || 0) + this.playerFilterResponse.length)}};
 
 
-            forkJoin(this.playerService.filter(request), timer(1000)) // Минимальный показ прелоадера
+            forkJoin(this.playerService.filter(request), timer(500)) // Минимальный показ прелоадера
                 .pipe(
                     map(([data]) => data),
                     finalize(() => this.loading = false)
