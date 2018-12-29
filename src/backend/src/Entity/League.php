@@ -50,7 +50,7 @@ class League extends LeagueSerializable
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
      */
-    private $зк�preview;
+    private $preview;
 
     public function __construct()
     {
@@ -141,14 +141,14 @@ class League extends LeagueSerializable
         return $this;
     }
 
-    public function getзк�preview(): ?string
+    public function getPreview(): ?string
     {
-        return $this->зк�preview;
+        return $this->preview;
     }
 
-    public function setзк�preview(?string $зк�preview): self
+    public function setPreview(?string $preview): self
     {
-        $this->зк�preview = $зк�preview;
+        $this->preview = $preview;
 
         return $this;
     }
